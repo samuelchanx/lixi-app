@@ -12,14 +12,14 @@ class QuestionControllerV2 {
   QuestionControllerV2({
     required this.questions,
     required this.ref,
-  });
+  }) {
+    diagnosedIssue = ref.read(diagnosedIssuesProvider);
+    userAnswers = ref.read(userAnswersProvider);
+  }
 
   final WidgetRef ref;
 
-  DiagnosedIssue diagnosedIssue = const DiagnosedIssue(
-    period: PeriodIssue.late,
-    periodLength: PeriodLengthIssue.tooLong,
-  );
+  DiagnosedIssue diagnosedIssue = const DiagnosedIssue();
 
   List<QuestionModelV2> questions;
   Map<int, UserAnswer> userAnswers = {
@@ -34,17 +34,17 @@ class QuestionControllerV2 {
     // lightDark
     5: const UserAnswer(selectedOptionIndex: [2]),
     // '黏稠', '有血塊'
-    6: const UserAnswer(selectedOptionIndex: [2, 3]),
+    6: const UserAnswer(selectedOptionIndex: [1, 2]),
     // 你有沒有經痛的問題？
     7: const UserAnswer(selectedOptionIndex: [0]),
-    // 經痛通常在什麼時候發生？(可選多項)
+    // 經痛通常在什麼時候發生？(可選多項) 經前
     8: const UserAnswer(selectedOptionIndex: [0]),
-    // 怎樣的痛法？
+    // 怎樣的痛法？nothing answered
     9: const UserAnswer(selectedOptionIndex: []),
-    // // 經痛會加重或改善？
-    // 10: const UserAnswer(selectedOptionIndex: []),
-    // // 經期間不適
-    // 11: const UserAnswer(selectedOptionIndex: []),
+    // 經痛會加重或改善？ 用溫暖的東西敷肚會改善 (optional)
+    10: const UserAnswer(selectedOptionIndex: [0]),
+    // 經期間不適
+    11: const UserAnswer(selectedOptionIndex: []),
   };
 
   SharedPreferences get prefs => ref.read(sharedPreferencesProvider);
@@ -55,6 +55,8 @@ class QuestionControllerV2 {
     final step2HaveSigns = _diagnoseForStep2HaveSigns();
     final canTell = _diagnoseForStep3CanTell();
     final painImprovement = _diagnoseForPainImprovement();
+    saveAndGetNextQuestion(userAnswers.keys.last, {});
+    _diagnoseFinalResult();
     log.info(
       'Diagnosed: ${diagnosedIssue.toJson()}',
     );
@@ -81,6 +83,10 @@ class QuestionControllerV2 {
       jsonEncode(
         userAnswers.map((key, value) => MapEntry(key.toString(), value)),
       ),
+    );
+    prefs.setString(
+      diagnosedIssueSaveKey,
+      jsonEncode(diagnosedIssue),
     );
     log.info('Current index: $currentIndex, User answers: $latestAnswers');
     if (currentIndex == questions.length - 1) {
@@ -132,9 +138,35 @@ class QuestionControllerV2 {
     return currentIndex + 1;
   }
 
+  void _diagnoseForPainImprovement() {
+    final painImprovement = userAnswers[10]?.selectedOptionIndex;
+    if (painImprovement == null || painImprovement.isEmpty) {
+      return;
+    }
+    final selectedOptions =
+        painImprovement.map((e) => questions[10].options[e]).toList();
+    final signs = painImprovementData
+        .mapIndexed(
+          (index, map) {
+            final hasSign = selectedOptions
+                .where(
+                  (option) => map[option] != null && map[option]!.isNotEmpty,
+                )
+                .isNotEmpty;
+            return hasSign ? index : null;
+          },
+        )
+        .whereNotNull()
+        .map((e) => DiagnosedBodyType.values[e])
+        .toList();
+    diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: signs);
+    log.info('Diagnosing for pain improvement...$signs');
+  }
+
   bool _diagnoseForStep2HaveSigns() {
     final periodAmount = userAnswers[4]!.selectedOptionIndex.first;
     final colorAnswerIndex = userAnswers[5]!.selectedOptionIndex.first;
+    final textureAnswerIndexes = userAnswers[6]?.selectedOptionIndex;
     PeriodAmountIssue? periodAmountIssue;
     periodAmountIssue = periodAmount == 0
         ? PeriodAmountIssue.tooLittle
@@ -145,6 +177,8 @@ class QuestionControllerV2 {
     diagnosedIssue = diagnosedIssue.copyWith(
       periodAmount: periodAmountIssue,
       periodColor: color,
+      periodTexture:
+          textureAnswerIndexes?.map((e) => PeriodTexture.values[e]).toList(),
     );
     log.info('Diagnosing for step 2...$periodAmountIssue, $color');
     if (color == PeriodColor.normal || periodAmountIssue == null) {
@@ -203,6 +237,20 @@ class QuestionControllerV2 {
     return isNormal;
   }
 
+  void _diagnoseFinalResult() {
+    // a
+    if (diagnosedIssue.periodAmount == PeriodAmountIssue.tooLittle &&
+        diagnosedIssue.periodColor == PeriodColor.lightRed &&
+        (diagnosedIssue.periodTexture?.contains(PeriodTexture.sticky) ??
+            false)) {
+      diagnosedIssue = diagnosedIssue.copyWith(
+        period: PeriodIssue.early,
+        periodLength: PeriodLengthIssue.tooShort,
+      );
+    }
+    diagnosedIssue;
+  }
+
   void _processLastAnsFilterOptions(UserAnswer userAnswer, int nextIndex) {
     final userAnswerIndex = userAnswer.selectedOptionIndex;
     final nextQuestion = questions[nextIndex];
@@ -218,30 +266,5 @@ class QuestionControllerV2 {
     log.info(
       'Processed last answer for filtering options: ${questions[nextIndex].options}',
     );
-  }
-
-  void _diagnoseForPainImprovement() {
-    final painImprovement = userAnswers[10]?.selectedOptionIndex;
-    if (painImprovement == null || painImprovement.isEmpty) {
-      return;
-    }
-    final selectedOptions =
-        painImprovement.map((e) => questions[10].options[e]).toList();
-    final signs = painImprovementData
-        .mapIndexed(
-          (index, map) {
-            final hasSign = selectedOptions
-                .where(
-                  (option) => map[option] != null && map[option]!.isNotEmpty,
-                )
-                .isNotEmpty;
-            return hasSign ? index : null;
-          },
-        )
-        .whereNotNull()
-        .map((e) => DiagnosedBodyType.values[e])
-        .toList();
-    diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: signs);
-    log.info('Diagnosing for pain improvement...$signs');
   }
 }

@@ -78,7 +78,7 @@ const databaseV2Json = [
   {
     "question": "月經一般的顏色",
     "options":
-        "淡紅(#FAE2E3),淡黯(#E2DADB),鮮紅(#F80322),深紅(#9A1D2D),深紫(#7C0313),紫紅(#E61C58),正常(#B2404F)",
+        "淡紅(#FAE2E3),淡黯(#E2DADB),鮮紅(#F80322),深紅(#9A1D2D),深紫(#7C0313),紫紅(#B2404F),正常(#B2404F)",
     "optionSeparator": "",
     "optionAdditionalStep": "colorParser",
     "isMultipleChoice": "",
@@ -124,7 +124,7 @@ const databaseV2Json = [
   {
     "question": "怎樣的痛法？",
     "options":
-        "月經來得不暢、絞痛、冷痛、灼痛、有固定痛點，如針刺狀、脹痛連及腹側、腹部有包塊，而此包塊推之可移，按之可散,月經來得不暢、絞痛、長期隱隱痛、冷痛、灼痛、有固定痛點，如針刺狀、脹痛連及腹側、有下墜感、腹部有包塊，而此包塊推之可移，按之可散,長期隱隱痛、有下墜感",
+        "月經來得不暢、絞痛、冷痛、灼痛、有固定痛點，如針刺狀、脹痛連及腹側、腹部有包塊，而此包塊推之可移，按之可散、痛連腰骶,月經來得不暢、絞痛、長期隱隱痛、冷痛、灼痛、有固定痛點，如針刺狀、脹痛連及腹側、有下墜感、腹部有包塊，而此包塊推之可移，按之可散、痛連腰骶,長期隱隱痛、有下墜感、痛連腰骶",
     "optionSeparator": "、",
     "optionAdditionalStep": "filteringByLastAnsIndex",
     "isMultipleChoice": "",

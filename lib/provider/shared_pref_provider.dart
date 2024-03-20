@@ -9,6 +9,7 @@ final sharedPreferencesProvider =
   throw UnimplementedError();
 });
 const userAnswerSaveKey = 'questionnaire_v2_user_answers';
+const diagnosedIssueSaveKey = 'questionnaire_v2_diagnosed_issue';
 final userAnswersProvider = StateProvider<Map<int, UserAnswer>>(
   (ref) {
     final answerString =
@@ -16,8 +17,21 @@ final userAnswersProvider = StateProvider<Map<int, UserAnswer>>(
     if (answerString == null) {
       return {};
     }
-    return (jsonDecode(answerString) as Map<String, UserAnswer>)
-        .map((key, value) => MapEntry(int.parse(key), value));
+    return (jsonDecode(answerString) as Map<String, dynamic>).map(
+      (key, value) => MapEntry(int.parse(key), UserAnswer.fromJson(value)),
+    );
+  },
+  dependencies: [sharedPreferencesProvider],
+);
+
+final diagnosedIssuesProvider = StateProvider<DiagnosedIssue>(
+  (ref) {
+    final answerString =
+        ref.read(sharedPreferencesProvider).getString(diagnosedIssueSaveKey);
+    if (answerString == null) {
+      return const DiagnosedIssue();
+    }
+    return DiagnosedIssue.fromJson(jsonDecode(answerString));
   },
   dependencies: [sharedPreferencesProvider],
 );

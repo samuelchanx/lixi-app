@@ -105,6 +105,9 @@ _$DiagnosedIssueImpl _$$DiagnosedIssueImplFromJson(Map<String, dynamic> json) =>
           $enumDecodeNullable(_$PeriodAmountIssueEnumMap, json['periodAmount']),
       periodColor:
           $enumDecodeNullable(_$PeriodColorEnumMap, json['periodColor']),
+      periodTexture: (json['periodTexture'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$PeriodTextureEnumMap, e))
+          .toList(),
       bodyTypes: (json['bodyTypes'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$DiagnosedBodyTypeEnumMap, e))
           .toList(),
@@ -126,6 +129,8 @@ Map<String, dynamic> _$$DiagnosedIssueImplToJson(
   writeNotNull(
       'periodAmount', _$PeriodAmountIssueEnumMap[instance.periodAmount]);
   writeNotNull('periodColor', _$PeriodColorEnumMap[instance.periodColor]);
+  writeNotNull('periodTexture',
+      instance.periodTexture?.map((e) => _$PeriodTextureEnumMap[e]!).toList());
   writeNotNull('bodyTypes',
       instance.bodyTypes?.map((e) => _$DiagnosedBodyTypeEnumMap[e]!).toList());
   return val;
@@ -157,6 +162,12 @@ const _$PeriodColorEnumMap = {
   PeriodColor.purpleRed: 'purpleRed',
   PeriodColor.deepPurple: 'deepPurple',
   PeriodColor.normal: 'normal',
+};
+
+const _$PeriodTextureEnumMap = {
+  PeriodTexture.dilute: 'dilute',
+  PeriodTexture.sticky: 'sticky',
+  PeriodTexture.withBloodClots: 'withBloodClots',
 };
 
 const _$DiagnosedBodyTypeEnumMap = {

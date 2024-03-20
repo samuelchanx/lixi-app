@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/assets/assets.gen.dart';
 import 'package:lixi/database.dart';
@@ -27,13 +28,12 @@ class ResultPage extends HookConsumerWidget {
       },
       const [],
     );
+    final issues = controller.diagnosedIssue.toJson();
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-      ),
       body: ListView(
         children: [
-          Assets.images.appIconCopy.image(
+          const Gap(24),
+          Assets.images.appIcon.image(
             height: 50,
           ),
           const SizedBox(height: 20),
@@ -44,14 +44,21 @@ class ResultPage extends HookConsumerWidget {
           ),
           SlideInLeft(
             duration: const Duration(seconds: 1),
-            child: const Center(
+            child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 20),
-                  Text('You have a cold!'),
-                  SizedBox(height: 20),
-                  Text('You should take some rest and drink lots of water.'),
+                  const SizedBox(height: 20),
+                  ...issues.entries.map(
+                    (e) => ListTile(
+                      title: Text(e.key),
+                      trailing: Text(e.value.toString()),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'You should take some rest and drink lots of water.',
+                  ),
                 ],
               ),
             ),

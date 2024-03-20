@@ -81,6 +81,7 @@ class DiagnosedIssue with _$DiagnosedIssue {
     PeriodLengthIssue? periodLength,
     PeriodAmountIssue? periodAmount,
     PeriodColor? periodColor,
+    List<PeriodTexture>? periodTexture,
     // Step 3
     List<DiagnosedBodyType>? bodyTypes,
   }) = _DiagnosedIssue;

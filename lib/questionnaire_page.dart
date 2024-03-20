@@ -32,7 +32,6 @@ class QuestionnairePage extends HookConsumerWidget {
 }
 
 class Questionnaire extends HookConsumerWidget {
-  final List<QuestionModelV2> questions;
   // final List<CureMethod> cureMethods;
 
   const Questionnaire({
@@ -40,6 +39,15 @@ class Questionnaire extends HookConsumerWidget {
     required this.questions,
     // required this.cureMethods,
   });
+
+  final List<QuestionModelV2> questions;
+
+  void goToResult(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/result',
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,16 +64,22 @@ class Questionnaire extends HookConsumerWidget {
       () => QuestionControllerV2(questions: questions, ref: ref),
     );
 
+    // useEffect(() {
+    //   controller.diagnose();
+    //   final nextPage = controller.getNextUnansweredForDebugging();
+    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //     if (nextPage != -1) {
+    //       currentQuestionIndex.value = nextPage;
+    //     } else {
+    //       goToResult(context);
+    //     }
+    //   });
+    //   return null;
+    // });
+
     final currentQuesIndex = currentQuestionIndex.value;
     final question = questions[currentQuesIndex];
     final options = question.options;
-    void goToResult() {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        '/result',
-        arguments: answers.value,
-        (route) => false,
-      );
-    }
 
     bool isValidated() {
       switch (question.expectedAnsFormat) {
@@ -102,7 +116,7 @@ class Questionnaire extends HookConsumerWidget {
       );
       if (forceNextQuestionIndex != null) {
         if (forceNextQuestionIndex == -1) {
-          goToResult();
+          goToResult(context);
         } else {
           currentQuestionIndex.value = forceNextQuestionIndex;
           resetPage();
@@ -114,7 +128,7 @@ class Questionnaire extends HookConsumerWidget {
         answers.value,
       );
       if (nextQuestionIndex == -1) {
-        goToResult();
+        goToResult(context);
         return;
       }
       currentQuestionIndex.value = nextQuestionIndex;
@@ -143,7 +157,7 @@ class Questionnaire extends HookConsumerWidget {
             ),
             const Gap(8),
             const Text(
-              'caring your menstruation health',
+              'your daily dose of magic',
               style: TextStyle(
                 fontSize: 24.0,
                 color: Colors.black87,
@@ -356,7 +370,7 @@ class Questionnaire extends HookConsumerWidget {
                 child: const Text('Go to next'),
               ),
               ElevatedButton(
-                onPressed: goToResult,
+                onPressed: () => goToResult(context),
                 child: const Text('Skip to result'),
               ),
               ElevatedButton(

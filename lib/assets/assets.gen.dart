@@ -12,21 +12,16 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/Animation - 1709482057336.gif
-  AssetGenImage get animation1709482057336 =>
-      const AssetGenImage('assets/images/Animation - 1709482057336.gif');
-
-  /// File path: assets/images/app_icon copy.png
-  AssetGenImage get appIconCopy =>
-      const AssetGenImage('assets/images/app_icon copy.png');
+  /// File path: assets/images/Animation - 1709482057336.json
+  String get animation1709482057336 =>
+      'assets/images/Animation - 1709482057336.json';
 
   /// File path: assets/images/app_icon.png
   AssetGenImage get appIcon =>
       const AssetGenImage('assets/images/app_icon.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [animation1709482057336, appIconCopy, appIcon];
+  List<dynamic> get values => [animation1709482057336, appIcon];
 }
 
 class $AssetsTextGen {
