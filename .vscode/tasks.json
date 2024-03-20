@@ -1,0 +1,15 @@
+{
+    // Define your tasks here
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build and deploy to netlify",
+            "type": "shell",
+            "command": "flutter build web && netlify deploy -s lixi-test --dir=build/web --prod",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

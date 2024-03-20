@@ -1,0 +1,44 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "name": "src.debug.uat",
+          "request": "launch",
+          "type": "dart",
+          "flutterMode": "debug",
+          "args": [
+              "--web-port=61995",
+              "--web-renderer=canvaskit",
+              "-d",
+              "chrome"
+          ],
+      },
+      {
+          "name": "src.profile",
+          "request": "launch",
+          "type": "dart",
+          "flutterMode": "profile",
+          "args": [
+              "--web-port=61995",
+              "--dart-define-from-file=.env-production.json",
+              "-d",
+              "chrome"
+          ],
+      },
+      {
+          "name": "src.production",
+          "request": "launch",
+          "type": "dart",
+          "flutterMode": "debug",
+          "args": [
+              "--web-port=61995",
+              "--dart-define-from-file=.env-production.json",
+              "-d",
+              "chrome"
+          ],
+      }
+  ]
+}
