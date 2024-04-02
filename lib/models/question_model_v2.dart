@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:lixi/utils/dart_helper.dart';
 
 part 'question_model_v2.freezed.dart';
 part 'question_model_v2.g.dart';
@@ -12,6 +13,16 @@ List<QuestionModelV2> parseDatabaseV2(List<Map<String, dynamic>> data) {
         rawOptions: e['options']?.split(',') ?? [],
         group: e['group'] ?? -1,
         title: e['title'],
+        showIf: (e['showIf'] as Map<String, dynamic>?)?.let((e) {
+          return e.map(
+            (key, value) {
+              return MapEntry(
+                key,
+                QuestionShowIfNotCondition.fromJson(value),
+              );
+            },
+          );
+        }),
         optionSeparator: e['optionSeparator'],
         optionAdditionalStep: e['optionAdditionalStep'] == 'colorParser'
             ? OptionAdditionalStep.colorParser
@@ -43,6 +54,9 @@ class QuestionModelV2 with _$QuestionModelV2 {
     required String? optionSeparator,
     required OptionAdditionalStep? optionAdditionalStep,
     required bool isMultipleChoice,
+
+    /// Question index in string to condition
+    Map<String, QuestionShowIfNotCondition>? showIf,
     required AnswerFormat expectedAnsFormat,
     required bool isOptional,
     required bool canSkipChoice,
@@ -229,4 +243,19 @@ enum PeriodTexture {
   String get title {
     return ['稀', '黏稠', '有血塊'][index];
   }
+}
+
+@freezed
+class QuestionShowIfNotCondition with _$QuestionShowIfNotCondition {
+  const QuestionShowIfNotCondition._();
+  const factory QuestionShowIfNotCondition(
+    int option,
+  ) = _QuestionShowIfNotCondition;
+
+  bool shouldNotShow(UserAnswer? answer) {
+    return answer?.selectedOptionIndex.contains(option) ?? false;
+  }
+
+  factory QuestionShowIfNotCondition.fromJson(Map<String, dynamic> json) =>
+      _$QuestionShowIfNotConditionFromJson(json);
 }

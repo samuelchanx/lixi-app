@@ -64,6 +64,11 @@ const databaseV2Json = [
     "optionAdditionalStep": "",
     "isMultipleChoice": "",
     "group": 0,
+    "showIf": {
+      '1': {
+        'option': 1,
+      },
+    },
     "expectedAnsFormat": "numberText",
     "isOptional": "",
     "logicReference":

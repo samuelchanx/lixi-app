@@ -24,6 +24,10 @@ _$QuestionModelV2Impl _$$QuestionModelV2ImplFromJson(
       optionAdditionalStep: $enumDecodeNullable(
           _$OptionAdditionalStepEnumMap, json['optionAdditionalStep']),
       isMultipleChoice: json['isMultipleChoice'] as bool,
+      showIf: (json['showIf'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, QuestionShowIfNotCondition.fromJson(e as Map<String, dynamic>)),
+      ),
       expectedAnsFormat:
           $enumDecode(_$AnswerFormatEnumMap, json['expectedAnsFormat']),
       isOptional: json['isOptional'] as bool,
@@ -54,6 +58,7 @@ Map<String, dynamic> _$$QuestionModelV2ImplToJson(
   writeNotNull('optionAdditionalStep',
       _$OptionAdditionalStepEnumMap[instance.optionAdditionalStep]);
   val['isMultipleChoice'] = instance.isMultipleChoice;
+  writeNotNull('showIf', instance.showIf);
   val['expectedAnsFormat'] = _$AnswerFormatEnumMap[instance.expectedAnsFormat]!;
   val['isOptional'] = instance.isOptional;
   val['canSkipChoice'] = instance.canSkipChoice;
@@ -199,3 +204,15 @@ const _$DiagnosedBodyTypeEnumMap = {
   DiagnosedBodyType.bloodyVirtual: 'bloodyVirtual',
   DiagnosedBodyType.bloodyReal: 'bloodyReal',
 };
+
+_$QuestionShowIfNotConditionImpl _$$QuestionShowIfNotConditionImplFromJson(
+        Map<String, dynamic> json) =>
+    _$QuestionShowIfNotConditionImpl(
+      json['option'] as int,
+    );
+
+Map<String, dynamic> _$$QuestionShowIfNotConditionImplToJson(
+        _$QuestionShowIfNotConditionImpl instance) =>
+    <String, dynamic>{
+      'option': instance.option,
+    };

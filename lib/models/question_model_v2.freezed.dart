@@ -44,6 +44,14 @@ mixin _$QuestionModelV2 {
       throw _privateConstructorUsedError;
   bool get isMultipleChoice => throw _privateConstructorUsedError;
   set isMultipleChoice(bool value) => throw _privateConstructorUsedError;
+
+  /// Question index in string to condition
+  Map<String, QuestionShowIfNotCondition>? get showIf =>
+      throw _privateConstructorUsedError;
+
+  /// Question index in string to condition
+  set showIf(Map<String, QuestionShowIfNotCondition>? value) =>
+      throw _privateConstructorUsedError;
   AnswerFormat get expectedAnsFormat => throw _privateConstructorUsedError;
   set expectedAnsFormat(AnswerFormat value) =>
       throw _privateConstructorUsedError;
@@ -79,6 +87,7 @@ abstract class $QuestionModelV2CopyWith<$Res> {
       String? optionSeparator,
       OptionAdditionalStep? optionAdditionalStep,
       bool isMultipleChoice,
+      Map<String, QuestionShowIfNotCondition>? showIf,
       AnswerFormat expectedAnsFormat,
       bool isOptional,
       bool canSkipChoice,
@@ -109,6 +118,7 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
     Object? optionSeparator = freezed,
     Object? optionAdditionalStep = freezed,
     Object? isMultipleChoice = null,
+    Object? showIf = freezed,
     Object? expectedAnsFormat = null,
     Object? isOptional = null,
     Object? canSkipChoice = null,
@@ -156,6 +166,10 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
           ? _value.isMultipleChoice
           : isMultipleChoice // ignore: cast_nullable_to_non_nullable
               as bool,
+      showIf: freezed == showIf
+          ? _value.showIf
+          : showIf // ignore: cast_nullable_to_non_nullable
+              as Map<String, QuestionShowIfNotCondition>?,
       expectedAnsFormat: null == expectedAnsFormat
           ? _value.expectedAnsFormat
           : expectedAnsFormat // ignore: cast_nullable_to_non_nullable
@@ -199,6 +213,7 @@ abstract class _$$QuestionModelV2ImplCopyWith<$Res>
       String? optionSeparator,
       OptionAdditionalStep? optionAdditionalStep,
       bool isMultipleChoice,
+      Map<String, QuestionShowIfNotCondition>? showIf,
       AnswerFormat expectedAnsFormat,
       bool isOptional,
       bool canSkipChoice,
@@ -227,6 +242,7 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
     Object? optionSeparator = freezed,
     Object? optionAdditionalStep = freezed,
     Object? isMultipleChoice = null,
+    Object? showIf = freezed,
     Object? expectedAnsFormat = null,
     Object? isOptional = null,
     Object? canSkipChoice = null,
@@ -274,6 +290,10 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
           ? _value.isMultipleChoice
           : isMultipleChoice // ignore: cast_nullable_to_non_nullable
               as bool,
+      showIf: freezed == showIf
+          ? _value.showIf
+          : showIf // ignore: cast_nullable_to_non_nullable
+              as Map<String, QuestionShowIfNotCondition>?,
       expectedAnsFormat: null == expectedAnsFormat
           ? _value.expectedAnsFormat
           : expectedAnsFormat // ignore: cast_nullable_to_non_nullable
@@ -312,6 +332,7 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
       required this.optionSeparator,
       required this.optionAdditionalStep,
       required this.isMultipleChoice,
+      this.showIf,
       required this.expectedAnsFormat,
       required this.isOptional,
       required this.canSkipChoice,
@@ -342,6 +363,10 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   OptionAdditionalStep? optionAdditionalStep;
   @override
   bool isMultipleChoice;
+
+  /// Question index in string to condition
+  @override
+  Map<String, QuestionShowIfNotCondition>? showIf;
   @override
   AnswerFormat expectedAnsFormat;
   @override
@@ -355,7 +380,7 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
 
   @override
   String toString() {
-    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, transformedQuestionText: $transformedQuestionText, title: $title, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
+    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, transformedQuestionText: $transformedQuestionText, title: $title, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, showIf: $showIf, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
   }
 
   @JsonKey(ignore: true)
@@ -385,6 +410,7 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
       required String? optionSeparator,
       required OptionAdditionalStep? optionAdditionalStep,
       required bool isMultipleChoice,
+      Map<String, QuestionShowIfNotCondition>? showIf,
       required AnswerFormat expectedAnsFormat,
       required bool isOptional,
       required bool canSkipChoice,
@@ -425,6 +451,13 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   @override
   bool get isMultipleChoice;
   set isMultipleChoice(bool value);
+  @override
+
+  /// Question index in string to condition
+  Map<String, QuestionShowIfNotCondition>? get showIf;
+
+  /// Question index in string to condition
+  set showIf(Map<String, QuestionShowIfNotCondition>? value);
   @override
   AnswerFormat get expectedAnsFormat;
   set expectedAnsFormat(AnswerFormat value);
@@ -949,4 +982,150 @@ abstract class _DiagnosedIssue extends DiagnosedIssue {
   @JsonKey(ignore: true)
   _$$DiagnosedIssueImplCopyWith<_$DiagnosedIssueImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+QuestionShowIfNotCondition _$QuestionShowIfNotConditionFromJson(
+    Map<String, dynamic> json) {
+  return _QuestionShowIfNotCondition.fromJson(json);
+}
+
+/// @nodoc
+mixin _$QuestionShowIfNotCondition {
+  int get option => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $QuestionShowIfNotConditionCopyWith<QuestionShowIfNotCondition>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $QuestionShowIfNotConditionCopyWith<$Res> {
+  factory $QuestionShowIfNotConditionCopyWith(QuestionShowIfNotCondition value,
+          $Res Function(QuestionShowIfNotCondition) then) =
+      _$QuestionShowIfNotConditionCopyWithImpl<$Res,
+          QuestionShowIfNotCondition>;
+  @useResult
+  $Res call({int option});
+}
+
+/// @nodoc
+class _$QuestionShowIfNotConditionCopyWithImpl<$Res,
+        $Val extends QuestionShowIfNotCondition>
+    implements $QuestionShowIfNotConditionCopyWith<$Res> {
+  _$QuestionShowIfNotConditionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? option = null,
+  }) {
+    return _then(_value.copyWith(
+      option: null == option
+          ? _value.option
+          : option // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$QuestionShowIfNotConditionImplCopyWith<$Res>
+    implements $QuestionShowIfNotConditionCopyWith<$Res> {
+  factory _$$QuestionShowIfNotConditionImplCopyWith(
+          _$QuestionShowIfNotConditionImpl value,
+          $Res Function(_$QuestionShowIfNotConditionImpl) then) =
+      __$$QuestionShowIfNotConditionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int option});
+}
+
+/// @nodoc
+class __$$QuestionShowIfNotConditionImplCopyWithImpl<$Res>
+    extends _$QuestionShowIfNotConditionCopyWithImpl<$Res,
+        _$QuestionShowIfNotConditionImpl>
+    implements _$$QuestionShowIfNotConditionImplCopyWith<$Res> {
+  __$$QuestionShowIfNotConditionImplCopyWithImpl(
+      _$QuestionShowIfNotConditionImpl _value,
+      $Res Function(_$QuestionShowIfNotConditionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? option = null,
+  }) {
+    return _then(_$QuestionShowIfNotConditionImpl(
+      null == option
+          ? _value.option
+          : option // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$QuestionShowIfNotConditionImpl extends _QuestionShowIfNotCondition {
+  const _$QuestionShowIfNotConditionImpl(this.option) : super._();
+
+  factory _$QuestionShowIfNotConditionImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$QuestionShowIfNotConditionImplFromJson(json);
+
+  @override
+  final int option;
+
+  @override
+  String toString() {
+    return 'QuestionShowIfNotCondition(option: $option)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$QuestionShowIfNotConditionImpl &&
+            (identical(other.option, option) || other.option == option));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, option);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$QuestionShowIfNotConditionImplCopyWith<_$QuestionShowIfNotConditionImpl>
+      get copyWith => __$$QuestionShowIfNotConditionImplCopyWithImpl<
+          _$QuestionShowIfNotConditionImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$QuestionShowIfNotConditionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _QuestionShowIfNotCondition extends QuestionShowIfNotCondition {
+  const factory _QuestionShowIfNotCondition(final int option) =
+      _$QuestionShowIfNotConditionImpl;
+  const _QuestionShowIfNotCondition._() : super._();
+
+  factory _QuestionShowIfNotCondition.fromJson(Map<String, dynamic> json) =
+      _$QuestionShowIfNotConditionImpl.fromJson;
+
+  @override
+  int get option;
+  @override
+  @JsonKey(ignore: true)
+  _$$QuestionShowIfNotConditionImplCopyWith<_$QuestionShowIfNotConditionImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

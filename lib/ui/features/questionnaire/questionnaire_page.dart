@@ -173,55 +173,28 @@ class Questionnaire extends HookConsumerWidget {
                 ...currentQuestions.map(
                   (question) {
                     final questionIndexInList = questions.indexOf(question);
-                    return [
-                      if (question.title != null)
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            question.title!,
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w600,
-                              color: normalColor,
-                            ),
-                          ),
-                        ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          question.questionText,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: normalColor,
-                          ),
-                        ),
-                      ),
-                      const Gap(8),
-                      OneQuestionWidgets(
-                        question: question,
-                        dateRange: dateRange,
-                        textController: textController,
-                        questionIndex: questionIndexInList,
-                        selectedOptionIndexNotifier:
-                            selectedOptionIndexNotifier,
-                        onChanged: () {
-                          answers.value[questionIndexInList] = UserAnswer(
-                            selectedOptionIndex: selectedOptionIndexNotifier
-                                    .value[questionIndexInList] ??
-                                [],
-                            dateRange: dateRange.value.whereNotNull().toList(),
-                            text: textController.text,
-                          );
-                          log.info(
-                            'onChanged called: $questionIndexInList ${answers.value[questionIndexInList]?.toJson()}',
-                          );
-                        },
-                      ),
-                      const Gap(24),
-                    ];
+                    return OneQuestionWidgets(
+                      question: question,
+                      dateRange: dateRange,
+                      currentAnswers: answers,
+                      textController: textController,
+                      questionIndex: questionIndexInList,
+                      selectedOptionIndexNotifier: selectedOptionIndexNotifier,
+                      onChanged: () {
+                        answers.value[questionIndexInList] = UserAnswer(
+                          selectedOptionIndex: selectedOptionIndexNotifier
+                                  .value[questionIndexInList] ??
+                              [],
+                          dateRange: dateRange.value.whereNotNull().toList(),
+                          text: textController.text,
+                        );
+                        log.info(
+                          'onChanged called: $questionIndexInList ${answers.value[questionIndexInList]?.toJson()}',
+                        );
+                      },
+                    );
                   },
-                ).flatten(),
+                ),
               ],
             ),
             const Gap(24),
