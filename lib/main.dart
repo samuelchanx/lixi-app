@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/provider/shared_pref_provider.dart';
@@ -39,6 +40,10 @@ class MyHealthcareApp extends HookWidget {
     return MaterialApp(
       title: 'Healthcare Questionnaire',
       theme: appTheme,
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: const [
+        Locale('zh', 'HK'),
+      ],
       routes: {
         '/': (context) => const LandingPage(),
         '/questionnaire': (context) => const QuestionnairePage(),

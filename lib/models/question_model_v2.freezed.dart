@@ -454,6 +454,7 @@ UserAnswer _$UserAnswerFromJson(Map<String, dynamic> json) {
 mixin _$UserAnswer {
   List<int> get selectedOptionIndex => throw _privateConstructorUsedError;
   DateTime? get date => throw _privateConstructorUsedError;
+  List<DateTime>? get dateRange => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -468,7 +469,11 @@ abstract class $UserAnswerCopyWith<$Res> {
           UserAnswer value, $Res Function(UserAnswer) then) =
       _$UserAnswerCopyWithImpl<$Res, UserAnswer>;
   @useResult
-  $Res call({List<int> selectedOptionIndex, DateTime? date, String? text});
+  $Res call(
+      {List<int> selectedOptionIndex,
+      DateTime? date,
+      List<DateTime>? dateRange,
+      String? text});
 }
 
 /// @nodoc
@@ -486,6 +491,7 @@ class _$UserAnswerCopyWithImpl<$Res, $Val extends UserAnswer>
   $Res call({
     Object? selectedOptionIndex = null,
     Object? date = freezed,
+    Object? dateRange = freezed,
     Object? text = freezed,
   }) {
     return _then(_value.copyWith(
@@ -497,6 +503,10 @@ class _$UserAnswerCopyWithImpl<$Res, $Val extends UserAnswer>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      dateRange: freezed == dateRange
+          ? _value.dateRange
+          : dateRange // ignore: cast_nullable_to_non_nullable
+              as List<DateTime>?,
       text: freezed == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -513,7 +523,11 @@ abstract class _$$UserAnswerImplCopyWith<$Res>
       __$$UserAnswerImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<int> selectedOptionIndex, DateTime? date, String? text});
+  $Res call(
+      {List<int> selectedOptionIndex,
+      DateTime? date,
+      List<DateTime>? dateRange,
+      String? text});
 }
 
 /// @nodoc
@@ -529,6 +543,7 @@ class __$$UserAnswerImplCopyWithImpl<$Res>
   $Res call({
     Object? selectedOptionIndex = null,
     Object? date = freezed,
+    Object? dateRange = freezed,
     Object? text = freezed,
   }) {
     return _then(_$UserAnswerImpl(
@@ -540,6 +555,10 @@ class __$$UserAnswerImplCopyWithImpl<$Res>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      dateRange: freezed == dateRange
+          ? _value._dateRange
+          : dateRange // ignore: cast_nullable_to_non_nullable
+              as List<DateTime>?,
       text: freezed == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -552,8 +571,12 @@ class __$$UserAnswerImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserAnswerImpl extends _UserAnswer {
   const _$UserAnswerImpl(
-      {final List<int> selectedOptionIndex = const [], this.date, this.text})
+      {final List<int> selectedOptionIndex = const [],
+      this.date,
+      final List<DateTime>? dateRange,
+      this.text})
       : _selectedOptionIndex = selectedOptionIndex,
+        _dateRange = dateRange,
         super._();
 
   factory _$UserAnswerImpl.fromJson(Map<String, dynamic> json) =>
@@ -571,12 +594,22 @@ class _$UserAnswerImpl extends _UserAnswer {
 
   @override
   final DateTime? date;
+  final List<DateTime>? _dateRange;
+  @override
+  List<DateTime>? get dateRange {
+    final value = _dateRange;
+    if (value == null) return null;
+    if (_dateRange is EqualUnmodifiableListView) return _dateRange;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final String? text;
 
   @override
   String toString() {
-    return 'UserAnswer(selectedOptionIndex: $selectedOptionIndex, date: $date, text: $text)';
+    return 'UserAnswer(selectedOptionIndex: $selectedOptionIndex, date: $date, dateRange: $dateRange, text: $text)';
   }
 
   @override
@@ -587,13 +620,19 @@ class _$UserAnswerImpl extends _UserAnswer {
             const DeepCollectionEquality()
                 .equals(other._selectedOptionIndex, _selectedOptionIndex) &&
             (identical(other.date, date) || other.date == date) &&
+            const DeepCollectionEquality()
+                .equals(other._dateRange, _dateRange) &&
             (identical(other.text, text) || other.text == text));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_selectedOptionIndex), date, text);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_selectedOptionIndex),
+      date,
+      const DeepCollectionEquality().hash(_dateRange),
+      text);
 
   @JsonKey(ignore: true)
   @override
@@ -613,6 +652,7 @@ abstract class _UserAnswer extends UserAnswer {
   const factory _UserAnswer(
       {final List<int> selectedOptionIndex,
       final DateTime? date,
+      final List<DateTime>? dateRange,
       final String? text}) = _$UserAnswerImpl;
   const _UserAnswer._() : super._();
 
@@ -623,6 +663,8 @@ abstract class _UserAnswer extends UserAnswer {
   List<int> get selectedOptionIndex;
   @override
   DateTime? get date;
+  @override
+  List<DateTime>? get dateRange;
   @override
   String? get text;
   @override

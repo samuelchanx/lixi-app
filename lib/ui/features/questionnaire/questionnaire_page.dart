@@ -7,13 +7,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/models/question_model_controller.dart';
 import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/provider/question_provider.dart';
+import 'package:lixi/ui/features/questionnaire/one_question_widgets.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/styles.dart';
-import 'package:lixi/ui/theme/theme_data.dart';
 import 'package:lixi/ui/widgets/lixi_logo.dart';
 import 'package:lixi/ui/widgets/lixi_slogan.dart';
-import 'package:lixi/utils/date_formatter.dart';
-import 'package:lixi/utils/iterable_utils.dart';
+import 'package:lixi/utils/logger.dart';
 
 class QuestionnairePage extends HookConsumerWidget {
   const QuestionnairePage({super.key});
@@ -54,17 +53,19 @@ class Questionnaire extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentPage = useState(0);
-    final currentQuestionIndex = useState(0);
+    final currentStep = useState(0);
     final isDebugMode = useState(kDebugMode);
 
     // question index: answer index (1 for yes, 0 for no for yes/no question options)
     final answers = useState<Map<int, UserAnswer>>({});
-    final selectedOptionIndexNotifier = useState<List<int>>([]);
+    final selectedOptionIndexNotifier = useState<Map<int, List<int>>>({});
 
-    final dateTextController = useTextEditingController();
+    final textController = useTextEditingController();
     final controller = useMemoized(
       () => QuestionControllerV2(questions: questions, ref: ref),
     );
+
+    final dateRange = useState<List<DateTime?>>([]);
 
     // useEffect(() {
     //   controller.diagnose();
@@ -79,65 +80,65 @@ class Questionnaire extends HookConsumerWidget {
     //   return null;
     // });
 
-    final currentQuesIndex = currentQuestionIndex.value;
-    final question = questions[currentQuesIndex];
-    final options = question.options;
+    final currentStepValue = currentStep.value;
+    final currentQuestions = questions
+        .where((element) => element.group == currentStepValue)
+        .toList();
+    // final question = currentQuestions.first;
 
     bool isValidated() {
-      switch (question.expectedAnsFormat) {
-        case AnswerFormat.bool:
-          return true;
-        case AnswerFormat.date:
-          return dateTextController.text.isNotEmpty;
-        case AnswerFormat.options:
-          return selectedOptionIndexNotifier.value.isNotEmpty ||
-              question.canSkipChoice;
-      }
+      return currentQuestions.every((question) {
+        final userAnswer = answers.value[questions.indexOf(question)];
+        switch (question.expectedAnsFormat) {
+          case AnswerFormat.bool:
+            return true;
+          case AnswerFormat.date:
+            return userAnswer?.dateRange?.length == 2;
+          case AnswerFormat.numberText:
+            return textController.text.isNotEmpty &&
+                int.tryParse(textController.text) != null;
+          case AnswerFormat.options:
+            return (userAnswer?.selectedOptionIndex.isNotEmpty ?? false) ||
+                question.canSkipChoice;
+        }
+      });
     }
 
     void resetPage() {
       currentPage.value++;
-      dateTextController.text = '';
-      selectedOptionIndexNotifier.value = [];
+      textController.text = '';
+      dateRange.value = [];
     }
 
-    void nextQuestion(List<int> answerIndex, [int? forceNextQuestionIndex]) {
+    void nextQuestion([int? forceNextQuestionIndex]) {
       if (!isValidated() && forceNextQuestionIndex == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Please answer the question'),
+            content: Text('請回答完所有問題再繼續'),
           ),
         );
         return;
       }
-      answers.value[currentQuestionIndex.value] = UserAnswer(
-        selectedOptionIndex: answerIndex,
-        date: dateTextController.text.isNotEmpty
-            ? dateTextController.text.toDateTime()
-            : null,
-      );
       if (forceNextQuestionIndex != null) {
         if (forceNextQuestionIndex == -1) {
           goToResult(context);
         } else {
-          currentQuestionIndex.value = forceNextQuestionIndex;
+          currentStep.value = forceNextQuestionIndex;
           resetPage();
         }
         return;
       }
       final nextQuestionIndex = controller.saveAndGetNextQuestion(
-        currentQuestionIndex.value,
+        currentStep.value,
         answers.value,
       );
       if (nextQuestionIndex == -1) {
         goToResult(context);
         return;
       }
-      currentQuestionIndex.value = nextQuestionIndex;
+      currentStep.value = nextQuestionIndex;
       resetPage();
     }
-
-    final questionNumberInList = questions.indexOf(question);
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -158,7 +159,7 @@ class Questionnaire extends HookConsumerWidget {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                'Q${currentPage.value + 1}',
+                'Step ${currentPage.value + 1}',
                 style: TextStyle(
                   fontSize: 36.0,
                   fontWeight: FontWeight.bold,
@@ -167,143 +168,68 @@ class Questionnaire extends HookConsumerWidget {
               ),
             ),
             const Gap(16),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                question.questionText,
-                style: TextStyle(
-                  fontSize: 28.0,
-                  fontWeight: FontWeight.w600,
-                  color: highlightColor,
-                ),
-              ),
-            ),
-            const Gap(24),
-            if (question.expectedAnsFormat == AnswerFormat.date) ...[
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: '選擇日期',
-                  labelStyle: TextStyle(
-                    color: highlightColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  suffixIcon: Icon(
-                    Icons.calendar_today,
-                    color: highlightColor,
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: highlightColor,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                controller: dateTextController,
-                readOnly: true,
-                onTap: () async {
-                  final now = DateTime.now();
-                  final results = await showDatePicker(
-                    context: context,
-                    initialDate: now,
-                    firstDate: now.subtract(const Duration(days: 365 * 20)),
-                    lastDate: DateTime.now(),
-                  );
-                  if (results == null) return;
-                  dateTextController.text = results.yearMonthDay;
-                },
-              ),
-              const Gap(24),
-            ],
-            if (question.expectedAnsFormat == AnswerFormat.options)
-              HookBuilder(
-                builder: (context) {
-                  final selectedIndex =
-                      useValueListenable(selectedOptionIndexNotifier);
-                  return ListView(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: options.mapIndexed(
-                      (index, option) {
-                        final selected = selectedIndex.contains(index);
-                        Color? color;
-                        String? transformedText;
-                        if (question.optionAdditionalStep ==
-                            OptionAdditionalStep.colorParser) {
-                          color = colorfromDex(
-                            'FF${option.split('(').last.split(')').first.replaceAll('#', '')}',
-                          );
-                          transformedText = option.split('(').first;
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (question.isMultipleChoice) {
-                                selectedOptionIndexNotifier.value =
-                                    selectedOptionIndexNotifier.value
-                                        .toggle(index);
-                              } else {
-                                selectedOptionIndexNotifier.value = [
-                                  index,
-                                ];
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: selected
-                                  ? highlightColor
-                                  : Colors.transparent,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 8,
-                              ),
-                              shadowColor: Colors.transparent,
-                              side: BorderSide(
-                                color: highlightColor,
-                                width: 1,
-                              ),
-                              shape: const StadiumBorder(),
-                              surfaceTintColor: Colors.white,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    transformedText ?? option,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: selected
-                                          ? Colors.white
-                                          : highlightColor,
-                                    ),
-                                  ),
-                                  if (color != null) ...[
-                                    const Gap(16),
-                                    Container(
-                                      color: color,
-                                      width: 24,
-                                      height: 12,
-                                    ),
-                                  ],
-                                ],
-                              ),
+            Column(
+              children: [
+                ...currentQuestions.map(
+                  (question) {
+                    final questionIndexInList = questions.indexOf(question);
+                    return [
+                      if (question.title != null)
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            question.title!,
+                            style: TextStyle(
+                              fontSize: 28.0,
+                              fontWeight: FontWeight.w600,
+                              color: normalColor,
                             ),
                           ),
-                        );
-                      },
-                    ).toList(),
-                  );
-                },
-              ),
+                        ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          question.questionText,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: normalColor,
+                          ),
+                        ),
+                      ),
+                      const Gap(8),
+                      OneQuestionWidgets(
+                        question: question,
+                        dateRange: dateRange,
+                        textController: textController,
+                        questionIndex: questionIndexInList,
+                        selectedOptionIndexNotifier:
+                            selectedOptionIndexNotifier,
+                        onChanged: () {
+                          answers.value[questionIndexInList] = UserAnswer(
+                            selectedOptionIndex: selectedOptionIndexNotifier
+                                    .value[questionIndexInList] ??
+                                [],
+                            dateRange: dateRange.value.whereNotNull().toList(),
+                            text: textController.text,
+                          );
+                          log.info(
+                            'onChanged called: $questionIndexInList ${answers.value[questionIndexInList]?.toJson()}',
+                          );
+                        },
+                      ),
+                      const Gap(24),
+                    ];
+                  },
+                ).flatten(),
+              ],
+            ),
             const Gap(24),
             HookBuilder(
               builder: (context) {
                 return ElevatedButton.icon(
                   onPressed: () {
-                    nextQuestion(selectedOptionIndexNotifier.value);
+                    nextQuestion();
                   },
                   style: elevatedButtonStyle,
                   label: const Icon(
@@ -323,9 +249,9 @@ class Questionnaire extends HookConsumerWidget {
             ),
             if (isDebugMode.value) ...[
               const Gap(24),
-              Text(
-                '// ${question.reference} ($questionNumberInList)',
-              ),
+              // Text(
+              //   '// ${question.reference} ($questionNumberInList)',
+              // ),
               SizedBox(
                 height: 36,
                 child: ListView(
@@ -336,7 +262,7 @@ class Questionnaire extends HookConsumerWidget {
                       return TextButton(
                         child: Text(index.toString()),
                         onPressed: () {
-                          nextQuestion([], index);
+                          nextQuestion(index);
                         },
                       );
                     },
@@ -346,7 +272,7 @@ class Questionnaire extends HookConsumerWidget {
               const Gap(24),
               ElevatedButton(
                 onPressed: () {
-                  nextQuestion([], controller.getNextUnansweredForDebugging());
+                  nextQuestion(controller.getNextUnansweredForDebugging());
                 },
                 child: const Text('Go to next'),
               ),

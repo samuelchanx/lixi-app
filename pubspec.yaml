@@ -1,11 +1,11 @@
 name: lixi
 description: "A new Flutter project."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.5 <4.0.0'
+  sdk: ">=3.2.5 <4.0.0"
 
 dependencies:
   animate_do: ^3.3.4
@@ -13,6 +13,8 @@ dependencies:
   csv: ^6.0.0
   dartx: ^1.2.0
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
   flutter_hooks: ^0.20.5
   flutter_svg: ^2.0.10+1
@@ -22,7 +24,7 @@ dependencies:
   google_fonts: ^6.2.1
   hooks_riverpod: ^2.4.10
   http: ^1.2.0
-  intl: ^0.19.0
+  intl: ^0.18.1
   json_annotation: ^4.8.1
   logging: ^1.2.0
   lottie: ^3.1.0
@@ -40,10 +42,9 @@ dev_dependencies:
   json_serializable: ^6.7.1
   flutter_launcher_icons: ^0.13.1
   dart_style: ^2.3.4
-dependency_overrides: 
+dependency_overrides:
   dart_style: ^2.3.4
 flutter:
-
   uses-material-design: true
 
   assets:

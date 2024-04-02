@@ -19,11 +19,7 @@ List<QuestionModelV2> parseDatabaseV2(List<Map<String, dynamic>> data) {
                 ? OptionAdditionalStep.filteringByLastAnsIndex
                 : null,
         isMultipleChoice: e['isMultipleChoice'] == 'TRUE',
-        expectedAnsFormat: e['expectedAnsFormat'] == 'bool'
-            ? AnswerFormat.bool
-            : e['expectedAnsFormat'] == 'date'
-                ? AnswerFormat.date
-                : AnswerFormat.options,
+        expectedAnsFormat: AnswerFormat.values.byName(e['expectedAnsFormat']),
         canSkipChoice: e['canSkipChoice'] == 'TRUE',
         isOptional: e['isOptional'] == 'TRUE',
         logicReference: e['logicReference'],
@@ -68,6 +64,7 @@ class UserAnswer with _$UserAnswer {
   const factory UserAnswer({
     @Default([]) List<int> selectedOptionIndex,
     DateTime? date,
+    List<DateTime>? dateRange,
     String? text,
   }) = _UserAnswer;
 
@@ -106,6 +103,7 @@ enum AnswerFormat {
   // Deprecated
   bool,
   date,
+  numberText,
   options,
 }
 

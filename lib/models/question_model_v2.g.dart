@@ -70,6 +70,7 @@ const _$OptionAdditionalStepEnumMap = {
 const _$AnswerFormatEnumMap = {
   AnswerFormat.bool: 'bool',
   AnswerFormat.date: 'date',
+  AnswerFormat.numberText: 'numberText',
   AnswerFormat.options: 'options',
 };
 
@@ -81,6 +82,9 @@ _$UserAnswerImpl _$$UserAnswerImplFromJson(Map<String, dynamic> json) =>
           const [],
       date:
           json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      dateRange: (json['dateRange'] as List<dynamic>?)
+          ?.map((e) => DateTime.parse(e as String))
+          .toList(),
       text: json['text'] as String?,
     );
 
@@ -96,6 +100,8 @@ Map<String, dynamic> _$$UserAnswerImplToJson(_$UserAnswerImpl instance) {
   }
 
   writeNotNull('date', instance.date?.toIso8601String());
+  writeNotNull('dateRange',
+      instance.dateRange?.map((e) => e.toIso8601String()).toList());
   writeNotNull('text', instance.text);
   return val;
 }

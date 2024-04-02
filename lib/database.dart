@@ -64,7 +64,7 @@ const databaseV2Json = [
     "optionAdditionalStep": "",
     "isMultipleChoice": "",
     "group": 0,
-    "expectedAnsFormat": "options",
+    "expectedAnsFormat": "numberText",
     "isOptional": "",
     "logicReference":
         "正常,5-7 days\n月經過短,<5 days\n月經延長,8 days-13 days\n崩漏,>14 days",

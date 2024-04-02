@@ -23,12 +23,16 @@ class QuestionControllerV2 {
 
   List<QuestionModelV2> questions;
   Map<int, UserAnswer> userAnswers = {
-    0: UserAnswer(date: DateTime(2024, 3, 19)),
-    1: UserAnswer(date: DateTime(2024, 1, 19)),
+    0: UserAnswer(
+      dateRange: [
+        DateTime(2024, 3, 19),
+        DateTime(2024, 3, 23),
+      ],
+    ),
     // often
-    2: const UserAnswer(selectedOptionIndex: [0]),
-    // 最近一次月經來幾天？（經期）, short
-    3: const UserAnswer(selectedOptionIndex: [1]),
+    1: const UserAnswer(selectedOptionIndex: [0]),
+    // 最近一次月經來幾天？（經期）
+    2: const UserAnswer(text: '28'),
     // 經量：月經期最多的一天日用衛生巾（23cm）的使用量, too much
     4: const UserAnswer(selectedOptionIndex: [2]),
     // lightDark
@@ -71,7 +75,7 @@ class QuestionControllerV2 {
   }
 
   int saveAndGetNextQuestion(
-    int currentIndex,
+    int currentStep,
     Map<int, UserAnswer> latestAnswers,
   ) {
     userAnswers = {
@@ -88,15 +92,15 @@ class QuestionControllerV2 {
       diagnosedIssueSaveKey,
       jsonEncode(diagnosedIssue),
     );
-    log.info('Current index: $currentIndex, User answers: $latestAnswers');
-    if (currentIndex == questions.length - 1) {
+    log.info('Current index: $currentStep, User answers: $latestAnswers');
+    if (currentStep == questions.length - 1) {
       log.info('Ending questionnaire');
       return -1;
     }
-    final currentAnswer = userAnswers[currentIndex];
-    final nextQuestion = questions[currentIndex + 1];
+    final currentAnswer = userAnswers[currentStep];
+    final nextQuestion = questions[currentStep + 1];
     if (nextQuestion.isOptional) {
-      switch (currentIndex + 1) {
+      switch (currentStep + 1) {
         case 2:
           if (_diagnoseIsNormalPeriodStep1()) {
             return 3;
@@ -131,11 +135,11 @@ class QuestionControllerV2 {
     if (nextQuestion.optionAdditionalStep ==
         OptionAdditionalStep.filteringByLastAnsIndex) {
       // Process for additional answer
-      _processLastAnsFilterOptions(currentAnswer!, currentIndex + 1);
-      return currentIndex + 1;
+      _processLastAnsFilterOptions(currentAnswer!, currentStep + 1);
+      return currentStep + 1;
     }
 
-    return currentIndex + 1;
+    return currentStep + 1;
   }
 
   void _diagnoseForPainImprovement() {
