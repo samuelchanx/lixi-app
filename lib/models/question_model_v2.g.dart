@@ -12,9 +12,11 @@ _$QuestionModelV2Impl _$$QuestionModelV2ImplFromJson(
       question: json['question'] as String,
       textReplaceData: json['textReplaceData'] as String,
       transformedQuestionText: json['transformedQuestionText'] as String?,
+      title: json['title'] as String?,
       rawOptions: (json['rawOptions'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
+      group: json['group'] as int,
       transformedOptions: (json['transformedOptions'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -44,7 +46,9 @@ Map<String, dynamic> _$$QuestionModelV2ImplToJson(
   }
 
   writeNotNull('transformedQuestionText', instance.transformedQuestionText);
+  writeNotNull('title', instance.title);
   val['rawOptions'] = instance.rawOptions;
+  val['group'] = instance.group;
   writeNotNull('transformedOptions', instance.transformedOptions);
   writeNotNull('optionSeparator', instance.optionSeparator);
   writeNotNull('optionAdditionalStep',

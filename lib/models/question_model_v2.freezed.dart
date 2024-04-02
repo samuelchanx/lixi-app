@@ -27,8 +27,12 @@ mixin _$QuestionModelV2 {
   String? get transformedQuestionText => throw _privateConstructorUsedError;
   set transformedQuestionText(String? value) =>
       throw _privateConstructorUsedError;
+  String? get title => throw _privateConstructorUsedError;
+  set title(String? value) => throw _privateConstructorUsedError;
   List<String> get rawOptions => throw _privateConstructorUsedError;
   set rawOptions(List<String> value) => throw _privateConstructorUsedError;
+  int get group => throw _privateConstructorUsedError;
+  set group(int value) => throw _privateConstructorUsedError;
   List<String>? get transformedOptions => throw _privateConstructorUsedError;
   set transformedOptions(List<String>? value) =>
       throw _privateConstructorUsedError;
@@ -68,7 +72,9 @@ abstract class $QuestionModelV2CopyWith<$Res> {
       {String question,
       String textReplaceData,
       String? transformedQuestionText,
+      String? title,
       List<String> rawOptions,
+      int group,
       List<String>? transformedOptions,
       String? optionSeparator,
       OptionAdditionalStep? optionAdditionalStep,
@@ -96,7 +102,9 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
     Object? question = null,
     Object? textReplaceData = null,
     Object? transformedQuestionText = freezed,
+    Object? title = freezed,
     Object? rawOptions = null,
+    Object? group = null,
     Object? transformedOptions = freezed,
     Object? optionSeparator = freezed,
     Object? optionAdditionalStep = freezed,
@@ -120,10 +128,18 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
           ? _value.transformedQuestionText
           : transformedQuestionText // ignore: cast_nullable_to_non_nullable
               as String?,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
       rawOptions: null == rawOptions
           ? _value.rawOptions
           : rawOptions // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      group: null == group
+          ? _value.group
+          : group // ignore: cast_nullable_to_non_nullable
+              as int,
       transformedOptions: freezed == transformedOptions
           ? _value.transformedOptions
           : transformedOptions // ignore: cast_nullable_to_non_nullable
@@ -176,7 +192,9 @@ abstract class _$$QuestionModelV2ImplCopyWith<$Res>
       {String question,
       String textReplaceData,
       String? transformedQuestionText,
+      String? title,
       List<String> rawOptions,
+      int group,
       List<String>? transformedOptions,
       String? optionSeparator,
       OptionAdditionalStep? optionAdditionalStep,
@@ -202,7 +220,9 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
     Object? question = null,
     Object? textReplaceData = null,
     Object? transformedQuestionText = freezed,
+    Object? title = freezed,
     Object? rawOptions = null,
+    Object? group = null,
     Object? transformedOptions = freezed,
     Object? optionSeparator = freezed,
     Object? optionAdditionalStep = freezed,
@@ -226,10 +246,18 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
           ? _value.transformedQuestionText
           : transformedQuestionText // ignore: cast_nullable_to_non_nullable
               as String?,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
       rawOptions: null == rawOptions
           ? _value.rawOptions
           : rawOptions // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      group: null == group
+          ? _value.group
+          : group // ignore: cast_nullable_to_non_nullable
+              as int,
       transformedOptions: freezed == transformedOptions
           ? _value.transformedOptions
           : transformedOptions // ignore: cast_nullable_to_non_nullable
@@ -277,7 +305,9 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
       {required this.question,
       required this.textReplaceData,
       this.transformedQuestionText,
+      this.title,
       required this.rawOptions,
+      required this.group,
       this.transformedOptions,
       required this.optionSeparator,
       required this.optionAdditionalStep,
@@ -299,7 +329,11 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   @override
   String? transformedQuestionText;
   @override
+  String? title;
+  @override
   List<String> rawOptions;
+  @override
+  int group;
   @override
   List<String>? transformedOptions;
   @override
@@ -321,7 +355,7 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
 
   @override
   String toString() {
-    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, transformedQuestionText: $transformedQuestionText, rawOptions: $rawOptions, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
+    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, transformedQuestionText: $transformedQuestionText, title: $title, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
   }
 
   @JsonKey(ignore: true)
@@ -344,7 +378,9 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
       {required String question,
       required String textReplaceData,
       String? transformedQuestionText,
+      String? title,
       required List<String> rawOptions,
+      required int group,
       List<String>? transformedOptions,
       required String? optionSeparator,
       required OptionAdditionalStep? optionAdditionalStep,
@@ -369,8 +405,14 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   String? get transformedQuestionText;
   set transformedQuestionText(String? value);
   @override
+  String? get title;
+  set title(String? value);
+  @override
   List<String> get rawOptions;
   set rawOptions(List<String> value);
+  @override
+  int get group;
+  set group(int value);
   @override
   List<String>? get transformedOptions;
   set transformedOptions(List<String>? value);

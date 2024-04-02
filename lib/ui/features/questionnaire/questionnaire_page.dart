@@ -3,13 +3,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/models/question_model_controller.dart';
 import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/provider/question_provider.dart';
-import 'package:lixi/theme/colors.dart';
-import 'package:lixi/theme/theme_data.dart';
+import 'package:lixi/ui/theme/colors.dart';
+import 'package:lixi/ui/theme/styles.dart';
+import 'package:lixi/ui/theme/theme_data.dart';
+import 'package:lixi/ui/widgets/lixi_logo.dart';
+import 'package:lixi/ui/widgets/lixi_slogan.dart';
 import 'package:lixi/utils/date_formatter.dart';
 import 'package:lixi/utils/iterable_utils.dart';
 
@@ -148,23 +150,10 @@ class Questionnaire extends HookConsumerWidget {
               onTap: () {
                 isDebugMode.value = !isDebugMode.value;
               },
-              child: Text(
-                'lixi',
-                style: GoogleFonts.gildaDisplay().copyWith(
-                  fontSize: 36,
-                ),
-              ),
+              child: const LixiLogo(),
             ),
             const Gap(8),
-            const Text(
-              'your daily dose of magic',
-              style: TextStyle(
-                fontSize: 24.0,
-                color: Colors.black87,
-                fontWeight: FontWeight.w200,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            const LixiSlogan(),
             const Gap(24),
             Align(
               alignment: Alignment.topLeft,
@@ -316,15 +305,7 @@ class Questionnaire extends HookConsumerWidget {
                   onPressed: () {
                     nextQuestion(selectedOptionIndexNotifier.value);
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: highlightColor,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                      vertical: 16,
-                    ),
-                    shape: const StadiumBorder(),
-                    shadowColor: Colors.transparent,
-                  ),
+                  style: elevatedButtonStyle,
                   label: const Icon(
                     Icons.arrow_forward,
                     color: Colors.white,

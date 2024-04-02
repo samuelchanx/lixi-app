@@ -3,13 +3,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'question_model_v2.freezed.dart';
 part 'question_model_v2.g.dart';
 
-List<QuestionModelV2> parseDatabaseV2(List<Map<String, String>> data) {
+List<QuestionModelV2> parseDatabaseV2(List<Map<String, dynamic>> data) {
   return data.map(
     (e) {
       return QuestionModelV2(
         question: e['question']!,
         textReplaceData: e['textReplaceData'] ?? '',
         rawOptions: e['options']?.split(',') ?? [],
+        group: e['group'] ?? -1,
+        title: e['title'],
         optionSeparator: e['optionSeparator'],
         optionAdditionalStep: e['optionAdditionalStep'] == 'colorParser'
             ? OptionAdditionalStep.colorParser
@@ -38,7 +40,9 @@ class QuestionModelV2 with _$QuestionModelV2 {
     required String question,
     required String textReplaceData,
     String? transformedQuestionText,
+    String? title,
     required List<String> rawOptions,
+    required int group,
     List<String>? transformedOptions,
     required String? optionSeparator,
     required OptionAdditionalStep? optionAdditionalStep,

@@ -3,9 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/provider/shared_pref_provider.dart';
-import 'package:lixi/questionnaire_page.dart';
-import 'package:lixi/result_page.dart';
-import 'package:lixi/theme/theme_data.dart';
+import 'package:lixi/ui/features/landing/landing_page.dart';
+import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
+import 'package:lixi/ui/features/result/result_page.dart';
+import 'package:lixi/ui/theme/theme_data.dart';
 import 'package:logging/logging.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,7 +40,8 @@ class MyHealthcareApp extends HookWidget {
       title: 'Healthcare Questionnaire',
       theme: appTheme,
       routes: {
-        '/': (context) => const QuestionnairePage(),
+        '/': (context) => const LandingPage(),
+        '/questionnaire': (context) => const QuestionnairePage(),
         '/result': (context) => const ResultPage(),
       },
       onGenerateRoute: (settings) {
