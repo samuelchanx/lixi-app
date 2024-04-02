@@ -7,8 +7,8 @@ import 'package:gap/gap.dart';
 import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/theme_data.dart';
+import 'package:lixi/utils/date_formatter.dart';
 import 'package:lixi/utils/iterable_utils.dart';
-import 'package:lixi/utils/logger.dart';
 
 class OneQuestionWidgets extends HookWidget {
   const OneQuestionWidgets({
@@ -34,21 +34,8 @@ class OneQuestionWidgets extends HookWidget {
     return HookBuilder(
       builder: (context) {
         final answers = useValueListenable(currentAnswers);
-        if (question.showIf != null) {
-          log.info('Evaluate show if $answers');
-          final showIf = question.showIf!;
-          final shouldNotShow = showIf.entries.any(
-            (entry) {
-              final questionIndex = int.parse(entry.key);
-              final answer = answers[questionIndex];
-              log.info('Answer: $answer');
-              final condition = entry.value;
-              return condition.shouldNotShow(answer);
-            },
-          );
-          if (shouldNotShow) {
-            return const SizedBox.shrink();
-          }
+        if (question.shouldNotShow(answers)) {
+          return const SizedBox.shrink();
         }
         Widget widget;
         switch (question.expectedAnsFormat) {
@@ -56,15 +43,24 @@ class OneQuestionWidgets extends HookWidget {
             widget = const SizedBox();
             break;
           case AnswerFormat.date:
-            widget = CalendarDatePicker2(
-              config: CalendarDatePicker2Config(
-                calendarType: CalendarDatePicker2Type.range,
-              ),
-              value: dateRange.value,
-              onValueChanged: (dates) {
-                dateRange.value = dates;
-                onChanged();
-              },
+            widget = Column(
+              children: [
+                CalendarDatePicker2(
+                  config: CalendarDatePicker2Config(
+                    calendarType: CalendarDatePicker2Type.range,
+                    lastDate: DateTime.now(),
+                  ),
+                  value: dateRange.value,
+                  onValueChanged: (dates) {
+                    dateRange.value = dates;
+                    onChanged();
+                  },
+                ),
+                if (dateRange.value.length == 2)
+                  Text(
+                    '${dateRange.value.first!.yearMonthDay} - ${dateRange.value.last?.yearMonthDay}',
+                  ),
+              ],
             );
             break;
           case AnswerFormat.numberText:

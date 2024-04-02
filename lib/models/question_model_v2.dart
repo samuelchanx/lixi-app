@@ -64,6 +64,17 @@ class QuestionModelV2 with _$QuestionModelV2 {
     required String reference,
   }) = _QuestionModelV2;
 
+  bool shouldNotShow(Map<int, UserAnswer>? answers) {
+    if (showIf == null) return false;
+    return showIf!.entries.any(
+      (entry) {
+        final condition = entry.value;
+        final questionIndex = int.parse(entry.key);
+        return condition.shouldNotShow(answers?[questionIndex]);
+      },
+    );
+  }
+
   List<String> get options => transformedOptions ?? rawOptions;
 
   String get questionText => transformedQuestionText ?? question;

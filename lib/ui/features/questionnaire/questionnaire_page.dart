@@ -89,6 +89,7 @@ class Questionnaire extends HookConsumerWidget {
     bool isValidated() {
       return currentQuestions.every((question) {
         final userAnswer = answers.value[questions.indexOf(question)];
+        if (question.shouldNotShow(answers.value)) return true;
         switch (question.expectedAnsFormat) {
           case AnswerFormat.bool:
             return true;
@@ -210,7 +211,7 @@ class Questionnaire extends HookConsumerWidget {
                     color: Colors.white,
                   ),
                   icon: const Text(
-                    '下一題',
+                    '繼續',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -221,10 +222,6 @@ class Questionnaire extends HookConsumerWidget {
               },
             ),
             if (isDebugMode.value) ...[
-              const Gap(24),
-              // Text(
-              //   '// ${question.reference} ($questionNumberInList)',
-              // ),
               SizedBox(
                 height: 36,
                 child: ListView(
