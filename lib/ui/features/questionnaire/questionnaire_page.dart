@@ -67,18 +67,18 @@ class Questionnaire extends HookConsumerWidget {
 
     final dateRange = useState<List<DateTime?>>([]);
 
-    // useEffect(() {
-    //   controller.diagnose();
-    //   final nextPage = controller.getNextUnansweredForDebugging();
-    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //     if (nextPage != -1) {
-    //       currentQuestionIndex.value = nextPage;
-    //     } else {
-    //       goToResult(context);
-    //     }
-    //   });
-    //   return null;
-    // });
+    useEffect(() {
+      // controller.diagnose();
+      const nextPage = 1;
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        if (nextPage != -1) {
+          currentStep.value = nextPage;
+        } else {
+          goToResult(context);
+        }
+      });
+      return null;
+    });
 
     final currentStepValue = currentStep.value;
     final currentQuestions = questions
@@ -86,6 +86,7 @@ class Questionnaire extends HookConsumerWidget {
         .toList();
     // final question = currentQuestions.first;
 
+    // FIXME: text controller cannot be used for multiple questions
     bool isValidated() {
       return currentQuestions.every((question) {
         final userAnswer = answers.value[questions.indexOf(question)];
@@ -93,12 +94,15 @@ class Questionnaire extends HookConsumerWidget {
         switch (question.expectedAnsFormat) {
           case AnswerFormat.bool:
             return true;
+          case AnswerFormat.imageCount:
+            return textController.text.isNotEmpty;
           case AnswerFormat.date:
             return userAnswer?.dateRange?.length == 2;
           case AnswerFormat.numberText:
             return textController.text.isNotEmpty &&
                 int.tryParse(textController.text) != null;
           case AnswerFormat.options:
+          case AnswerFormat.bloodColors:
             return (userAnswer?.selectedOptionIndex.isNotEmpty ?? false) ||
                 question.canSkipChoice;
         }

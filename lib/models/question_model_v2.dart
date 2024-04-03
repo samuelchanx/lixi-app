@@ -13,6 +13,8 @@ List<QuestionModelV2> parseDatabaseV2(List<Map<String, dynamic>> data) {
         rawOptions: e['options']?.split(',') ?? [],
         group: e['group'] ?? -1,
         title: e['title'],
+        imagesToShow: e['imagesToShow'],
+        image: e['image'],
         showIf: (e['showIf'] as Map<String, dynamic>?)?.let((e) {
           return e.map(
             (key, value) {
@@ -48,6 +50,8 @@ class QuestionModelV2 with _$QuestionModelV2 {
     required String textReplaceData,
     String? transformedQuestionText,
     String? title,
+    String? image,
+    int? imagesToShow,
     required List<String> rawOptions,
     required int group,
     List<String>? transformedOptions,
@@ -129,6 +133,8 @@ enum AnswerFormat {
   bool,
   date,
   numberText,
+  imageCount,
+  bloodColors,
   options,
 }
 

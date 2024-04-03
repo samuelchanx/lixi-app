@@ -31,6 +31,7 @@ class OneQuestionWidgets extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = useMemoized(() => MediaQuery.of(context).size.width);
     return HookBuilder(
       builder: (context) {
         final answers = useValueListenable(currentAnswers);
@@ -39,6 +40,51 @@ class OneQuestionWidgets extends HookWidget {
         }
         Widget widget;
         switch (question.expectedAnsFormat) {
+          case AnswerFormat.imageCount:
+            final rowsToShow = useState(1);
+            final currentCount =
+                useState(int.tryParse(answers[questionIndex]?.text ?? ''));
+            final imagesToShow = question.imagesToShow!;
+            widget = Column(
+              children: [
+                ...List.generate(rowsToShow.value, (column) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(
+                        question.imagesToShow!,
+                        (index) {
+                          final imageIndex = column * imagesToShow + index;
+                          final isSelected = currentCount.value != null &&
+                              currentCount.value! >= imageIndex;
+                          return GestureDetector(
+                            onTap: () {
+                              textController.text = (imageIndex + 1).toString();
+                              currentCount.value = imageIndex;
+                              onChanged();
+                            },
+                            child: Image.asset(
+                              question.image!,
+                              color: isSelected ? Colors.red : null,
+                              width: width / 6,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                }),
+                IconButton(
+                  onPressed: () {
+                    rowsToShow.value++;
+                  },
+                  iconSize: 32,
+                  icon: const Icon(Icons.add_circle),
+                ),
+              ],
+            );
+            break;
           case AnswerFormat.bool:
             widget = const SizedBox();
             break;
@@ -162,6 +208,56 @@ class OneQuestionWidgets extends HookWidget {
                       );
                     },
                   ).toList(),
+                );
+              },
+            );
+            break;
+          case AnswerFormat.bloodColors:
+            final colors = question.options.first
+                .split('、')
+                .map((e) => e.split('#').last.slice(0, -2))
+                .toList();
+            widget = HookBuilder(
+              builder: (context) {
+                final optionsAnsMap =
+                    useValueListenable(selectedOptionIndexNotifier);
+                final selectedOption = optionsAnsMap[questionIndex];
+                return Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: List.generate(7, (index) {
+                    final selected = selectedOption?.contains(index) ?? false;
+                    return InkWell(
+                      onTap: () {
+                        selectedOptionIndexNotifier.value = {
+                          ...optionsAnsMap,
+                          questionIndex: <int>[
+                            if (question.isMultipleChoice)
+                              ...optionsAnsMap[questionIndex] ?? [],
+                          ].toggle(index),
+                        };
+                        onChanged();
+                      },
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color:
+                                selected ? highlightColor : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.water_drop_rounded,
+                            color: colorfromDex('FF${colors[index]}'),
+                            size: 72,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 );
               },
             );

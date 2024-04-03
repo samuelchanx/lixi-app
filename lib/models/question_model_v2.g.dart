@@ -13,6 +13,8 @@ _$QuestionModelV2Impl _$$QuestionModelV2ImplFromJson(
       textReplaceData: json['textReplaceData'] as String,
       transformedQuestionText: json['transformedQuestionText'] as String?,
       title: json['title'] as String?,
+      image: json['image'] as String?,
+      imagesToShow: json['imagesToShow'] as int?,
       rawOptions: (json['rawOptions'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -51,6 +53,8 @@ Map<String, dynamic> _$$QuestionModelV2ImplToJson(
 
   writeNotNull('transformedQuestionText', instance.transformedQuestionText);
   writeNotNull('title', instance.title);
+  writeNotNull('image', instance.image);
+  writeNotNull('imagesToShow', instance.imagesToShow);
   val['rawOptions'] = instance.rawOptions;
   val['group'] = instance.group;
   writeNotNull('transformedOptions', instance.transformedOptions);
@@ -76,6 +80,8 @@ const _$AnswerFormatEnumMap = {
   AnswerFormat.bool: 'bool',
   AnswerFormat.date: 'date',
   AnswerFormat.numberText: 'numberText',
+  AnswerFormat.imageCount: 'imageCount',
+  AnswerFormat.bloodColors: 'bloodColors',
   AnswerFormat.options: 'options',
 };
 
