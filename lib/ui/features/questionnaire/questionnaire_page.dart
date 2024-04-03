@@ -260,6 +260,16 @@ class Questionnaire extends HookConsumerWidget {
                 },
                 child: const Text('Diagnose'),
               ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/result',
+                    (route) => false,
+                    arguments: controller.diagnosedIssue,
+                  );
+                },
+                child: const Text('Profile'),
+              ),
             ],
           ],
         ),
