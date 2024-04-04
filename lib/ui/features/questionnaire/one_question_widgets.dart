@@ -262,6 +262,68 @@ class OneQuestionWidgets extends HookWidget {
               },
             );
             break;
+          case AnswerFormat.bloodTexture:
+            // TODO: Handle this case.
+            final textures = question.options;
+            widget = HookBuilder(
+              builder: (context) {
+                final optionsAnsMap =
+                    useValueListenable(selectedOptionIndexNotifier);
+                final selectedOption = optionsAnsMap[questionIndex];
+                return Row(
+                  children: textures.mapIndexed((index, element) {
+                    final selected = selectedOption?.contains(index) ?? false;
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () {
+                            selectedOptionIndexNotifier.value = {
+                              ...optionsAnsMap,
+                              questionIndex: <int>[
+                                if (question.isMultipleChoice)
+                                  ...optionsAnsMap[questionIndex] ?? [],
+                              ].toggle(index),
+                            };
+                            onChanged();
+                          },
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              border: Border.all(
+                                color: selected
+                                    ? highlightColor
+                                    : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/texture_${index + 1}.png',
+                                  ),
+                                  const Gap(8),
+                                  Text(
+                                    textures[index],
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: highlightColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
+            );
+            break;
         }
 
         return Column(

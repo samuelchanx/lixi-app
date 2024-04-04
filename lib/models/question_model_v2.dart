@@ -135,6 +135,7 @@ enum AnswerFormat {
   numberText,
   imageCount,
   bloodColors,
+  bloodTexture,
   options,
 }
 

@@ -8,6 +8,7 @@ import 'package:lixi/models/question_model_controller.dart';
 import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/provider/question_provider.dart';
 import 'package:lixi/ui/features/questionnaire/one_question_widgets.dart';
+import 'package:lixi/ui/features/registration/profile_registration_page.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/styles.dart';
 import 'package:lixi/ui/widgets/lixi_logo.dart';
@@ -103,6 +104,7 @@ class Questionnaire extends HookConsumerWidget {
                 int.tryParse(textController.text) != null;
           case AnswerFormat.options:
           case AnswerFormat.bloodColors:
+          case AnswerFormat.bloodTexture:
             return (userAnswer?.selectedOptionIndex.isNotEmpty ?? false) ||
                 question.canSkipChoice;
         }
@@ -262,11 +264,24 @@ class Questionnaire extends HookConsumerWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/result',
-                    (route) => false,
-                    arguments: controller.diagnosedIssue,
+                  showModalBottomSheet(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(10.0)),
+                    ),
+                    isScrollControlled: true,
+                    backgroundColor: backgroundColor,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const ProfileRegistrationPage();
+                    },
                   );
+
+                  // Navigator.of(context).pushNamedAndRemoveUntil(
+                  //   '/result',
+                  //   (route) => false,
+                  //   arguments: controller.diagnosedIssue,
+                  // );
                 },
                 child: const Text('Profile'),
               ),
