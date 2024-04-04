@@ -11,11 +11,13 @@ _$QuestionModelV2Impl _$$QuestionModelV2ImplFromJson(
     _$QuestionModelV2Impl(
       question: json['question'] as String,
       textReplaceData: json['textReplaceData'] as String,
+      index: json['index'] as int,
       transformedQuestionText: json['transformedQuestionText'] as String?,
       title: json['title'] as String?,
       image: json['image'] as String?,
       imagesToShow: json['imagesToShow'] as int?,
       horizontalOption: json['horizontalOption'] as bool?,
+      showByDiagnosis: json['showByDiagnosis'] as bool?,
       rawOptions: (json['rawOptions'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -44,6 +46,7 @@ Map<String, dynamic> _$$QuestionModelV2ImplToJson(
   final val = <String, dynamic>{
     'question': instance.question,
     'textReplaceData': instance.textReplaceData,
+    'index': instance.index,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -57,6 +60,7 @@ Map<String, dynamic> _$$QuestionModelV2ImplToJson(
   writeNotNull('image', instance.image);
   writeNotNull('imagesToShow', instance.imagesToShow);
   writeNotNull('horizontalOption', instance.horizontalOption);
+  writeNotNull('showByDiagnosis', instance.showByDiagnosis);
   val['rawOptions'] = instance.rawOptions;
   val['group'] = instance.group;
   writeNotNull('transformedOptions', instance.transformedOptions);

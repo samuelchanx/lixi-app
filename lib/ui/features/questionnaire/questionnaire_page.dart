@@ -17,28 +17,38 @@ import 'package:lixi/ui/widgets/lixi_logo.dart';
 import 'package:lixi/ui/widgets/lixi_slogan.dart';
 import 'package:lixi/utils/logger.dart';
 
+final questionControllerProvider = Provider.autoDispose<QuestionControllerV2>(
+  (ref) => throw UnimplementedError(),
+);
+
 class QuestionnairePage extends HookConsumerWidget {
   const QuestionnairePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final questionnaireProvider = ref.watch(questionsProvider);
-    return Scaffold(
-      body: questionnaireProvider.when(
-        data: (questions) => Questionnaire(
+    final questions = ref.watch(questionsProvider);
+    return ProviderScope(
+      overrides: [
+        questionControllerProvider.overrideWith(
+          (ref) => QuestionControllerV2(
+            questions: ref.watch(questionsProvider),
+            ref: ref,
+          ),
+        ),
+      ],
+      child: Scaffold(
+        body: QuestionnaireContent(
           questions: questions,
         ),
-        loading: () => const CircularProgressIndicator(),
-        error: (err, stack) => Text('Error: $err'),
       ),
     );
   }
 }
 
-class Questionnaire extends HookConsumerWidget {
+class QuestionnaireContent extends HookConsumerWidget {
   // final List<CureMethod> cureMethods;
 
-  const Questionnaire({
+  const QuestionnaireContent({
     super.key,
     required this.questions,
     // required this.cureMethods,
@@ -63,15 +73,13 @@ class Questionnaire extends HookConsumerWidget {
     final selectedOptionIndexNotifier = useState<Map<int, List<int>>>({});
 
     final textController = useTextEditingController();
-    final controller = useMemoized(
-      () => QuestionControllerV2(questions: questions, ref: ref),
-    );
+    final controller = ref.watch(questionControllerProvider);
 
     final dateRange = useState<List<DateTime?>>([]);
 
     useEffect(() {
       // controller.diagnose();
-      const nextPage = 2;
+      const nextPage = 3;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (nextPage != -1) {
           currentStep.value = nextPage;
@@ -92,7 +100,7 @@ class Questionnaire extends HookConsumerWidget {
     bool isValidated() {
       final unfinishedQuestions = currentQuestions.whereNot((question) {
         final userAnswer = answers.value[questions.indexOf(question)];
-        if (question.shouldNotShow(answers.value)) return true;
+        if (question.shouldNotShow(answers.value, questions)) return true;
         switch (question.expectedAnsFormat) {
           case AnswerFormat.bool:
             return true;

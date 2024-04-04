@@ -1,20 +1,23 @@
 import 'package:dartx/dartx.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:lixi/models/question_model_controller.dart';
 import 'package:lixi/utils/dart_helper.dart';
 
 part 'question_model_v2.freezed.dart';
 part 'question_model_v2.g.dart';
 
 List<QuestionModelV2> parseDatabaseV2(List<Map<String, dynamic>> data) {
-  return data.map(
-    (e) {
+  return data.mapIndexed(
+    (index, e) {
       return QuestionModelV2(
         question: e['question']!,
+        index: index,
         textReplaceData: e['textReplaceData'] ?? '',
         rawOptions: e['options']?.split(',') ?? [],
         group: e['group'] ?? -1,
         title: e['title'],
         horizontalOption: e['horizontalOption'],
+        showByDiagnosis: e['showByDiagnosis'],
         imagesToShow: e['imagesToShow'],
         image: e['image'],
         showIf: (e['showIf'] as Map<String, dynamic>?)?.let((e) {
@@ -50,11 +53,13 @@ class QuestionModelV2 with _$QuestionModelV2 {
   factory QuestionModelV2({
     required String question,
     required String textReplaceData,
+    required int index,
     String? transformedQuestionText,
     String? title,
     String? image,
     int? imagesToShow,
     bool? horizontalOption,
+    bool? showByDiagnosis,
     required List<String> rawOptions,
     required int group,
     List<String>? transformedOptions,
@@ -71,8 +76,21 @@ class QuestionModelV2 with _$QuestionModelV2 {
     required String reference,
   }) = _QuestionModelV2;
 
-  bool shouldNotShow(Map<int, UserAnswer>? answers) {
+  bool shouldNotShow(
+    Map<int, UserAnswer>? answers,
+    List<QuestionModelV2> questions,
+  ) {
     if (showIf == null) return false;
+    if (showByDiagnosis == true) {
+      final canDetermineAlready = diagnoseForStep3CanDetermine(
+        answers!,
+        questions,
+        const DiagnosedIssue(),
+      );
+      if (canDetermineAlready.$2) {
+        return true;
+      }
+    }
     return showIf!.entries.any(
       (entry) {
         final condition = entry.value;

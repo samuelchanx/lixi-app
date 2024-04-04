@@ -24,6 +24,8 @@ mixin _$QuestionModelV2 {
   set question(String value) => throw _privateConstructorUsedError;
   String get textReplaceData => throw _privateConstructorUsedError;
   set textReplaceData(String value) => throw _privateConstructorUsedError;
+  int get index => throw _privateConstructorUsedError;
+  set index(int value) => throw _privateConstructorUsedError;
   String? get transformedQuestionText => throw _privateConstructorUsedError;
   set transformedQuestionText(String? value) =>
       throw _privateConstructorUsedError;
@@ -35,6 +37,8 @@ mixin _$QuestionModelV2 {
   set imagesToShow(int? value) => throw _privateConstructorUsedError;
   bool? get horizontalOption => throw _privateConstructorUsedError;
   set horizontalOption(bool? value) => throw _privateConstructorUsedError;
+  bool? get showByDiagnosis => throw _privateConstructorUsedError;
+  set showByDiagnosis(bool? value) => throw _privateConstructorUsedError;
   List<String> get rawOptions => throw _privateConstructorUsedError;
   set rawOptions(List<String> value) => throw _privateConstructorUsedError;
   int get group => throw _privateConstructorUsedError;
@@ -85,11 +89,13 @@ abstract class $QuestionModelV2CopyWith<$Res> {
   $Res call(
       {String question,
       String textReplaceData,
+      int index,
       String? transformedQuestionText,
       String? title,
       String? image,
       int? imagesToShow,
       bool? horizontalOption,
+      bool? showByDiagnosis,
       List<String> rawOptions,
       int group,
       List<String>? transformedOptions,
@@ -119,11 +125,13 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
   $Res call({
     Object? question = null,
     Object? textReplaceData = null,
+    Object? index = null,
     Object? transformedQuestionText = freezed,
     Object? title = freezed,
     Object? image = freezed,
     Object? imagesToShow = freezed,
     Object? horizontalOption = freezed,
+    Object? showByDiagnosis = freezed,
     Object? rawOptions = null,
     Object? group = null,
     Object? transformedOptions = freezed,
@@ -146,6 +154,10 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
           ? _value.textReplaceData
           : textReplaceData // ignore: cast_nullable_to_non_nullable
               as String,
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
       transformedQuestionText: freezed == transformedQuestionText
           ? _value.transformedQuestionText
           : transformedQuestionText // ignore: cast_nullable_to_non_nullable
@@ -165,6 +177,10 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
       horizontalOption: freezed == horizontalOption
           ? _value.horizontalOption
           : horizontalOption // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      showByDiagnosis: freezed == showByDiagnosis
+          ? _value.showByDiagnosis
+          : showByDiagnosis // ignore: cast_nullable_to_non_nullable
               as bool?,
       rawOptions: null == rawOptions
           ? _value.rawOptions
@@ -229,11 +245,13 @@ abstract class _$$QuestionModelV2ImplCopyWith<$Res>
   $Res call(
       {String question,
       String textReplaceData,
+      int index,
       String? transformedQuestionText,
       String? title,
       String? image,
       int? imagesToShow,
       bool? horizontalOption,
+      bool? showByDiagnosis,
       List<String> rawOptions,
       int group,
       List<String>? transformedOptions,
@@ -261,11 +279,13 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
   $Res call({
     Object? question = null,
     Object? textReplaceData = null,
+    Object? index = null,
     Object? transformedQuestionText = freezed,
     Object? title = freezed,
     Object? image = freezed,
     Object? imagesToShow = freezed,
     Object? horizontalOption = freezed,
+    Object? showByDiagnosis = freezed,
     Object? rawOptions = null,
     Object? group = null,
     Object? transformedOptions = freezed,
@@ -288,6 +308,10 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
           ? _value.textReplaceData
           : textReplaceData // ignore: cast_nullable_to_non_nullable
               as String,
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
       transformedQuestionText: freezed == transformedQuestionText
           ? _value.transformedQuestionText
           : transformedQuestionText // ignore: cast_nullable_to_non_nullable
@@ -307,6 +331,10 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
       horizontalOption: freezed == horizontalOption
           ? _value.horizontalOption
           : horizontalOption // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      showByDiagnosis: freezed == showByDiagnosis
+          ? _value.showByDiagnosis
+          : showByDiagnosis // ignore: cast_nullable_to_non_nullable
               as bool?,
       rawOptions: null == rawOptions
           ? _value.rawOptions
@@ -366,11 +394,13 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   _$QuestionModelV2Impl(
       {required this.question,
       required this.textReplaceData,
+      required this.index,
       this.transformedQuestionText,
       this.title,
       this.image,
       this.imagesToShow,
       this.horizontalOption,
+      this.showByDiagnosis,
       required this.rawOptions,
       required this.group,
       this.transformedOptions,
@@ -393,6 +423,8 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   @override
   String textReplaceData;
   @override
+  int index;
+  @override
   String? transformedQuestionText;
   @override
   String? title;
@@ -402,6 +434,8 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   int? imagesToShow;
   @override
   bool? horizontalOption;
+  @override
+  bool? showByDiagnosis;
   @override
   List<String> rawOptions;
   @override
@@ -431,7 +465,7 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
 
   @override
   String toString() {
-    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, transformedQuestionText: $transformedQuestionText, title: $title, image: $image, imagesToShow: $imagesToShow, horizontalOption: $horizontalOption, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, showIf: $showIf, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
+    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, index: $index, transformedQuestionText: $transformedQuestionText, title: $title, image: $image, imagesToShow: $imagesToShow, horizontalOption: $horizontalOption, showByDiagnosis: $showByDiagnosis, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, showIf: $showIf, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
   }
 
   @JsonKey(ignore: true)
@@ -453,11 +487,13 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   factory _QuestionModelV2(
       {required String question,
       required String textReplaceData,
+      required int index,
       String? transformedQuestionText,
       String? title,
       String? image,
       int? imagesToShow,
       bool? horizontalOption,
+      bool? showByDiagnosis,
       required List<String> rawOptions,
       required int group,
       List<String>? transformedOptions,
@@ -482,6 +518,9 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   String get textReplaceData;
   set textReplaceData(String value);
   @override
+  int get index;
+  set index(int value);
+  @override
   String? get transformedQuestionText;
   set transformedQuestionText(String? value);
   @override
@@ -496,6 +535,9 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   @override
   bool? get horizontalOption;
   set horizontalOption(bool? value);
+  @override
+  bool? get showByDiagnosis;
+  set showByDiagnosis(bool? value);
   @override
   List<String> get rawOptions;
   set rawOptions(List<String> value);

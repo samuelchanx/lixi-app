@@ -17,38 +17,45 @@ class QuestionControllerV2 {
     userAnswers = ref.read(userAnswersProvider);
   }
 
-  final WidgetRef ref;
+  final Ref ref;
 
   DiagnosedIssue diagnosedIssue = const DiagnosedIssue();
-
   List<QuestionModelV2> questions;
   Map<int, UserAnswer> userAnswers = {
+    /// Group 0
     0: UserAnswer(
       dateRange: [
         DateTime(2024, 3, 19),
         DateTime(2024, 3, 23),
       ],
     ),
-    // often
+    // 你平常的月經規律嗎？
     1: const UserAnswer(selectedOptionIndex: [0]),
-    // 最近一次月經來幾天？（經期）
+    // 一般來說，你的月經週期是多少天？
     2: const UserAnswer(text: '28'),
+
+    /// Group 1
     // 經量：月經期最多的一天日用衛生巾（23cm）的使用量, too much
-    4: const UserAnswer(text: '3'),
+    3: const UserAnswer(text: '3'),
     // color
-    5: const UserAnswer(selectedOptionIndex: [2]),
+    4: const UserAnswer(selectedOptionIndex: [2]),
     // '黏稠', '有血塊'
-    6: const UserAnswer(selectedOptionIndex: [2, 3]),
-    // 你有沒有經痛的問題？
-    7: const UserAnswer(text: '2'),
-    // 經痛通常在什麼時候發生？(可選多項) 經前
+    5: const UserAnswer(selectedOptionIndex: [2, 3]),
+
+    /// Group 2
+    // 請在橫線上標示你的經痛程度
+    6: const UserAnswer(text: '2'),
+    // 經痛通常在什麼時候發生？(可選多項)
+    7: const UserAnswer(selectedOptionIndex: [0]),
+    // 經痛有什麼表現？(可選多項)
     8: const UserAnswer(selectedOptionIndex: [0]),
+
+    /// Group 3
     // 怎樣的痛法？nothing answered
-    9: const UserAnswer(selectedOptionIndex: []),
     // 經痛會加重或改善？ 用溫暖的東西敷肚會改善 (optional)
-    10: const UserAnswer(selectedOptionIndex: [0]),
+    9: const UserAnswer(selectedOptionIndex: []),
     // 經期間不適
-    11: const UserAnswer(selectedOptionIndex: []),
+    10: const UserAnswer(selectedOptionIndex: []),
   };
 
   SharedPreferences get prefs => ref.read(sharedPreferencesProvider);
@@ -57,9 +64,13 @@ class QuestionControllerV2 {
     log.info('Diagnosing...');
     final isNormal = _diagnoseIsNormalPeriodStep1();
     final step2HaveSigns = _diagnoseForStep2HaveSigns();
-    final canTell = _diagnoseForStep3CanTell();
+    final canTell = diagnoseForStep3CanDetermine(
+      userAnswers,
+      questions,
+      diagnosedIssue,
+    );
     final painImprovement = _diagnoseForPainImprovement();
-    saveAndGetNextQuestion(userAnswers.keys.last, {});
+    // saveAndGetNextQuestion(userAnswers.keys.last, {});
     _diagnoseFinalResult();
     log.info(
       'Diagnosed: ${diagnosedIssue.toJson()}',
@@ -93,9 +104,9 @@ class QuestionControllerV2 {
       jsonEncode(diagnosedIssue),
     );
     log.info('Current index: $currentStep, User answers: $latestAnswers');
-    if (currentStep == 2) {
+    if (currentStep == 3) {
       log.info('Ending questionnaire');
-      // TODO: Diagnose
+      diagnose();
       return -1;
     }
     return currentStep + 1;
@@ -124,7 +135,11 @@ class QuestionControllerV2 {
             return 11;
           }
         case 10:
-          if (_diagnoseForStep3CanTell()) {
+          if (diagnoseForStep3CanDetermine(
+            userAnswers,
+            questions,
+            diagnosedIssue,
+          ).$2) {
             return 11;
           } else {
             return 10;
@@ -142,6 +157,20 @@ class QuestionControllerV2 {
     }
 
     return currentStep + 1;
+  }
+
+  void _diagnoseFinalResult() {
+    // a
+    if (diagnosedIssue.periodAmount == PeriodAmountIssue.tooLittle &&
+        diagnosedIssue.periodColor == PeriodColor.lightRed &&
+        (diagnosedIssue.periodTexture?.contains(PeriodTexture.sticky) ??
+            false)) {
+      diagnosedIssue = diagnosedIssue.copyWith(
+        period: PeriodIssue.early,
+        periodLength: PeriodLengthIssue.tooShort,
+      );
+    }
+    diagnosedIssue;
   }
 
   void _diagnoseForPainImprovement() {
@@ -197,29 +226,10 @@ class QuestionControllerV2 {
     return true;
   }
 
-  bool _diagnoseForStep3CanTell() {
-    final painType = userAnswers[9]?.selectedOptionIndex;
-    if (painType == null || painType.isEmpty) {
-      return false;
-    }
-    final selectedOptions =
-        painType.map((e) => questions[9].options[e]).toList();
-    final signs = selectedOptions
-        .map((e) => menstruationPainData[e]!.split('\n'))
-        .flatten()
-        .distinct()
-        .toList();
-    final bodyTypes =
-        signs.map((e) => DiagnosedBodyType.fromString(e)).toList();
-    diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: bodyTypes);
-    log.info('Diagnosing for step 3...$bodyTypes');
-    return bodyTypes.isNotEmpty;
-  }
-
   bool _diagnoseIsNormalPeriodStep1() {
-    final lastLastPeriod = userAnswers[1]!.date!;
-    final lastPeriod = userAnswers[0]!.date!;
-    final periodLength = lastPeriod.difference(lastLastPeriod).inDays;
+    final lastPeriodEnd = userAnswers[0]!.dateRange!.last;
+    final lastPeriodStart = userAnswers[0]!.dateRange!.first;
+    final periodLength = lastPeriodEnd.difference(lastPeriodStart).inDays;
     final isNormal = periodLength >= 28 && periodLength <= 35;
     log.info('Period length: $periodLength, isNormal: $isNormal');
     if (!isNormal) {
@@ -243,20 +253,6 @@ class QuestionControllerV2 {
     return isNormal;
   }
 
-  void _diagnoseFinalResult() {
-    // a
-    if (diagnosedIssue.periodAmount == PeriodAmountIssue.tooLittle &&
-        diagnosedIssue.periodColor == PeriodColor.lightRed &&
-        (diagnosedIssue.periodTexture?.contains(PeriodTexture.sticky) ??
-            false)) {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        period: PeriodIssue.early,
-        periodLength: PeriodLengthIssue.tooShort,
-      );
-    }
-    diagnosedIssue;
-  }
-
   void _processLastAnsFilterOptions(UserAnswer userAnswer, int nextIndex) {
     final userAnswerIndex = userAnswer.selectedOptionIndex;
     final nextQuestion = questions[nextIndex];
@@ -273,4 +269,39 @@ class QuestionControllerV2 {
       'Processed last answer for filtering options: ${questions[nextIndex].options}',
     );
   }
+}
+
+(DiagnosedIssue, bool) diagnoseForStep3CanDetermine(
+  Map<int, UserAnswer> userAnswers,
+  List<QuestionModelV2> questions,
+  DiagnosedIssue diagnosedIssue,
+) {
+  if (userAnswers[6]?.text == '0') {
+    // 無痛
+    return (diagnosedIssue, false);
+  }
+  final painTypeIndexes = userAnswers[8]?.selectedOptionIndex;
+  if (painTypeIndexes == null || painTypeIndexes.isEmpty) {
+    // No options selected
+    return (diagnosedIssue, false);
+  }
+
+  final lastAnsIndexes = userAnswers[7]!.selectedOptionIndex;
+  final selectedOptionsInText = painTypeIndexes
+      .map((e) => questions[8].optionsByLastAnsIndex(lastAnsIndexes)[e])
+      .toList();
+  final signs = selectedOptionsInText
+      .map((e) => menstruationPainData[e]!.split('\n'))
+      .flatten()
+      .distinct()
+      .toList();
+  final bodyTypes = signs.map((e) => DiagnosedBodyType.fromString(e)).toList();
+  diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: bodyTypes);
+  log.info('Diagnosing for step 3...$bodyTypes');
+  return (diagnosedIssue, bodyTypes.isNotEmpty);
+}
+
+bool canDetermineBy6To8(Map<int, UserAnswer> answers, int index) {
+  // TODO:
+  return true;
 }

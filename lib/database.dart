@@ -186,6 +186,7 @@ const databaseV2Json = [
     "isMultipleChoice": "TRUE",
     "expectedAnsFormat": "options",
     "isOptional": "TRUE",
+    "showByDiagnosis": true,
     "showIf": {
       '6': {
         'text': {

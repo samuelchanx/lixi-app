@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/models/question_model_v2.dart';
+import 'package:lixi/provider/question_provider.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/theme_data.dart';
 import 'package:lixi/utils/date_formatter.dart';
 import 'package:lixi/utils/iterable_utils.dart';
 
-class OneQuestionWidgets extends HookWidget {
+class OneQuestionWidgets extends HookConsumerWidget {
   const OneQuestionWidgets({
     super.key,
     required this.question,
@@ -30,12 +32,15 @@ class OneQuestionWidgets extends HookWidget {
   final TextEditingController textController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final width = useMemoized(() => MediaQuery.of(context).size.width);
     return HookBuilder(
       builder: (context) {
         final answers = useValueListenable(currentAnswers);
-        final shouldNotShow = question.shouldNotShow(answers);
+        final shouldNotShow = question.shouldNotShow(
+          answers,
+          ref.read(questionsProvider),
+        );
         if (shouldNotShow) {
           return const SizedBox.shrink();
         }
