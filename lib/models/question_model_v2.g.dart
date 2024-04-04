@@ -15,6 +15,7 @@ _$QuestionModelV2Impl _$$QuestionModelV2ImplFromJson(
       title: json['title'] as String?,
       image: json['image'] as String?,
       imagesToShow: json['imagesToShow'] as int?,
+      horizontalOption: json['horizontalOption'] as bool?,
       rawOptions: (json['rawOptions'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -55,6 +56,7 @@ Map<String, dynamic> _$$QuestionModelV2ImplToJson(
   writeNotNull('title', instance.title);
   writeNotNull('image', instance.image);
   writeNotNull('imagesToShow', instance.imagesToShow);
+  writeNotNull('horizontalOption', instance.horizontalOption);
   val['rawOptions'] = instance.rawOptions;
   val['group'] = instance.group;
   writeNotNull('transformedOptions', instance.transformedOptions);
@@ -82,6 +84,8 @@ const _$AnswerFormatEnumMap = {
   AnswerFormat.numberText: 'numberText',
   AnswerFormat.imageCount: 'imageCount',
   AnswerFormat.bloodColors: 'bloodColors',
+  AnswerFormat.bloodTexture: 'bloodTexture',
+  AnswerFormat.slider: 'slider',
   AnswerFormat.options: 'options',
 };
 
@@ -214,11 +218,47 @@ const _$DiagnosedBodyTypeEnumMap = {
 _$QuestionShowIfNotConditionImpl _$$QuestionShowIfNotConditionImplFromJson(
         Map<String, dynamic> json) =>
     _$QuestionShowIfNotConditionImpl(
-      json['option'] as int,
+      json['option'] as int?,
+      json['text'] == null
+          ? null
+          : ComparisonCondition.fromJson(json['text'] as Map<String, dynamic>),
+      json['questionAnswered'] as bool?,
     );
 
 Map<String, dynamic> _$$QuestionShowIfNotConditionImplToJson(
-        _$QuestionShowIfNotConditionImpl instance) =>
-    <String, dynamic>{
-      'option': instance.option,
-    };
+    _$QuestionShowIfNotConditionImpl instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('option', instance.option);
+  writeNotNull('text', instance.text);
+  writeNotNull('questionAnswered', instance.questionAnswered);
+  return val;
+}
+
+_$ComparisonConditionImpl _$$ComparisonConditionImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ComparisonConditionImpl(
+      json['neq'] as String?,
+      json['eq'] as String?,
+    );
+
+Map<String, dynamic> _$$ComparisonConditionImplToJson(
+    _$ComparisonConditionImpl instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('neq', instance.neq);
+  writeNotNull('eq', instance.eq);
+  return val;
+}

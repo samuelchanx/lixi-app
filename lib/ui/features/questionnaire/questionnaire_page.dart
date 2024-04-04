@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +55,6 @@ class Questionnaire extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPage = useState(0);
     final currentStep = useState(0);
     final isDebugMode = useState(kDebugMode);
 
@@ -70,7 +71,7 @@ class Questionnaire extends HookConsumerWidget {
 
     useEffect(() {
       // controller.diagnose();
-      const nextPage = 1;
+      const nextPage = 2;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (nextPage != -1) {
           currentStep.value = nextPage;
@@ -89,7 +90,7 @@ class Questionnaire extends HookConsumerWidget {
 
     // FIXME: text controller cannot be used for multiple questions
     bool isValidated() {
-      return currentQuestions.every((question) {
+      final unfinishedQuestions = currentQuestions.whereNot((question) {
         final userAnswer = answers.value[questions.indexOf(question)];
         if (question.shouldNotShow(answers.value)) return true;
         switch (question.expectedAnsFormat) {
@@ -100,6 +101,7 @@ class Questionnaire extends HookConsumerWidget {
           case AnswerFormat.date:
             return userAnswer?.dateRange?.length == 2;
           case AnswerFormat.numberText:
+          case AnswerFormat.slider:
             return textController.text.isNotEmpty &&
                 int.tryParse(textController.text) != null;
           case AnswerFormat.options:
@@ -108,11 +110,14 @@ class Questionnaire extends HookConsumerWidget {
             return (userAnswer?.selectedOptionIndex.isNotEmpty ?? false) ||
                 question.canSkipChoice;
         }
-      });
+      }).toList();
+      log.info(
+        'Unfinished questions: ${unfinishedQuestions.map((e) => questions.indexOf(e)).toList()}',
+      );
+      return unfinishedQuestions.isEmpty;
     }
 
     void resetPage() {
-      currentPage.value++;
       textController.text = '';
       dateRange.value = [];
     }
@@ -135,17 +140,20 @@ class Questionnaire extends HookConsumerWidget {
         }
         return;
       }
-      final nextQuestionIndex = controller.saveAndGetNextQuestion(
+      final nextStep = controller.saveAndGetNextQuestion(
         currentStep.value,
         answers.value,
       );
-      if (nextQuestionIndex == -1) {
+      if (nextStep == -1) {
         goToResult(context);
         return;
       }
-      currentStep.value = nextQuestionIndex;
+      log.info('Next step: $nextStep');
+      currentStep.value = nextStep;
       resetPage();
     }
+
+    log.info('Current step: $currentStepValue');
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -166,7 +174,7 @@ class Questionnaire extends HookConsumerWidget {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                'Step ${currentPage.value + 1}',
+                'Step ${min(currentStepValue + 1, 3)}',
                 style: TextStyle(
                   fontSize: 36.0,
                   fontWeight: FontWeight.bold,
@@ -188,13 +196,16 @@ class Questionnaire extends HookConsumerWidget {
                       questionIndex: questionIndexInList,
                       selectedOptionIndexNotifier: selectedOptionIndexNotifier,
                       onChanged: () {
-                        answers.value[questionIndexInList] = UserAnswer(
-                          selectedOptionIndex: selectedOptionIndexNotifier
-                                  .value[questionIndexInList] ??
-                              [],
-                          dateRange: dateRange.value.whereNotNull().toList(),
-                          text: textController.text,
-                        );
+                        answers.value = {
+                          ...answers.value,
+                          questionIndexInList: UserAnswer(
+                            selectedOptionIndex: selectedOptionIndexNotifier
+                                    .value[questionIndexInList] ??
+                                [],
+                            dateRange: dateRange.value.whereNotNull().toList(),
+                            text: textController.text,
+                          ),
+                        };
                         log.info(
                           'onChanged called: $questionIndexInList ${answers.value[questionIndexInList]?.toJson()}',
                         );

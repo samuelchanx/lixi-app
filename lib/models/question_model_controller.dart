@@ -34,13 +34,13 @@ class QuestionControllerV2 {
     // 最近一次月經來幾天？（經期）
     2: const UserAnswer(text: '28'),
     // 經量：月經期最多的一天日用衛生巾（23cm）的使用量, too much
-    4: const UserAnswer(selectedOptionIndex: [2]),
-    // lightDark
+    4: const UserAnswer(text: '3'),
+    // color
     5: const UserAnswer(selectedOptionIndex: [2]),
     // '黏稠', '有血塊'
-    6: const UserAnswer(selectedOptionIndex: [1, 2]),
+    6: const UserAnswer(selectedOptionIndex: [2, 3]),
     // 你有沒有經痛的問題？
-    7: const UserAnswer(selectedOptionIndex: [0]),
+    7: const UserAnswer(text: '2'),
     // 經痛通常在什麼時候發生？(可選多項) 經前
     8: const UserAnswer(selectedOptionIndex: [0]),
     // 怎樣的痛法？nothing answered
@@ -93,10 +93,12 @@ class QuestionControllerV2 {
       jsonEncode(diagnosedIssue),
     );
     log.info('Current index: $currentStep, User answers: $latestAnswers');
-    if (currentStep == questions.length - 1) {
+    if (currentStep == 2) {
       log.info('Ending questionnaire');
+      // TODO: Diagnose
       return -1;
     }
+    return currentStep + 1;
     final currentAnswer = userAnswers[currentStep];
     final nextQuestion = questions[currentStep + 1];
     if (nextQuestion.isOptional) {

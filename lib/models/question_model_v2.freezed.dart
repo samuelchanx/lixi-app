@@ -33,6 +33,8 @@ mixin _$QuestionModelV2 {
   set image(String? value) => throw _privateConstructorUsedError;
   int? get imagesToShow => throw _privateConstructorUsedError;
   set imagesToShow(int? value) => throw _privateConstructorUsedError;
+  bool? get horizontalOption => throw _privateConstructorUsedError;
+  set horizontalOption(bool? value) => throw _privateConstructorUsedError;
   List<String> get rawOptions => throw _privateConstructorUsedError;
   set rawOptions(List<String> value) => throw _privateConstructorUsedError;
   int get group => throw _privateConstructorUsedError;
@@ -87,6 +89,7 @@ abstract class $QuestionModelV2CopyWith<$Res> {
       String? title,
       String? image,
       int? imagesToShow,
+      bool? horizontalOption,
       List<String> rawOptions,
       int group,
       List<String>? transformedOptions,
@@ -120,6 +123,7 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
     Object? title = freezed,
     Object? image = freezed,
     Object? imagesToShow = freezed,
+    Object? horizontalOption = freezed,
     Object? rawOptions = null,
     Object? group = null,
     Object? transformedOptions = freezed,
@@ -158,6 +162,10 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
           ? _value.imagesToShow
           : imagesToShow // ignore: cast_nullable_to_non_nullable
               as int?,
+      horizontalOption: freezed == horizontalOption
+          ? _value.horizontalOption
+          : horizontalOption // ignore: cast_nullable_to_non_nullable
+              as bool?,
       rawOptions: null == rawOptions
           ? _value.rawOptions
           : rawOptions // ignore: cast_nullable_to_non_nullable
@@ -225,6 +233,7 @@ abstract class _$$QuestionModelV2ImplCopyWith<$Res>
       String? title,
       String? image,
       int? imagesToShow,
+      bool? horizontalOption,
       List<String> rawOptions,
       int group,
       List<String>? transformedOptions,
@@ -256,6 +265,7 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
     Object? title = freezed,
     Object? image = freezed,
     Object? imagesToShow = freezed,
+    Object? horizontalOption = freezed,
     Object? rawOptions = null,
     Object? group = null,
     Object? transformedOptions = freezed,
@@ -294,6 +304,10 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
           ? _value.imagesToShow
           : imagesToShow // ignore: cast_nullable_to_non_nullable
               as int?,
+      horizontalOption: freezed == horizontalOption
+          ? _value.horizontalOption
+          : horizontalOption // ignore: cast_nullable_to_non_nullable
+              as bool?,
       rawOptions: null == rawOptions
           ? _value.rawOptions
           : rawOptions // ignore: cast_nullable_to_non_nullable
@@ -356,6 +370,7 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
       this.title,
       this.image,
       this.imagesToShow,
+      this.horizontalOption,
       required this.rawOptions,
       required this.group,
       this.transformedOptions,
@@ -386,6 +401,8 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   @override
   int? imagesToShow;
   @override
+  bool? horizontalOption;
+  @override
   List<String> rawOptions;
   @override
   int group;
@@ -414,7 +431,7 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
 
   @override
   String toString() {
-    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, transformedQuestionText: $transformedQuestionText, title: $title, image: $image, imagesToShow: $imagesToShow, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, showIf: $showIf, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
+    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, transformedQuestionText: $transformedQuestionText, title: $title, image: $image, imagesToShow: $imagesToShow, horizontalOption: $horizontalOption, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, showIf: $showIf, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
   }
 
   @JsonKey(ignore: true)
@@ -440,6 +457,7 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
       String? title,
       String? image,
       int? imagesToShow,
+      bool? horizontalOption,
       required List<String> rawOptions,
       required int group,
       List<String>? transformedOptions,
@@ -475,6 +493,9 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   @override
   int? get imagesToShow;
   set imagesToShow(int? value);
+  @override
+  bool? get horizontalOption;
+  set horizontalOption(bool? value);
   @override
   List<String> get rawOptions;
   set rawOptions(List<String> value);
@@ -1033,7 +1054,9 @@ QuestionShowIfNotCondition _$QuestionShowIfNotConditionFromJson(
 
 /// @nodoc
 mixin _$QuestionShowIfNotCondition {
-  int get option => throw _privateConstructorUsedError;
+  int? get option => throw _privateConstructorUsedError;
+  ComparisonCondition? get text => throw _privateConstructorUsedError;
+  bool? get questionAnswered => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1048,7 +1071,9 @@ abstract class $QuestionShowIfNotConditionCopyWith<$Res> {
       _$QuestionShowIfNotConditionCopyWithImpl<$Res,
           QuestionShowIfNotCondition>;
   @useResult
-  $Res call({int option});
+  $Res call({int? option, ComparisonCondition? text, bool? questionAnswered});
+
+  $ComparisonConditionCopyWith<$Res>? get text;
 }
 
 /// @nodoc
@@ -1065,14 +1090,36 @@ class _$QuestionShowIfNotConditionCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? option = null,
+    Object? option = freezed,
+    Object? text = freezed,
+    Object? questionAnswered = freezed,
   }) {
     return _then(_value.copyWith(
-      option: null == option
+      option: freezed == option
           ? _value.option
           : option // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
+      text: freezed == text
+          ? _value.text
+          : text // ignore: cast_nullable_to_non_nullable
+              as ComparisonCondition?,
+      questionAnswered: freezed == questionAnswered
+          ? _value.questionAnswered
+          : questionAnswered // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ComparisonConditionCopyWith<$Res>? get text {
+    if (_value.text == null) {
+      return null;
+    }
+
+    return $ComparisonConditionCopyWith<$Res>(_value.text!, (value) {
+      return _then(_value.copyWith(text: value) as $Val);
+    });
   }
 }
 
@@ -1085,7 +1132,10 @@ abstract class _$$QuestionShowIfNotConditionImplCopyWith<$Res>
       __$$QuestionShowIfNotConditionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int option});
+  $Res call({int? option, ComparisonCondition? text, bool? questionAnswered});
+
+  @override
+  $ComparisonConditionCopyWith<$Res>? get text;
 }
 
 /// @nodoc
@@ -1101,13 +1151,23 @@ class __$$QuestionShowIfNotConditionImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? option = null,
+    Object? option = freezed,
+    Object? text = freezed,
+    Object? questionAnswered = freezed,
   }) {
     return _then(_$QuestionShowIfNotConditionImpl(
-      null == option
+      freezed == option
           ? _value.option
           : option // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
+      freezed == text
+          ? _value.text
+          : text // ignore: cast_nullable_to_non_nullable
+              as ComparisonCondition?,
+      freezed == questionAnswered
+          ? _value.questionAnswered
+          : questionAnswered // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -1115,18 +1175,24 @@ class __$$QuestionShowIfNotConditionImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$QuestionShowIfNotConditionImpl extends _QuestionShowIfNotCondition {
-  const _$QuestionShowIfNotConditionImpl(this.option) : super._();
+  const _$QuestionShowIfNotConditionImpl(
+      this.option, this.text, this.questionAnswered)
+      : super._();
 
   factory _$QuestionShowIfNotConditionImpl.fromJson(
           Map<String, dynamic> json) =>
       _$$QuestionShowIfNotConditionImplFromJson(json);
 
   @override
-  final int option;
+  final int? option;
+  @override
+  final ComparisonCondition? text;
+  @override
+  final bool? questionAnswered;
 
   @override
   String toString() {
-    return 'QuestionShowIfNotCondition(option: $option)';
+    return 'QuestionShowIfNotCondition(option: $option, text: $text, questionAnswered: $questionAnswered)';
   }
 
   @override
@@ -1134,12 +1200,15 @@ class _$QuestionShowIfNotConditionImpl extends _QuestionShowIfNotCondition {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$QuestionShowIfNotConditionImpl &&
-            (identical(other.option, option) || other.option == option));
+            (identical(other.option, option) || other.option == option) &&
+            (identical(other.text, text) || other.text == text) &&
+            (identical(other.questionAnswered, questionAnswered) ||
+                other.questionAnswered == questionAnswered));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, option);
+  int get hashCode => Object.hash(runtimeType, option, text, questionAnswered);
 
   @JsonKey(ignore: true)
   @override
@@ -1157,17 +1226,178 @@ class _$QuestionShowIfNotConditionImpl extends _QuestionShowIfNotCondition {
 }
 
 abstract class _QuestionShowIfNotCondition extends QuestionShowIfNotCondition {
-  const factory _QuestionShowIfNotCondition(final int option) =
-      _$QuestionShowIfNotConditionImpl;
+  const factory _QuestionShowIfNotCondition(
+      final int? option,
+      final ComparisonCondition? text,
+      final bool? questionAnswered) = _$QuestionShowIfNotConditionImpl;
   const _QuestionShowIfNotCondition._() : super._();
 
   factory _QuestionShowIfNotCondition.fromJson(Map<String, dynamic> json) =
       _$QuestionShowIfNotConditionImpl.fromJson;
 
   @override
-  int get option;
+  int? get option;
+  @override
+  ComparisonCondition? get text;
+  @override
+  bool? get questionAnswered;
   @override
   @JsonKey(ignore: true)
   _$$QuestionShowIfNotConditionImplCopyWith<_$QuestionShowIfNotConditionImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+ComparisonCondition _$ComparisonConditionFromJson(Map<String, dynamic> json) {
+  return _ComparisonCondition.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ComparisonCondition {
+  String? get neq => throw _privateConstructorUsedError;
+  String? get eq => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ComparisonConditionCopyWith<ComparisonCondition> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ComparisonConditionCopyWith<$Res> {
+  factory $ComparisonConditionCopyWith(
+          ComparisonCondition value, $Res Function(ComparisonCondition) then) =
+      _$ComparisonConditionCopyWithImpl<$Res, ComparisonCondition>;
+  @useResult
+  $Res call({String? neq, String? eq});
+}
+
+/// @nodoc
+class _$ComparisonConditionCopyWithImpl<$Res, $Val extends ComparisonCondition>
+    implements $ComparisonConditionCopyWith<$Res> {
+  _$ComparisonConditionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? neq = freezed,
+    Object? eq = freezed,
+  }) {
+    return _then(_value.copyWith(
+      neq: freezed == neq
+          ? _value.neq
+          : neq // ignore: cast_nullable_to_non_nullable
+              as String?,
+      eq: freezed == eq
+          ? _value.eq
+          : eq // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ComparisonConditionImplCopyWith<$Res>
+    implements $ComparisonConditionCopyWith<$Res> {
+  factory _$$ComparisonConditionImplCopyWith(_$ComparisonConditionImpl value,
+          $Res Function(_$ComparisonConditionImpl) then) =
+      __$$ComparisonConditionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? neq, String? eq});
+}
+
+/// @nodoc
+class __$$ComparisonConditionImplCopyWithImpl<$Res>
+    extends _$ComparisonConditionCopyWithImpl<$Res, _$ComparisonConditionImpl>
+    implements _$$ComparisonConditionImplCopyWith<$Res> {
+  __$$ComparisonConditionImplCopyWithImpl(_$ComparisonConditionImpl _value,
+      $Res Function(_$ComparisonConditionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? neq = freezed,
+    Object? eq = freezed,
+  }) {
+    return _then(_$ComparisonConditionImpl(
+      freezed == neq
+          ? _value.neq
+          : neq // ignore: cast_nullable_to_non_nullable
+              as String?,
+      freezed == eq
+          ? _value.eq
+          : eq // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ComparisonConditionImpl extends _ComparisonCondition {
+  const _$ComparisonConditionImpl(this.neq, this.eq) : super._();
+
+  factory _$ComparisonConditionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ComparisonConditionImplFromJson(json);
+
+  @override
+  final String? neq;
+  @override
+  final String? eq;
+
+  @override
+  String toString() {
+    return 'ComparisonCondition(neq: $neq, eq: $eq)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ComparisonConditionImpl &&
+            (identical(other.neq, neq) || other.neq == neq) &&
+            (identical(other.eq, eq) || other.eq == eq));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, neq, eq);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ComparisonConditionImplCopyWith<_$ComparisonConditionImpl> get copyWith =>
+      __$$ComparisonConditionImplCopyWithImpl<_$ComparisonConditionImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ComparisonConditionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ComparisonCondition extends ComparisonCondition {
+  const factory _ComparisonCondition(final String? neq, final String? eq) =
+      _$ComparisonConditionImpl;
+  const _ComparisonCondition._() : super._();
+
+  factory _ComparisonCondition.fromJson(Map<String, dynamic> json) =
+      _$ComparisonConditionImpl.fromJson;
+
+  @override
+  String? get neq;
+  @override
+  String? get eq;
+  @override
+  @JsonKey(ignore: true)
+  _$$ComparisonConditionImplCopyWith<_$ComparisonConditionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

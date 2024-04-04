@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lixi/utils/dart_helper.dart';
 
@@ -13,6 +14,7 @@ List<QuestionModelV2> parseDatabaseV2(List<Map<String, dynamic>> data) {
         rawOptions: e['options']?.split(',') ?? [],
         group: e['group'] ?? -1,
         title: e['title'],
+        horizontalOption: e['horizontalOption'],
         imagesToShow: e['imagesToShow'],
         image: e['image'],
         showIf: (e['showIf'] as Map<String, dynamic>?)?.let((e) {
@@ -52,6 +54,7 @@ class QuestionModelV2 with _$QuestionModelV2 {
     String? title,
     String? image,
     int? imagesToShow,
+    bool? horizontalOption,
     required List<String> rawOptions,
     required int group,
     List<String>? transformedOptions,
@@ -80,6 +83,20 @@ class QuestionModelV2 with _$QuestionModelV2 {
   }
 
   List<String> get options => transformedOptions ?? rawOptions;
+
+  List<String> optionsByLastAnsIndex(List<int> lastAnsIndex) {
+    if (optionAdditionalStep != OptionAdditionalStep.filteringByLastAnsIndex) {
+      return options;
+    }
+    return rawOptions
+        .whereIndexed(
+          (element, index) => lastAnsIndex.contains(index),
+        )
+        .map((e) => e.split(optionSeparator!))
+        .flatten()
+        .distinct()
+        .toList();
+  }
 
   String get questionText => transformedQuestionText ?? question;
 
@@ -136,6 +153,7 @@ enum AnswerFormat {
   imageCount,
   bloodColors,
   bloodTexture,
+  slider,
   options,
 }
 
@@ -267,13 +285,38 @@ enum PeriodTexture {
 class QuestionShowIfNotCondition with _$QuestionShowIfNotCondition {
   const QuestionShowIfNotCondition._();
   const factory QuestionShowIfNotCondition(
-    int option,
+    int? option,
+    ComparisonCondition? text,
+    bool? questionAnswered,
   ) = _QuestionShowIfNotCondition;
 
   bool shouldNotShow(UserAnswer? answer) {
-    return answer?.selectedOptionIndex.contains(option) ?? false;
+    if (questionAnswered != null) {
+      return answer == null;
+    }
+    if (option != null) {
+      return answer?.selectedOptionIndex.contains(option) ?? false;
+    } else if (text != null) {
+      if (text?.neq != null) {
+        return answer?.text == text!.neq!;
+      }
+    }
+
+    return true;
   }
 
   factory QuestionShowIfNotCondition.fromJson(Map<String, dynamic> json) =>
       _$QuestionShowIfNotConditionFromJson(json);
+}
+
+@freezed
+class ComparisonCondition with _$ComparisonCondition {
+  const ComparisonCondition._();
+  const factory ComparisonCondition(
+    String? neq,
+    String? eq,
+  ) = _ComparisonCondition;
+
+  factory ComparisonCondition.fromJson(Map<String, dynamic> json) =>
+      _$ComparisonConditionFromJson(json);
 }

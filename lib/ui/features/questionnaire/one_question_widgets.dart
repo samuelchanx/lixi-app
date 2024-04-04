@@ -35,7 +35,8 @@ class OneQuestionWidgets extends HookWidget {
     return HookBuilder(
       builder: (context) {
         final answers = useValueListenable(currentAnswers);
-        if (question.shouldNotShow(answers)) {
+        final shouldNotShow = question.shouldNotShow(answers);
+        if (shouldNotShow) {
           return const SizedBox.shrink();
         }
         Widget widget;
@@ -58,7 +59,7 @@ class OneQuestionWidgets extends HookWidget {
                           final imageIndex = column * imagesToShow + index;
                           final isSelected = currentCount.value != null &&
                               currentCount.value! >= imageIndex;
-                          return GestureDetector(
+                          return InkWell(
                             onTap: () {
                               textController.text = (imageIndex + 1).toString();
                               currentCount.value = imageIndex;
@@ -127,11 +128,47 @@ class OneQuestionWidgets extends HookWidget {
             );
             break;
           case AnswerFormat.options:
-            final options = question.options;
+            var options = question.options;
+            if (question.optionAdditionalStep ==
+                OptionAdditionalStep.filteringByLastAnsIndex) {
+              options = question.optionsByLastAnsIndex(
+                answers[questionIndex - 1]?.selectedOptionIndex ?? [],
+              );
+            }
             widget = HookBuilder(
               builder: (context) {
                 final optionsAnsMap =
                     useValueListenable(selectedOptionIndexNotifier);
+                final isHorizontal = question.horizontalOption == true;
+                if (isHorizontal) {
+                  return Row(
+                    children: options.mapIndexed((index, e) {
+                      final selected =
+                          optionsAnsMap[questionIndex]?.contains(index) ??
+                              false;
+                      return Expanded(
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: selected,
+                              onChanged: (val) {
+                                selectedOptionIndexNotifier.value = {
+                                  ...optionsAnsMap,
+                                  questionIndex: <int>[
+                                    if (question.isMultipleChoice)
+                                      ...optionsAnsMap[questionIndex] ?? [],
+                                  ].toggle(index),
+                                };
+                                onChanged();
+                              },
+                            ),
+                            Text(e),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  );
+                }
                 return ListView(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -263,7 +300,6 @@ class OneQuestionWidgets extends HookWidget {
             );
             break;
           case AnswerFormat.bloodTexture:
-            // TODO: Handle this case.
             final textures = question.options;
             widget = HookBuilder(
               builder: (context) {
@@ -320,6 +356,34 @@ class OneQuestionWidgets extends HookWidget {
                       ),
                     );
                   }).toList(),
+                );
+              },
+            );
+            break;
+          case AnswerFormat.slider:
+            final options = question.options;
+            final sliderValue = useState(5.0);
+            widget = HookBuilder(
+              builder: (context) {
+                return Row(
+                  children: [
+                    Text(options.first),
+                    Expanded(
+                      child: Slider(
+                        value: sliderValue.value,
+                        onChanged: (value) {
+                          textController.text = value.round().toString();
+                          sliderValue.value = value.roundToDouble();
+                          onChanged();
+                        },
+                        min: 0,
+                        max: 10,
+                        divisions: 10,
+                        label: textController.text,
+                      ),
+                    ),
+                    Text(options.last),
+                  ],
                 );
               },
             );
