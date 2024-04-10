@@ -821,7 +821,7 @@ mixin _$DiagnosedIssue {
   PeriodIssue? get period => throw _privateConstructorUsedError; // Step 2
   PeriodLengthIssue? get periodLength => throw _privateConstructorUsedError;
   PeriodAmountIssue? get periodAmount => throw _privateConstructorUsedError;
-  PeriodColor? get periodColor => throw _privateConstructorUsedError;
+  List<PeriodColor>? get periodColor => throw _privateConstructorUsedError;
   List<PeriodTexture>? get periodTexture =>
       throw _privateConstructorUsedError; // Step 3
   List<DiagnosedBodyType>? get bodyTypes => throw _privateConstructorUsedError;
@@ -842,7 +842,7 @@ abstract class $DiagnosedIssueCopyWith<$Res> {
       {PeriodIssue? period,
       PeriodLengthIssue? periodLength,
       PeriodAmountIssue? periodAmount,
-      PeriodColor? periodColor,
+      List<PeriodColor>? periodColor,
       List<PeriodTexture>? periodTexture,
       List<DiagnosedBodyType>? bodyTypes});
 }
@@ -883,7 +883,7 @@ class _$DiagnosedIssueCopyWithImpl<$Res, $Val extends DiagnosedIssue>
       periodColor: freezed == periodColor
           ? _value.periodColor
           : periodColor // ignore: cast_nullable_to_non_nullable
-              as PeriodColor?,
+              as List<PeriodColor>?,
       periodTexture: freezed == periodTexture
           ? _value.periodTexture
           : periodTexture // ignore: cast_nullable_to_non_nullable
@@ -908,7 +908,7 @@ abstract class _$$DiagnosedIssueImplCopyWith<$Res>
       {PeriodIssue? period,
       PeriodLengthIssue? periodLength,
       PeriodAmountIssue? periodAmount,
-      PeriodColor? periodColor,
+      List<PeriodColor>? periodColor,
       List<PeriodTexture>? periodTexture,
       List<DiagnosedBodyType>? bodyTypes});
 }
@@ -945,9 +945,9 @@ class __$$DiagnosedIssueImplCopyWithImpl<$Res>
           : periodAmount // ignore: cast_nullable_to_non_nullable
               as PeriodAmountIssue?,
       periodColor: freezed == periodColor
-          ? _value.periodColor
+          ? _value._periodColor
           : periodColor // ignore: cast_nullable_to_non_nullable
-              as PeriodColor?,
+              as List<PeriodColor>?,
       periodTexture: freezed == periodTexture
           ? _value._periodTexture
           : periodTexture // ignore: cast_nullable_to_non_nullable
@@ -967,10 +967,11 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
       {this.period,
       this.periodLength,
       this.periodAmount,
-      this.periodColor,
+      final List<PeriodColor>? periodColor,
       final List<PeriodTexture>? periodTexture,
       final List<DiagnosedBodyType>? bodyTypes})
-      : _periodTexture = periodTexture,
+      : _periodColor = periodColor,
+        _periodTexture = periodTexture,
         _bodyTypes = bodyTypes,
         super._();
 
@@ -985,8 +986,16 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
   final PeriodLengthIssue? periodLength;
   @override
   final PeriodAmountIssue? periodAmount;
+  final List<PeriodColor>? _periodColor;
   @override
-  final PeriodColor? periodColor;
+  List<PeriodColor>? get periodColor {
+    final value = _periodColor;
+    if (value == null) return null;
+    if (_periodColor is EqualUnmodifiableListView) return _periodColor;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<PeriodTexture>? _periodTexture;
   @override
   List<PeriodTexture>? get periodTexture {
@@ -1024,8 +1033,8 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
                 other.periodLength == periodLength) &&
             (identical(other.periodAmount, periodAmount) ||
                 other.periodAmount == periodAmount) &&
-            (identical(other.periodColor, periodColor) ||
-                other.periodColor == periodColor) &&
+            const DeepCollectionEquality()
+                .equals(other._periodColor, _periodColor) &&
             const DeepCollectionEquality()
                 .equals(other._periodTexture, _periodTexture) &&
             const DeepCollectionEquality()
@@ -1039,7 +1048,7 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
       period,
       periodLength,
       periodAmount,
-      periodColor,
+      const DeepCollectionEquality().hash(_periodColor),
       const DeepCollectionEquality().hash(_periodTexture),
       const DeepCollectionEquality().hash(_bodyTypes));
 
@@ -1063,7 +1072,7 @@ abstract class _DiagnosedIssue extends DiagnosedIssue {
       {final PeriodIssue? period,
       final PeriodLengthIssue? periodLength,
       final PeriodAmountIssue? periodAmount,
-      final PeriodColor? periodColor,
+      final List<PeriodColor>? periodColor,
       final List<PeriodTexture>? periodTexture,
       final List<DiagnosedBodyType>? bodyTypes}) = _$DiagnosedIssueImpl;
   const _DiagnosedIssue._() : super._();
@@ -1078,7 +1087,7 @@ abstract class _DiagnosedIssue extends DiagnosedIssue {
   @override
   PeriodAmountIssue? get periodAmount;
   @override
-  PeriodColor? get periodColor;
+  List<PeriodColor>? get periodColor;
   @override
   List<PeriodTexture>? get periodTexture;
   @override // Step 3

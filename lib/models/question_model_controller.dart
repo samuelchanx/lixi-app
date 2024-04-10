@@ -22,7 +22,7 @@ class QuestionControllerV2 {
   DiagnosedIssue diagnosedIssue = const DiagnosedIssue();
   List<QuestionModelV2> questions;
   Map<int, UserAnswer> userAnswers = {
-    /// Group 0
+    /// Group 0, only for predicting menstruation cycle
     0: UserAnswer(
       dateRange: [
         DateTime(2024, 3, 19),
@@ -62,8 +62,13 @@ class QuestionControllerV2 {
 
   void diagnose() {
     log.info('Diagnosing...');
-    final isNormal = _diagnoseIsNormalPeriodStep1();
-    final step2HaveSigns = _diagnoseForStep2HaveSigns();
+    // Clear the previous diagnosis
+    diagnosedIssue = diagnosedIssue.copyWith(
+      bodyTypes: [],
+    );
+    // final isNormal = _diagnoseIsNormalPeriodStep1();
+    final step2HaveSigns = _diagnoseForStep2Signs();
+    _diagnoseWithBloodTexture();
     final canTell = diagnoseForStep3CanDetermine(
       userAnswers,
       questions,
@@ -105,57 +110,10 @@ class QuestionControllerV2 {
     );
     log.info('Current index: $currentStep, User answers: $latestAnswers');
     if (currentStep == 3) {
-      log.info('Ending questionnaire');
+      log.info('Ending questionnaire, doing final diagnosis');
       diagnose();
       return -1;
     }
-    return currentStep + 1;
-    final currentAnswer = userAnswers[currentStep];
-    final nextQuestion = questions[currentStep + 1];
-    if (nextQuestion.isOptional) {
-      switch (currentStep + 1) {
-        case 2:
-          if (_diagnoseIsNormalPeriodStep1()) {
-            return 3;
-          } else {
-            return 2;
-          }
-        case 6:
-          if (_diagnoseForStep2HaveSigns()) {
-            return 7;
-          } else {
-            return 6;
-          }
-        case 8:
-          if (currentAnswer!.selectedOptionIndex.first == 0) {
-            // Continue pain problems
-            return 8;
-          } else {
-            // Skip menstruation pain problems
-            return 11;
-          }
-        case 10:
-          if (diagnoseForStep3CanDetermine(
-            userAnswers,
-            questions,
-            diagnosedIssue,
-          ).$2) {
-            return 11;
-          } else {
-            return 10;
-          }
-        case 11:
-          _diagnoseForPainImprovement();
-          break;
-      }
-    }
-    if (nextQuestion.optionAdditionalStep ==
-        OptionAdditionalStep.filteringByLastAnsIndex) {
-      // Process for additional answer
-      _processLastAnsFilterOptions(currentAnswer!, currentStep + 1);
-      return currentStep + 1;
-    }
-
     return currentStep + 1;
   }
 
@@ -198,32 +156,56 @@ class QuestionControllerV2 {
     log.info('Diagnosing for pain improvement...$signs');
   }
 
-  bool _diagnoseForStep2HaveSigns() {
-    final periodAmount = userAnswers[4]!.selectedOptionIndex.first;
-    final colorAnswerIndex = userAnswers[5]!.selectedOptionIndex.first;
-    final textureAnswerIndexes = userAnswers[6]?.selectedOptionIndex;
+  bool _diagnoseForStep2Signs() {
+    final periodAmount = int.parse(userAnswers[3]!.text!);
+
     PeriodAmountIssue? periodAmountIssue;
-    periodAmountIssue = periodAmount == 0
-        ? PeriodAmountIssue.tooLittle
-        : periodAmount == 1
-            ? null
-            : PeriodAmountIssue.tooMuch;
-    PeriodColor color = PeriodColor.values[colorAnswerIndex];
+    if (periodAmount < 2) {
+      periodAmountIssue = PeriodAmountIssue.tooLittle;
+    } else if (periodAmount > 4) {
+      periodAmountIssue = PeriodAmountIssue.tooMuch;
+    }
+
+    final colorAnswerIndexes = userAnswers[4]!.selectedOptionIndex;
+    final textureAnswerIndexes = userAnswers[6]?.selectedOptionIndex;
+    final colors =
+        colorAnswerIndexes.map((e) => PeriodColor.values[e]).toList();
     diagnosedIssue = diagnosedIssue.copyWith(
       periodAmount: periodAmountIssue,
-      periodColor: color,
+      periodColor: colors,
       periodTexture:
           textureAnswerIndexes?.map((e) => PeriodTexture.values[e]).toList(),
     );
-    log.info('Diagnosing for step 2...$periodAmountIssue, $color');
-    if (color == PeriodColor.normal || periodAmountIssue == null) {
-      return false;
+    var cannotDiagnose = false;
+    if ((colors.length == 1 && colors.contains(PeriodColor.normal)) ||
+        periodAmountIssue == null) {
+      cannotDiagnose = true;
     }
     if (periodAmountIssue == PeriodAmountIssue.tooMuch &&
-        color == PeriodColor.lightDark) {
-      return false;
+        colors.contains(PeriodColor.lightDark) &&
+        colors.length == 1) {
+      cannotDiagnose = true;
     }
-    return true;
+    final matchIndex = periodAmountIssue == PeriodAmountIssue.tooLittle
+        ? 1
+        : periodAmountIssue == PeriodAmountIssue.tooMuch
+            ? 2
+            : 3;
+    final issuesFromMatch = colors
+        .map((e) {
+          final matchData = colorAmountMatchData
+              .firstWhere((data) => data['color'] == e.title);
+          return matchData.values.elementAt(matchIndex).split('\n');
+        })
+        .flatten()
+        .whereNot((element) => element == 'TBC')
+        .map((e) => DiagnosedBodyType.fromString(e))
+        .toList();
+
+    log.info(
+      'Diagnosing for step 2...$periodAmountIssue, $colors, cannotDiagnose: $cannotDiagnose $issuesFromMatch',
+    );
+    return cannotDiagnose;
   }
 
   bool _diagnoseIsNormalPeriodStep1() {
@@ -269,6 +251,41 @@ class QuestionControllerV2 {
       'Processed last answer for filtering options: ${questions[nextIndex].options}',
     );
   }
+
+  void _diagnoseWithBloodTexture() {
+    // TODO: Update texture
+    final textures = userAnswers[5]
+            ?.selectedOptionIndex
+            .map(
+              (e) => PeriodTexture.values
+                  .firstWhere((element) => element.answerIndex == e),
+            )
+            .toList() ??
+        [];
+    diagnosedIssue = diagnosedIssue.copyWith(periodTexture: textures);
+    // TODO: Diagnose
+    if (diagnosedIssue.periodAmount == PeriodAmountIssue.tooLittle) {
+      // (a) 月經過少+淡紅 options
+      if (diagnosedIssue.periodColor?.contains(PeriodColor.lightRed) ?? false) {
+        if (textures.contains(PeriodTexture.sticky)) {
+          diagnosedIssue = diagnosedIssue.copyWith(
+            bodyTypes: [DiagnosedBodyType.spleenYangNotGoodDamp],
+          );
+        }
+        if (textures.contains(PeriodTexture.dilute)) {
+          diagnosedIssue = diagnosedIssue.copyWith(
+            bodyTypes: [
+              DiagnosedBodyType.liverDeficiencyAndLittleBlood,
+              DiagnosedBodyType.bloodDeficiency,
+              DiagnosedBodyType.bloodyColdVirtual,
+            ],
+          );
+        }
+      }
+      
+      return;
+    }
+  }
 }
 
 (DiagnosedIssue, bool) diagnoseForStep3CanDetermine(
@@ -299,9 +316,4 @@ class QuestionControllerV2 {
   diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: bodyTypes);
   log.info('Diagnosing for step 3...$bodyTypes');
   return (diagnosedIssue, bodyTypes.isNotEmpty);
-}
-
-bool canDetermineBy6To8(Map<int, UserAnswer> answers, int index) {
-  // TODO:
-  return true;
 }

@@ -79,7 +79,7 @@ class QuestionnaireContent extends HookConsumerWidget {
 
     useEffect(() {
       // controller.diagnose();
-      const nextPage = 3;
+      const nextPage = 1;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (nextPage != -1) {
           currentStep.value = nextPage;

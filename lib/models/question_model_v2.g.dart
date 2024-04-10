@@ -132,8 +132,9 @@ _$DiagnosedIssueImpl _$$DiagnosedIssueImplFromJson(Map<String, dynamic> json) =>
           $enumDecodeNullable(_$PeriodLengthIssueEnumMap, json['periodLength']),
       periodAmount:
           $enumDecodeNullable(_$PeriodAmountIssueEnumMap, json['periodAmount']),
-      periodColor:
-          $enumDecodeNullable(_$PeriodColorEnumMap, json['periodColor']),
+      periodColor: (json['periodColor'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$PeriodColorEnumMap, e))
+          .toList(),
       periodTexture: (json['periodTexture'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$PeriodTextureEnumMap, e))
           .toList(),
@@ -157,7 +158,8 @@ Map<String, dynamic> _$$DiagnosedIssueImplToJson(
       'periodLength', _$PeriodLengthIssueEnumMap[instance.periodLength]);
   writeNotNull(
       'periodAmount', _$PeriodAmountIssueEnumMap[instance.periodAmount]);
-  writeNotNull('periodColor', _$PeriodColorEnumMap[instance.periodColor]);
+  writeNotNull('periodColor',
+      instance.periodColor?.map((e) => _$PeriodColorEnumMap[e]!).toList());
   writeNotNull('periodTexture',
       instance.periodTexture?.map((e) => _$PeriodTextureEnumMap[e]!).toList());
   writeNotNull('bodyTypes',
@@ -204,19 +206,18 @@ const _$DiagnosedBodyTypeEnumMap = {
   DiagnosedBodyType.kidneyYinDeficiency: 'kidneyYinDeficiency',
   DiagnosedBodyType.liverQiStagnation: 'liverQiStagnation',
   DiagnosedBodyType.dampheat: 'dampheat',
-  DiagnosedBodyType.weakTemper: 'weakTemper',
-  DiagnosedBodyType.spleenYangIsNotCheerfulPhlegmWet:
-      'spleenYangIsNotCheerfulPhlegmWet',
-  DiagnosedBodyType.liverDeficiencyAndBloodHeartAndSpleenDeficiency:
-      'liverDeficiencyAndBloodHeartAndSpleenDeficiency',
+  DiagnosedBodyType.weakSpleen: 'weakSpleen',
+  DiagnosedBodyType.spleenYangNotGoodDamp: 'spleenYangNotGoodDamp',
+  DiagnosedBodyType.liverDeficiencyAndLittleBlood:
+      'liverDeficiencyAndLittleBlood',
   DiagnosedBodyType.qiDeficiency: 'qiDeficiency',
   DiagnosedBodyType.liverStagnationFire: 'liverStagnationFire',
   DiagnosedBodyType.bloodDeficiency: 'bloodDeficiency',
   DiagnosedBodyType.bloodStasis: 'bloodStasis',
-  DiagnosedBodyType.bloodyFeverVirtual: 'bloodyFeverVirtual',
   DiagnosedBodyType.bloodyFeverReal: 'bloodyFeverReal',
-  DiagnosedBodyType.bloodyVirtual: 'bloodyVirtual',
-  DiagnosedBodyType.bloodyReal: 'bloodyReal',
+  DiagnosedBodyType.bloodyFeverVirtual: 'bloodyFeverVirtual',
+  DiagnosedBodyType.bloodyColdReal: 'bloodyColdReal',
+  DiagnosedBodyType.bloodyColdVirtual: 'bloodyColdVirtual',
 };
 
 _$QuestionShowIfNotConditionImpl _$$QuestionShowIfNotConditionImplFromJson(

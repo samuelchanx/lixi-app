@@ -314,16 +314,23 @@ class OneQuestionWidgets extends HookConsumerWidget {
                 return Row(
                   children: textures.mapIndexed((index, element) {
                     final selected = selectedOption?.contains(index) ?? false;
+                    final shouldGreyOut = index <= 2 &&
+                        selectedOption?.any((element) => element <= 2) ==
+                            true &&
+                        selectedOption?.contains(index) == false;
                     return Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: InkWell(
                           onTap: () {
+                            final currentSelectedOptions =
+                                optionsAnsMap[questionIndex] ?? [];
                             selectedOptionIndexNotifier.value = {
                               ...optionsAnsMap,
                               questionIndex: <int>[
-                                if (question.isMultipleChoice)
-                                  ...optionsAnsMap[questionIndex] ?? [],
+                                ...currentSelectedOptions.where(
+                                  (element) => element > 2 || index > 2,
+                                ),
                               ].toggle(index),
                             };
                             onChanged();
@@ -344,6 +351,7 @@ class OneQuestionWidgets extends HookConsumerWidget {
                                 children: [
                                   Image.asset(
                                     'assets/images/texture_${index + 1}.png',
+                                    color: shouldGreyOut ? Colors.grey : null,
                                   ),
                                   const Gap(8),
                                   Text(

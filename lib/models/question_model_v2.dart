@@ -145,7 +145,7 @@ class DiagnosedIssue with _$DiagnosedIssue {
     // Step 2
     PeriodLengthIssue? periodLength,
     PeriodAmountIssue? periodAmount,
-    PeriodColor? periodColor,
+    List<PeriodColor>? periodColor,
     List<PeriodTexture>? periodTexture,
     // Step 3
     List<DiagnosedBodyType>? bodyTypes,
@@ -242,21 +242,36 @@ const bodyTypesBigCategory = [
 ];
 
 enum DiagnosedBodyType {
+  // 腎氣虛
+  // 腎陰虛
+  // 肝氣鬱結
+  // 濕熱蘊結
+  // 脾氣虛弱
+  // 脾陽不振(痰濕)
+  // 肝虛血少(心脾兩虛)
+  // 氣虛
+  // 肝鬱化火
+  // 血虛
+  // 血瘀
+  // 血熱 (實）
+  // 血熱 (虛）
+  // 血寒（實）
+  // 血寒（虛）
   kidneyQiDeficiency,
   kidneyYinDeficiency,
   liverQiStagnation,
   dampheat,
-  weakTemper,
-  spleenYangIsNotCheerfulPhlegmWet,
-  liverDeficiencyAndBloodHeartAndSpleenDeficiency,
+  weakSpleen,
+  spleenYangNotGoodDamp,
+  liverDeficiencyAndLittleBlood,
   qiDeficiency,
   liverStagnationFire,
   bloodDeficiency,
   bloodStasis,
-  bloodyFeverVirtual,
   bloodyFeverReal,
-  bloodyVirtual,
-  bloodyReal;
+  bloodyFeverVirtual,
+  bloodyColdReal,
+  bloodyColdVirtual;
 
   String get biggerCategory {
     return bodyTypesBigCategory[index];
@@ -293,6 +308,8 @@ enum PeriodTexture {
   dilute,
   sticky,
   withBloodClots;
+
+  int get answerIndex => [0, 2, 3][index];
 
   String get title {
     return ['稀', '黏稠', '有血塊'][index];
