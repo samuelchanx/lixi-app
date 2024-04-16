@@ -194,30 +194,35 @@ class QuestionControllerV2 {
       if (onlyOneBodyTypeOrDiagnosed) return;
 
       final hasMPain = q6MenstruationPainLevel > 0;
-      const options = ['經前', '經期間', '經後'];
-      final mPainPeriodIndexes = userAnswers[7]?.selectedOptionIndex ?? [];
-      final bodyTypes = filterBodyTypesByData(
-        mPainData,
-        (index, map) {
-          if (!currentBodyTypesIndexes.contains(index)) return false;
-          if (!hasMPain) return map['無'] == 'T';
-          return mPainPeriodIndexes
-              .any((period) => map[options[period]] == 'T');
-        },
-        currentBodyTypes,
-      );
       // 有 - BOTH 氣虛+血虛
-      if (bodyTypes.toSet().contentEquals([
-        DiagnosedBodyType.qiDeficiency,
-        DiagnosedBodyType.bloodDeficiency,
-      ])) {
+      if (diagnosedIssue.periodAmount == PeriodAmountIssue.tooMuch &&
+          diagnosedIssue.periodColor!.contains(PeriodColor.lightRed) &&
+          hasMPain) {
         diagnosedIssue = diagnosedIssue.copyWith(
           diagnosedStep: 2,
+          bodyTypes: [
+            DiagnosedBodyType.qiDeficiency,
+            DiagnosedBodyType.bloodDeficiency,
+          ],
         );
+      } else {
+        const options = ['經前', '經期間', '經後'];
+        final mPainPeriodIndexes = userAnswers[7]?.selectedOptionIndex ?? [];
+        final bodyTypes = filterBodyTypesByData(
+          mPainData,
+          (index, map) {
+            if (!currentBodyTypesIndexes.contains(index)) return false;
+            if (!hasMPain) return map['無'] == 'T';
+            return mPainPeriodIndexes
+                .any((period) => map[options[period]] == 'T');
+          },
+          currentBodyTypes,
+        );
+        diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: bodyTypes);
       }
-      diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: bodyTypes);
+
       confirmDiagnosisIfApplicable(2);
-      log.info('Diagnosing for when pain s2...$bodyTypes');
+      log.info('Diagnosing for when pain s2...${diagnosedIssue.bodyTypes}');
     }
 
     void performDiagnosisPainSymptomsS3() {
