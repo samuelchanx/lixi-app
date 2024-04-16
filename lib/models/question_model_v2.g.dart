@@ -138,6 +138,7 @@ _$DiagnosedIssueImpl _$$DiagnosedIssueImplFromJson(Map<String, dynamic> json) =>
       periodTexture: (json['periodTexture'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$PeriodTextureEnumMap, e))
           .toList(),
+      diagnosedStep: json['diagnosedStep'] as int?,
       bodyTypes: (json['bodyTypes'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$DiagnosedBodyTypeEnumMap, e))
           .toList(),
@@ -162,6 +163,7 @@ Map<String, dynamic> _$$DiagnosedIssueImplToJson(
       instance.periodColor?.map((e) => _$PeriodColorEnumMap[e]!).toList());
   writeNotNull('periodTexture',
       instance.periodTexture?.map((e) => _$PeriodTextureEnumMap[e]!).toList());
+  writeNotNull('diagnosedStep', instance.diagnosedStep);
   writeNotNull('bodyTypes',
       instance.bodyTypes?.map((e) => _$DiagnosedBodyTypeEnumMap[e]!).toList());
   return val;

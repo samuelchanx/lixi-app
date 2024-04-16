@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/provider/question_provider.dart';
+import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/theme_data.dart';
 import 'package:lixi/utils/date_formatter.dart';
@@ -34,6 +35,10 @@ class OneQuestionWidgets extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final width = useMemoized(() => MediaQuery.of(context).size.width);
+    final sliderValue = useState(5.0);
+    final imageRowsToShow = useState(1);
+    final currentImageCount = useState<int?>(null);
+    final controller = ref.watch(questionControllerProvider);
     return HookBuilder(
       builder: (context) {
         final answers = useValueListenable(currentAnswers);
@@ -47,13 +52,10 @@ class OneQuestionWidgets extends HookConsumerWidget {
         Widget widget;
         switch (question.expectedAnsFormat) {
           case AnswerFormat.imageCount:
-            final rowsToShow = useState(1);
-            final currentCount =
-                useState(int.tryParse(answers[questionIndex]?.text ?? ''));
             final imagesToShow = question.imagesToShow!;
             widget = Column(
               children: [
-                ...List.generate(rowsToShow.value, (column) {
+                ...List.generate(imageRowsToShow.value, (column) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Row(
@@ -62,12 +64,12 @@ class OneQuestionWidgets extends HookConsumerWidget {
                         question.imagesToShow!,
                         (index) {
                           final imageIndex = column * imagesToShow + index;
-                          final isSelected = currentCount.value != null &&
-                              currentCount.value! >= imageIndex;
+                          final isSelected = currentImageCount.value != null &&
+                              currentImageCount.value! >= imageIndex;
                           return InkWell(
                             onTap: () {
                               textController.text = (imageIndex + 1).toString();
-                              currentCount.value = imageIndex;
+                              currentImageCount.value = imageIndex;
                               onChanged();
                             },
                             child: Image.asset(
@@ -83,7 +85,7 @@ class OneQuestionWidgets extends HookConsumerWidget {
                 }),
                 IconButton(
                   onPressed: () {
-                    rowsToShow.value++;
+                    imageRowsToShow.value++;
                   },
                   iconSize: 32,
                   icon: const Icon(Icons.add_circle),
@@ -133,6 +135,7 @@ class OneQuestionWidgets extends HookConsumerWidget {
             );
             break;
           case AnswerFormat.options:
+          case AnswerFormat.otherSymptoms:
             var options = question.options;
             if (question.optionAdditionalStep ==
                 OptionAdditionalStep.filteringByLastAnsIndex) {
@@ -140,6 +143,10 @@ class OneQuestionWidgets extends HookConsumerWidget {
                 answers[questionIndex - 1]?.selectedOptionIndex ?? [],
               );
             }
+            if (question.expectedAnsFormat == AnswerFormat.otherSymptoms) {
+              options = controller.getOtherQuestions(question.options);
+            }
+            
             widget = HookBuilder(
               builder: (context) {
                 final optionsAnsMap =
@@ -375,7 +382,7 @@ class OneQuestionWidgets extends HookConsumerWidget {
             break;
           case AnswerFormat.slider:
             final options = question.options;
-            final sliderValue = useState(5.0);
+
             widget = HookBuilder(
               builder: (context) {
                 return Row(

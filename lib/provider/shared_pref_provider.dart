@@ -12,6 +12,7 @@ const userAnswerSaveKey = 'questionnaire_v2_user_answers';
 const diagnosedIssueSaveKey = 'questionnaire_v2_diagnosed_issue';
 final userAnswersProvider = StateProvider<Map<int, UserAnswer>>(
   (ref) {
+    return {};
     final answerString =
         ref.read(sharedPreferencesProvider).getString(userAnswerSaveKey);
     if (answerString == null) {

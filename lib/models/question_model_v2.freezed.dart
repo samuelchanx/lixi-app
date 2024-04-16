@@ -822,8 +822,8 @@ mixin _$DiagnosedIssue {
   PeriodLengthIssue? get periodLength => throw _privateConstructorUsedError;
   PeriodAmountIssue? get periodAmount => throw _privateConstructorUsedError;
   List<PeriodColor>? get periodColor => throw _privateConstructorUsedError;
-  List<PeriodTexture>? get periodTexture =>
-      throw _privateConstructorUsedError; // Step 3
+  List<PeriodTexture>? get periodTexture => throw _privateConstructorUsedError;
+  int? get diagnosedStep => throw _privateConstructorUsedError; // Step 3
   List<DiagnosedBodyType>? get bodyTypes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -844,6 +844,7 @@ abstract class $DiagnosedIssueCopyWith<$Res> {
       PeriodAmountIssue? periodAmount,
       List<PeriodColor>? periodColor,
       List<PeriodTexture>? periodTexture,
+      int? diagnosedStep,
       List<DiagnosedBodyType>? bodyTypes});
 }
 
@@ -865,6 +866,7 @@ class _$DiagnosedIssueCopyWithImpl<$Res, $Val extends DiagnosedIssue>
     Object? periodAmount = freezed,
     Object? periodColor = freezed,
     Object? periodTexture = freezed,
+    Object? diagnosedStep = freezed,
     Object? bodyTypes = freezed,
   }) {
     return _then(_value.copyWith(
@@ -888,6 +890,10 @@ class _$DiagnosedIssueCopyWithImpl<$Res, $Val extends DiagnosedIssue>
           ? _value.periodTexture
           : periodTexture // ignore: cast_nullable_to_non_nullable
               as List<PeriodTexture>?,
+      diagnosedStep: freezed == diagnosedStep
+          ? _value.diagnosedStep
+          : diagnosedStep // ignore: cast_nullable_to_non_nullable
+              as int?,
       bodyTypes: freezed == bodyTypes
           ? _value.bodyTypes
           : bodyTypes // ignore: cast_nullable_to_non_nullable
@@ -910,6 +916,7 @@ abstract class _$$DiagnosedIssueImplCopyWith<$Res>
       PeriodAmountIssue? periodAmount,
       List<PeriodColor>? periodColor,
       List<PeriodTexture>? periodTexture,
+      int? diagnosedStep,
       List<DiagnosedBodyType>? bodyTypes});
 }
 
@@ -929,6 +936,7 @@ class __$$DiagnosedIssueImplCopyWithImpl<$Res>
     Object? periodAmount = freezed,
     Object? periodColor = freezed,
     Object? periodTexture = freezed,
+    Object? diagnosedStep = freezed,
     Object? bodyTypes = freezed,
   }) {
     return _then(_$DiagnosedIssueImpl(
@@ -952,6 +960,10 @@ class __$$DiagnosedIssueImplCopyWithImpl<$Res>
           ? _value._periodTexture
           : periodTexture // ignore: cast_nullable_to_non_nullable
               as List<PeriodTexture>?,
+      diagnosedStep: freezed == diagnosedStep
+          ? _value.diagnosedStep
+          : diagnosedStep // ignore: cast_nullable_to_non_nullable
+              as int?,
       bodyTypes: freezed == bodyTypes
           ? _value._bodyTypes
           : bodyTypes // ignore: cast_nullable_to_non_nullable
@@ -969,6 +981,7 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
       this.periodAmount,
       final List<PeriodColor>? periodColor,
       final List<PeriodTexture>? periodTexture,
+      this.diagnosedStep,
       final List<DiagnosedBodyType>? bodyTypes})
       : _periodColor = periodColor,
         _periodTexture = periodTexture,
@@ -1006,6 +1019,8 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
     return EqualUnmodifiableListView(value);
   }
 
+  @override
+  final int? diagnosedStep;
 // Step 3
   final List<DiagnosedBodyType>? _bodyTypes;
 // Step 3
@@ -1020,7 +1035,7 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
 
   @override
   String toString() {
-    return 'DiagnosedIssue(period: $period, periodLength: $periodLength, periodAmount: $periodAmount, periodColor: $periodColor, periodTexture: $periodTexture, bodyTypes: $bodyTypes)';
+    return 'DiagnosedIssue(period: $period, periodLength: $periodLength, periodAmount: $periodAmount, periodColor: $periodColor, periodTexture: $periodTexture, diagnosedStep: $diagnosedStep, bodyTypes: $bodyTypes)';
   }
 
   @override
@@ -1037,6 +1052,8 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
                 .equals(other._periodColor, _periodColor) &&
             const DeepCollectionEquality()
                 .equals(other._periodTexture, _periodTexture) &&
+            (identical(other.diagnosedStep, diagnosedStep) ||
+                other.diagnosedStep == diagnosedStep) &&
             const DeepCollectionEquality()
                 .equals(other._bodyTypes, _bodyTypes));
   }
@@ -1050,6 +1067,7 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
       periodAmount,
       const DeepCollectionEquality().hash(_periodColor),
       const DeepCollectionEquality().hash(_periodTexture),
+      diagnosedStep,
       const DeepCollectionEquality().hash(_bodyTypes));
 
   @JsonKey(ignore: true)
@@ -1074,6 +1092,7 @@ abstract class _DiagnosedIssue extends DiagnosedIssue {
       final PeriodAmountIssue? periodAmount,
       final List<PeriodColor>? periodColor,
       final List<PeriodTexture>? periodTexture,
+      final int? diagnosedStep,
       final List<DiagnosedBodyType>? bodyTypes}) = _$DiagnosedIssueImpl;
   const _DiagnosedIssue._() : super._();
 
@@ -1090,6 +1109,8 @@ abstract class _DiagnosedIssue extends DiagnosedIssue {
   List<PeriodColor>? get periodColor;
   @override
   List<PeriodTexture>? get periodTexture;
+  @override
+  int? get diagnosedStep;
   @override // Step 3
   List<DiagnosedBodyType>? get bodyTypes;
   @override

@@ -17,15 +17,13 @@ class ResultPage extends HookConsumerWidget {
     final diagnosedIssue = useMemoized(
       () =>
           ModalRoute.of(context)!.settings.arguments as DiagnosedIssue? ??
-          const DiagnosedIssue(),
+          const DiagnosedIssue(
+            bodyTypes: [
+              DiagnosedBodyType.bloodDeficiency,
+              DiagnosedBodyType.bloodyColdReal,
+            ],
+          ),
     );
-    // useEffect(
-    //   () {
-    //     controller.diagnose();
-    //     return null;
-    //   },
-    //   const [],
-    // );
     final issues = diagnosedIssue.toJson();
     return Scaffold(
       body: SingleChildScrollView(
@@ -41,40 +39,73 @@ class ResultPage extends HookConsumerWidget {
               alignment: Alignment.centerLeft,
               child: FadeInDown(
                 duration: const Duration(seconds: 1),
-                child: const Text(
-                  '診斷',
-                  style: TextStyle(
+                child: Text(
+                  '診斷：${diagnosedIssue.bodyTypes?.map((e) => e.title).join(', ')}',
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
+            const Gap(16),
             Align(
               alignment: Alignment.centerLeft,
               child: FadeInDown(
                 duration: const Duration(seconds: 1),
                 delay: const Duration(milliseconds: 500),
-                child: const Text(
-                  'lixi治療方案',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'lixi治療方案：',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '月經期 — 理血舒氣\n經後期 — 補肝腎，養沖任，調和氣血\n排卵期 — 溫補腎陽，填補腎陰\n經前期 — 肝腎同調',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
+            // TODO:
+            const Gap(16),
             Align(
               alignment: Alignment.centerLeft,
               child: FadeInDown(
                 duration: const Duration(seconds: 1),
                 delay: const Duration(milliseconds: 500),
-                child: const Text(
-                  'lixi使用方法',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Builder(
+                  builder: (context) {
+                    const periodText = '''月經期 [] 
+經後期 [] New Moon 早 (1) | 晚 (1)
+排卵期 [] Gibbous 早 (2.1) | 晚(2.2)
+經前期 [] Full Moon 早 (3.1) | 晚(3.2)''';
+                    return const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'lixi使用方法：',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          periodText,
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),

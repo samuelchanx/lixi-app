@@ -18,7 +18,10 @@ import 'package:lixi/ui/widgets/lixi_slogan.dart';
 import 'package:lixi/utils/logger.dart';
 
 final questionControllerProvider = Provider.autoDispose<QuestionControllerV2>(
-  (ref) => throw UnimplementedError(),
+  (ref) => QuestionControllerV2(
+    questions: ref.watch(questionsProvider),
+    ref: ref,
+  ),
 );
 
 class QuestionnairePage extends HookConsumerWidget {
@@ -79,7 +82,7 @@ class QuestionnaireContent extends HookConsumerWidget {
 
     useEffect(() {
       // controller.diagnose();
-      const nextPage = 1;
+      const nextPage = 4;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (nextPage != -1) {
           currentStep.value = nextPage;
@@ -115,6 +118,7 @@ class QuestionnaireContent extends HookConsumerWidget {
           case AnswerFormat.options:
           case AnswerFormat.bloodColors:
           case AnswerFormat.bloodTexture:
+          case AnswerFormat.otherSymptoms:
             return (userAnswer?.selectedOptionIndex.isNotEmpty ?? false) ||
                 question.canSkipChoice;
         }

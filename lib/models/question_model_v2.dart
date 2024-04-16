@@ -82,7 +82,7 @@ class QuestionModelV2 with _$QuestionModelV2 {
   ) {
     if (showIf == null) return false;
     if (showByDiagnosis == true) {
-      final canDetermineAlready = diagnoseForStep3CanDetermine(
+      final canDetermineAlready = diagnoseForStep3PainTypes(
         answers!,
         questions,
         const DiagnosedIssue(),
@@ -147,6 +147,7 @@ class DiagnosedIssue with _$DiagnosedIssue {
     PeriodAmountIssue? periodAmount,
     List<PeriodColor>? periodColor,
     List<PeriodTexture>? periodTexture,
+    int? diagnosedStep,
     // Step 3
     List<DiagnosedBodyType>? bodyTypes,
   }) = _DiagnosedIssue;
@@ -173,6 +174,7 @@ enum AnswerFormat {
   bloodTexture,
   slider,
   options,
+  otherSymptoms,
 }
 
 enum PeriodIssue {
@@ -189,21 +191,21 @@ enum PeriodIssue {
 enum PeriodColor {
   lightRed,
   lightDark,
+  normal,
   brightRed,
   deepRed,
   purpleRed,
-  deepPurple,
-  normal;
+  deepPurple;
 
   String get title {
     return [
       '淡紅',
       '淡黯',
+      '正常',
       '鮮紅',
       '深紅',
-      '紫紅',
       '深紫',
-      '正常',
+      '紫紅',
     ][index];
   }
 }
@@ -235,10 +237,10 @@ const bodyTypesBigCategory = [
   '肝鬱化火',
   '血虛',
   '血瘀',
-  '血熱',
-  '血熱',
-  '血寒',
-  '血寒',
+  '血熱(實)',
+  '血熱(虛)',
+  '血寒(實)',
+  '血寒(虛)',
 ];
 
 enum DiagnosedBodyType {
@@ -276,6 +278,9 @@ enum DiagnosedBodyType {
   String get biggerCategory {
     return bodyTypesBigCategory[index];
   }
+
+  @override
+  String toString() => title;
 
   static DiagnosedBodyType fromString(String type) {
     return DiagnosedBodyType.values.firstWhere(
