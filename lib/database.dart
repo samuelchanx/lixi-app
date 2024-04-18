@@ -154,10 +154,10 @@ const databaseV2Json = [
   {
     "question": "經痛有什麼表現？(可選多項)",
     "options":
-        "月經不暢順、絞痛、感覺冰凍、灼熱疼痛、有固定痛點、脹痛、腹部有包塊，但可推散、腰部疼痛,月經不暢順、絞痛、長期隱隱痛、感覺冰凍、灼熱疼痛、有固定痛點、脹痛、有下墜感、腹部有包塊，但可推散、腰部疼痛,長期隱隱痛、有下墜感、腰部疼痛",
-    "optionSeparator": "、",
+        "月經不暢順,絞痛,長期隱隱痛,感覺冰凍,灼熱疼痛,有固定痛點,脹痛,有下墜感,腹部有包塊，但可推散,腰部疼痛",
+    "optionSeparator": "",
     "group": 2,
-    "optionAdditionalStep": "filteringByLastAnsIndex",
+    "optionAdditionalStep": "",
     "isMultipleChoice": "TRUE",
     "expectedAnsFormat": "options",
     "canSkipChoice": "TRUE",

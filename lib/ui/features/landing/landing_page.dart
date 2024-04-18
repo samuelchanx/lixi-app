@@ -11,6 +11,7 @@ import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/styles.dart';
 import 'package:lixi/ui/widgets/lixi_logo.dart';
 import 'package:lixi/ui/widgets/lixi_slogan.dart';
+import 'package:lixi/utils/logger.dart';
 
 class LandingPage extends HookConsumerWidget {
   const LandingPage({
@@ -129,7 +130,11 @@ class LandingPage extends HookConsumerWidget {
                           onPressed: () {
                             final controller =
                                 ref.read(questionControllerProvider);
-                            controller.startTest();
+                            try {
+                              controller.startTest();
+                            } catch (e, stack) {
+                              log.severe('$e $stack');
+                            }
                           },
                           child: const Text('Test questionnaire'),
                         ),

@@ -171,73 +171,14 @@ class QuestionControllerV2 {
   }
 
   void startTest() {
-    const testingIndexes = [2];
-    final testingResults = [];
+    final testingIndexes = List.generate(testingData.length, (index) => index);
+    final testingResults = <(Map<int, UserAnswer>, DiagnosedIssue)>[];
     for (var element in testingIndexes) {
       log.info('Testing for index $element');
       final data = testingData[element];
       diagnosedIssue = const DiagnosedIssue();
-      Map<int, UserAnswer> userAnswers = {};
-      data.forEach((key, valueObj) {
-        if (key == 'Questions') return;
-        if (key == '診斷') return;
-        final value = valueObj.toString();
-        if (key == '1') {
-          userAnswers[0] = UserAnswer(
-            dateRange: [
-              DateTime.parse(value.split('-').first),
-              DateTime.parse(value.split('-').last),
-            ],
-          );
-        }
-        // if (key == '2') {
-        //   userAnswers[1] = UserAnswer(text: value);
-        // }
-        if (key == '3') {
-          userAnswers[1] = UserAnswer(selectedOptionIndex: [int.parse(value)]);
-        }
-        if (key == '4') {
-          userAnswers[2] = UserAnswer(text: value);
-        }
-        if (key == '5') {
-          userAnswers[3] = UserAnswer(text: value);
-        }
-        if (key == '6') {
-          userAnswers[4] = UserAnswer(
-            selectedOptionIndex:
-                value.split(',').map((e) => e.toInt()).toList(),
-          );
-        }
-        if (key == '7') {
-          userAnswers[5] = UserAnswer(
-            selectedOptionIndex:
-                value.split(',').map((e) => e.toInt()).toList(),
-          );
-        }
-        if (key == '8') {
-          userAnswers[6] = UserAnswer(text: value);
-        }
-        if (key == '9') {
-          userAnswers[7] = UserAnswer(
-            selectedOptionIndex:
-                value.split(',').map((e) => e.toInt()).toList(),
-          );
-        }
-        if (key == '10') {
-          userAnswers[8] = UserAnswer(
-            selectedOptionIndex:
-                value.split(',').map((e) => e.toInt()).toList(),
-          );
-        }
-        if (key == '11') {
-          userAnswers[9] = UserAnswer(
-            selectedOptionIndex: value.isEmpty
-                ? []
-                : value.split(',').map((e) => e.toInt()).toList(),
-          );
-        }
-      });
-      this.userAnswers = userAnswers;
+
+      userAnswers = _prepareQuestions(data);
       diagnose();
       testingResults.add(
         (
@@ -246,6 +187,11 @@ class QuestionControllerV2 {
         ),
       );
     }
+    testingResults.forEachIndexed((element, index) {
+      log.info(
+        'Testing result for index ${index + 1}: ${element.$2.bodyTypes!.map((e) => e.title)}',
+      );
+    });
   }
 
   void _diagnoseFinalResult() {
@@ -623,9 +569,10 @@ class QuestionControllerV2 {
     final textures = userAnswers[5]
             ?.selectedOptionIndex
             .map(
-              (e) =>
-                  PeriodTexture.values.firstWhere((tt) => tt.answerIndex == e),
+              (e) => PeriodTexture.values
+                  .firstOrNullWhere((tt) => tt.answerIndex == e),
             )
+            .whereNotNull()
             .toList() ??
         [];
     // FIXME: Should not happen in future in the questionnaire
@@ -636,6 +583,97 @@ class QuestionControllerV2 {
       periodTexture: textures,
     );
     return textures;
+  }
+
+  Map<int, UserAnswer> _prepareQuestions(Map<String, Object> data) {
+    Map<int, UserAnswer> userAnswers = {};
+    for (var e in data.entries) {
+      final key = e.key;
+      final valueObj = e.value;
+      if (key == 'Questions') continue;
+      if (key == '診斷') continue;
+      if (key == 'Remarks') continue;
+      final value = valueObj.toString();
+      if (key == '1') {
+        userAnswers[0] = UserAnswer(
+          dateRange: [
+            DateTime.parse(value.split('-').first),
+            if (value.contains('-')) DateTime.parse(value.split('-').last),
+          ],
+        );
+      }
+      // if (key == '2') {
+      //   userAnswers[1] = UserAnswer(text: value);
+      // }
+      if (key == '3') {
+        userAnswers[1] = UserAnswer(selectedOptionIndex: [int.parse(value)]);
+      }
+      if (key == '4') {
+        userAnswers[2] = UserAnswer(text: value);
+      }
+      if (key == '5') {
+        userAnswers[3] = UserAnswer(text: value);
+      }
+      if (key == '6') {
+        userAnswers[4] = UserAnswer(
+          selectedOptionIndex: value.isNotEmpty
+              ? value.split(',').map((e) => e.toInt()).toList()
+              : [],
+        );
+      }
+      if (key == '7') {
+        userAnswers[5] = UserAnswer(
+          selectedOptionIndex: value.isNotEmpty
+              ? value.split(',').map((e) => e.toInt()).toList()
+              : [],
+        );
+      }
+      if (key == '8') {
+        userAnswers[6] = UserAnswer(text: value);
+      }
+      if (key == '9') {
+        userAnswers[7] = UserAnswer(
+          selectedOptionIndex: value.isNotEmpty
+              ? value.split(',').map((e) => e.toInt()).toList()
+              : [],
+        );
+      }
+      if (key == '10') {
+        // final optionsText = [
+        //   '月經不暢順',
+        //   '絞痛',
+        //   '長期隱隱痛',
+        //   '感覺冰凍',
+        //   '灼熱疼痛',
+        //   '有固定痛點',
+        //   '脹痛',
+        //   '有下墜感',
+        //   '腹部有包塊，但可推散',
+        //   '腰部疼痛',
+        // ];
+        // final filteredOptions = questions[8]
+        //     .optionsByLastAnsIndex(userAnswers[7]!.selectedOptionIndex);
+        userAnswers[8] = UserAnswer(
+          selectedOptionIndex: value.isNotEmpty
+              ? value.split(',').map((e) => e.toInt()).toList()
+              : [],
+        );
+        // if (userAnswers[8]!
+        //     .selectedOptionIndex
+        //     .any((element) => element == -1)) {
+        //   log.warning('Invalid options for question 8: $value');
+        //   continue;
+        // }
+      }
+      if (key == '11') {
+        userAnswers[9] = UserAnswer(
+          selectedOptionIndex: value.isEmpty
+              ? []
+              : value.split(',').map((e) => e.toInt()).toList(),
+        );
+      }
+    }
+    return userAnswers;
   }
 }
 
@@ -656,9 +694,16 @@ class QuestionControllerV2 {
   }
 
   final lastAnsIndexes = userAnswers[7]!.selectedOptionIndex;
-  final selectedOptionsInText = painTypeIndexes
-      .map((e) => questions[8].optionsByLastAnsIndex(lastAnsIndexes)[e])
-      .toList();
+  log.info(
+    'Last answer indexes: $lastAnsIndexes, $painTypeIndexes',
+  );
+  final selectedOptionsInText = painTypeIndexes.map(
+    (e) {
+      final options = questions[8].optionsByLastAnsIndex(lastAnsIndexes);
+      log.info(options);
+      return options[e];
+    },
+  ).toList();
   log.info(
     'Selected options in text: $selectedOptionsInText, $painTypeIndexes',
   );
