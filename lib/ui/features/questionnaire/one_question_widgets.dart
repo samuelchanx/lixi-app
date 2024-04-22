@@ -416,7 +416,7 @@ class OneQuestionWidgets extends HookConsumerWidget {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  question.title!,
+                  '${question.displayIndex}. ${question.title!}',
                   style: TextStyle(
                     fontSize: 28.0,
                     fontWeight: FontWeight.w600,

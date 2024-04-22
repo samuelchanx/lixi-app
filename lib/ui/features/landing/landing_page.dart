@@ -53,9 +53,9 @@ class LandingPage extends HookConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('懷孕'),
+                      const Text('澄清'),
                       const Text(
-                        '如果您已懷孕或懷疑懷孕，很抱歉我們的計劃不適合您。',
+                        '如果妳正在懷孕或有懷疑，為保障妳的安全，妳不能參與此計劃。',
                         style: TextStyle(
                           fontSize: 16.0,
                           color: Colors.black,
@@ -85,7 +85,7 @@ class LandingPage extends HookConsumerWidget {
                           ),
                           const Expanded(
                             child: Text(
-                              '如果您繼續，便表示您同意您沒有懷孕，在這種情況下發生的任何事情都不屬於lixi的責任。',
+                              '請按同意，以開始妳的調理計劃三步曲。',
                               style: TextStyle(
                                 fontSize: 16.0,
                                 color: Colors.black,
@@ -94,6 +94,17 @@ class LandingPage extends HookConsumerWidget {
                             ),
                           ),
                         ],
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          '註: 如服用期間發現懷孕，流產或其他情況，lixi 將不負上仼何責任。',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w200,
+                          ),
+                        ),
                       ),
                       const Gap(8),
                       Padding(

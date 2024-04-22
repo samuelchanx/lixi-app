@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lixi/l10n/translations.dart';
 import 'package:lixi/models/question_model_controller.dart';
 import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/provider/question_provider.dart';
@@ -13,8 +12,6 @@ import 'package:lixi/ui/features/questionnaire/one_question_widgets.dart';
 import 'package:lixi/ui/features/registration/profile_registration_page.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/styles.dart';
-import 'package:lixi/ui/widgets/lixi_logo.dart';
-import 'package:lixi/ui/widgets/lixi_slogan.dart';
 import 'package:lixi/utils/logger.dart';
 
 final questionControllerProvider = Provider.autoDispose<QuestionControllerV2>(
@@ -80,18 +77,18 @@ class QuestionnaireContent extends HookConsumerWidget {
 
     final dateRange = useState<List<DateTime?>>([]);
 
-    useEffect(() {
-      // controller.diagnose();
-      const nextPage = 4;
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        if (nextPage != -1) {
-          currentStep.value = nextPage;
-        } else {
-          goToResult(context);
-        }
-      });
-      return null;
-    });
+    // useEffect(() {
+    //   // controller.diagnose();
+    //   const nextPage = 4;
+    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //     if (nextPage != -1) {
+    //       currentStep.value = nextPage;
+    //     } else {
+    //       goToResult(context);
+    //     }
+    //   });
+    //   return null;
+    // });
 
     final currentStepValue = currentStep.value;
     final currentQuestions = questions
@@ -174,19 +171,10 @@ class QuestionnaireContent extends HookConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                isDebugMode.value = !isDebugMode.value;
-              },
-              child: const LixiLogo(),
-            ),
-            const Gap(8),
-            const LixiSlogan(),
-            const Gap(24),
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                'Step ${min(currentStepValue + 1, 3)}',
+                '第${countsChinese[currentStepValue]}步',
                 style: TextStyle(
                   fontSize: 36.0,
                   fontWeight: FontWeight.bold,
@@ -194,7 +182,6 @@ class QuestionnaireContent extends HookConsumerWidget {
                 ),
               ),
             ),
-            const Gap(16),
             Column(
               children: [
                 ...currentQuestions.map(

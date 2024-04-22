@@ -12,6 +12,7 @@ _$QuestionModelV2Impl _$$QuestionModelV2ImplFromJson(
       question: json['question'] as String,
       textReplaceData: json['textReplaceData'] as String,
       index: json['index'] as int,
+      displayIndex: json['displayIndex'] as int?,
       transformedQuestionText: json['transformedQuestionText'] as String?,
       title: json['title'] as String?,
       image: json['image'] as String?,
@@ -55,6 +56,7 @@ Map<String, dynamic> _$$QuestionModelV2ImplToJson(
     }
   }
 
+  writeNotNull('displayIndex', instance.displayIndex);
   writeNotNull('transformedQuestionText', instance.transformedQuestionText);
   writeNotNull('title', instance.title);
   writeNotNull('image', instance.image);
@@ -91,6 +93,7 @@ const _$AnswerFormatEnumMap = {
   AnswerFormat.bloodTexture: 'bloodTexture',
   AnswerFormat.slider: 'slider',
   AnswerFormat.options: 'options',
+  AnswerFormat.otherSymptoms: 'otherSymptoms',
 };
 
 _$UserAnswerImpl _$$UserAnswerImplFromJson(Map<String, dynamic> json) =>
@@ -190,11 +193,11 @@ const _$PeriodAmountIssueEnumMap = {
 const _$PeriodColorEnumMap = {
   PeriodColor.lightRed: 'lightRed',
   PeriodColor.lightDark: 'lightDark',
+  PeriodColor.normal: 'normal',
   PeriodColor.brightRed: 'brightRed',
   PeriodColor.deepRed: 'deepRed',
   PeriodColor.purpleRed: 'purpleRed',
   PeriodColor.deepPurple: 'deepPurple',
-  PeriodColor.normal: 'normal',
 };
 
 const _$PeriodTextureEnumMap = {

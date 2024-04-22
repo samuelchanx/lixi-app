@@ -26,6 +26,8 @@ mixin _$QuestionModelV2 {
   set textReplaceData(String value) => throw _privateConstructorUsedError;
   int get index => throw _privateConstructorUsedError;
   set index(int value) => throw _privateConstructorUsedError;
+  int? get displayIndex => throw _privateConstructorUsedError;
+  set displayIndex(int? value) => throw _privateConstructorUsedError;
   String? get transformedQuestionText => throw _privateConstructorUsedError;
   set transformedQuestionText(String? value) =>
       throw _privateConstructorUsedError;
@@ -90,6 +92,7 @@ abstract class $QuestionModelV2CopyWith<$Res> {
       {String question,
       String textReplaceData,
       int index,
+      int? displayIndex,
       String? transformedQuestionText,
       String? title,
       String? image,
@@ -126,6 +129,7 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
     Object? question = null,
     Object? textReplaceData = null,
     Object? index = null,
+    Object? displayIndex = freezed,
     Object? transformedQuestionText = freezed,
     Object? title = freezed,
     Object? image = freezed,
@@ -158,6 +162,10 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
               as int,
+      displayIndex: freezed == displayIndex
+          ? _value.displayIndex
+          : displayIndex // ignore: cast_nullable_to_non_nullable
+              as int?,
       transformedQuestionText: freezed == transformedQuestionText
           ? _value.transformedQuestionText
           : transformedQuestionText // ignore: cast_nullable_to_non_nullable
@@ -246,6 +254,7 @@ abstract class _$$QuestionModelV2ImplCopyWith<$Res>
       {String question,
       String textReplaceData,
       int index,
+      int? displayIndex,
       String? transformedQuestionText,
       String? title,
       String? image,
@@ -280,6 +289,7 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
     Object? question = null,
     Object? textReplaceData = null,
     Object? index = null,
+    Object? displayIndex = freezed,
     Object? transformedQuestionText = freezed,
     Object? title = freezed,
     Object? image = freezed,
@@ -312,6 +322,10 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
               as int,
+      displayIndex: freezed == displayIndex
+          ? _value.displayIndex
+          : displayIndex // ignore: cast_nullable_to_non_nullable
+              as int?,
       transformedQuestionText: freezed == transformedQuestionText
           ? _value.transformedQuestionText
           : transformedQuestionText // ignore: cast_nullable_to_non_nullable
@@ -395,6 +409,7 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
       {required this.question,
       required this.textReplaceData,
       required this.index,
+      required this.displayIndex,
       this.transformedQuestionText,
       this.title,
       this.image,
@@ -424,6 +439,8 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   String textReplaceData;
   @override
   int index;
+  @override
+  int? displayIndex;
   @override
   String? transformedQuestionText;
   @override
@@ -465,7 +482,7 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
 
   @override
   String toString() {
-    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, index: $index, transformedQuestionText: $transformedQuestionText, title: $title, image: $image, imagesToShow: $imagesToShow, horizontalOption: $horizontalOption, showByDiagnosis: $showByDiagnosis, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, showIf: $showIf, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
+    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, index: $index, displayIndex: $displayIndex, transformedQuestionText: $transformedQuestionText, title: $title, image: $image, imagesToShow: $imagesToShow, horizontalOption: $horizontalOption, showByDiagnosis: $showByDiagnosis, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, showIf: $showIf, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
   }
 
   @JsonKey(ignore: true)
@@ -488,6 +505,7 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
       {required String question,
       required String textReplaceData,
       required int index,
+      required int? displayIndex,
       String? transformedQuestionText,
       String? title,
       String? image,
@@ -520,6 +538,9 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   @override
   int get index;
   set index(int value);
+  @override
+  int? get displayIndex;
+  set displayIndex(int? value);
   @override
   String? get transformedQuestionText;
   set transformedQuestionText(String? value);

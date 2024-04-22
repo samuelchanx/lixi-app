@@ -11,7 +11,7 @@ class LixiLogo extends StatelessWidget {
     return Text(
       'lixi',
       style: GoogleFonts.gildaDisplay().copyWith(
-        fontSize: 36,
+        fontSize: 28,
       ),
     );
   }

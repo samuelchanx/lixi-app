@@ -12,6 +12,7 @@ List<QuestionModelV2> parseDatabaseV2(List<Map<String, dynamic>> data) {
       return QuestionModelV2(
         question: e['question']!,
         index: index,
+        displayIndex: e['displayIndex'],
         textReplaceData: e['textReplaceData'] ?? '',
         rawOptions: e['options']?.split(',') ?? [],
         group: e['group'] ?? -1,
@@ -54,6 +55,7 @@ class QuestionModelV2 with _$QuestionModelV2 {
     required String question,
     required String textReplaceData,
     required int index,
+    required int? displayIndex,
     String? transformedQuestionText,
     String? title,
     String? image,

@@ -22,41 +22,42 @@ class QuestionControllerV2 {
 
   DiagnosedIssue diagnosedIssue = const DiagnosedIssue();
   List<QuestionModelV2> questions;
-  Map<int, UserAnswer> userAnswers = {
-    /// Group 0, only for predicting menstruation cycle
-    0: UserAnswer(
-      dateRange: [
-        DateTime(2024, 3, 19),
-        DateTime(2024, 3, 23),
-      ],
-    ),
-    // 你平常的月經規律嗎？
-    1: const UserAnswer(selectedOptionIndex: [0]),
-    // 一般來說，你的月經週期是多少天？
-    2: const UserAnswer(text: '28'),
+  Map<int, UserAnswer> userAnswers = {};
+  // Map<int, UserAnswer> userAnswers = {
+  //   /// Group 0, only for predicting menstruation cycle
+  //   0: UserAnswer(
+  //     dateRange: [
+  //       DateTime(2024, 3, 19),
+  //       DateTime(2024, 3, 23),
+  //     ],
+  //   ),
+  //   // 你平常的月經規律嗎？
+  //   1: const UserAnswer(selectedOptionIndex: [0]),
+  //   // 一般來說，你的月經週期是多少天？
+  //   2: const UserAnswer(text: '28'),
 
-    /// Group 1
-    // 經量：月經期最多的一天日用衛生巾（23cm）的使用量, too much
-    3: const UserAnswer(text: '3'),
-    // color
-    4: const UserAnswer(selectedOptionIndex: [2]),
-    // '黏稠', '有血塊'
-    5: const UserAnswer(selectedOptionIndex: [2, 3]),
+  //   /// Group 1
+  //   // 經量：月經期最多的一天日用衛生巾（23cm）的使用量, too much
+  //   3: const UserAnswer(text: '3'),
+  //   // color
+  //   4: const UserAnswer(selectedOptionIndex: [2]),
+  //   // '黏稠', '有血塊'
+  //   5: const UserAnswer(selectedOptionIndex: [2, 3]),
 
-    /// Group 2
-    // 請在橫線上標示你的經痛程度
-    6: const UserAnswer(text: '2'),
-    // 經痛通常在什麼時候發生？(可選多項)
-    7: const UserAnswer(selectedOptionIndex: [0]),
-    // 怎樣的痛法？(可選多項）(based on (2))
-    8: const UserAnswer(selectedOptionIndex: [0]),
+  //   /// Group 2
+  //   // 請在橫線上標示你的經痛程度
+  //   6: const UserAnswer(text: '2'),
+  //   // 經痛通常在什麼時候發生？(可選多項)
+  //   7: const UserAnswer(selectedOptionIndex: [0]),
+  //   // 怎樣的痛法？(可選多項）(based on (2))
+  //   8: const UserAnswer(selectedOptionIndex: [0]),
 
-    /// Group 3
-    // 經痛會加重或改善？ 用溫暖的東西敷肚會改善 (optional)
-    9: const UserAnswer(selectedOptionIndex: []),
-    // 經期間不適
-    10: const UserAnswer(selectedOptionIndex: []),
-  };
+  //   /// Group 3
+  //   // 經痛會加重或改善？ 用溫暖的東西敷肚會改善 (optional)
+  //   9: const UserAnswer(selectedOptionIndex: []),
+  //   // 經期間不適
+  //   10: const UserAnswer(selectedOptionIndex: []),
+  // };
 
   List<DiagnosedBodyType> get currentBodyTypes =>
       diagnosedIssue.bodyTypes ?? [];

@@ -10,7 +10,7 @@ class LixiSlogan extends StatelessWidget {
     return const Text(
       'your daily dose of magic',
       style: TextStyle(
-        fontSize: 24.0,
+        fontSize: 16.0,
         color: Colors.black87,
         fontWeight: FontWeight.w200,
       ),
