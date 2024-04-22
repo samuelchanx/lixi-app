@@ -79,7 +79,7 @@ class QuestionControllerV2 {
 
     final canDiagnose = _diagnoseForStep2();
     log.info(
-      'Diagnosed... ${diagnosedIssue.bodyTypes} ${diagnosedIssue.diagnosedStep}',
+      'Diagnosed... ${diagnosedIssue.bodyTypes} $canDiagnose ${canDiagnose ? diagnosedIssue.diagnosedStep : ''}',
     );
     return canDiagnose;
   }
@@ -171,8 +171,9 @@ class QuestionControllerV2 {
   }
 
   void startTest() {
-    final testingIndexes = List.generate(testingData.length, (index) => index);
-    final testingResults = <(Map<int, UserAnswer>, DiagnosedIssue)>[];
+    final testingIndexes = [1];
+    // final testingIndexes = List.generate(15, (index) => index);
+    final testingResults = <(Map<int, UserAnswer>, DiagnosedIssue, int)>[];
     for (var element in testingIndexes) {
       log.info('Testing for index $element');
       final data = testingData[element];
@@ -181,15 +182,12 @@ class QuestionControllerV2 {
       userAnswers = _prepareQuestions(data);
       diagnose();
       testingResults.add(
-        (
-          userAnswers,
-          diagnosedIssue,
-        ),
+        (userAnswers, diagnosedIssue, element),
       );
     }
     testingResults.forEachIndexed((element, index) {
       log.info(
-        'Testing result for index ${index + 1}: ${element.$2.bodyTypes!.map((e) => e.title)}',
+        'Testing result for index ${element.$3 + 1}: ${element.$2.bodyTypes!.map((e) => e.title)}',
       );
     });
   }
@@ -339,6 +337,7 @@ class QuestionControllerV2 {
         )
         .whereNotNull()
         .map((e) => DiagnosedBodyType.values[e])
+        .where((element) => diagnosedIssue.bodyTypes!.contains(element))
         .toList();
     log.info('Diagnosing for pain improvement...$signs');
     return signs;
@@ -478,7 +477,14 @@ class QuestionControllerV2 {
         );
       } else {
         const options = ['經前', '經期間', '經後'];
-        final mPainPeriodIndexes = userAnswers[7]?.selectedOptionIndex ?? [];
+        var mPainPeriodIndexes = userAnswers[7]?.selectedOptionIndex ?? [];
+        if (textures.length == 1 &&
+            textures.contains(PeriodTexture.sticky) &&
+            mPainPeriodIndexes.contains(2)) {
+          log.info('黏稠跟經後發生經痛是不會一次出現，在此以黏稠+正常繼續診斷');
+          mPainPeriodIndexes =
+              mPainPeriodIndexes.whereNot((i) => i == 2).toList();
+        }
         final bodyTypes = filterBodyTypesByData(
           mPainData,
           (index, map) {
@@ -489,7 +495,6 @@ class QuestionControllerV2 {
           },
           currentBodyTypes,
         );
-        log.info(bodyTypes);
         diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: bodyTypes);
       }
 
@@ -527,42 +532,7 @@ class QuestionControllerV2 {
     performDiagnosisWhenPainS2();
     performDiagnosisPainSymptomsS3();
     performDiagnosisPainChangesS4();
-    // TODO: Diagnose with other questions
-    return false;
-    if (diagnosedIssue.periodAmount == PeriodAmountIssue.tooLittle) {
-      if (periodColor.contains(PeriodColor.lightRed)) {
-        _diagnoseForLightRedLittleBlood();
-      }
-      if (periodColor.contains(PeriodColor.brightRed)) {
-        _diagnoseForBrightRedLittleBlood();
-      }
-
-      if (periodColor.contains(PeriodColor.purpleRed)) {
-        _diagnoseForPurpleRedLittleBlood();
-      }
-    } else if (diagnosedIssue.periodAmount == PeriodAmountIssue.tooMuch) {
-      if (periodColor.contains(PeriodColor.lightRed)) {
-        _diagnoseForLightRedMuchBlood();
-      }
-      if (periodColor.contains(PeriodColor.brightRed)) {
-        _diagnoseForBrightRedMuchBlood();
-      }
-      if (periodColor.contains(PeriodColor.purpleRed) &&
-          userTextures.contains(PeriodTexture.sticky) &&
-          userTextures.contains(PeriodTexture.withBloodClots)) {
-        // (f) 月經過多+紫紅+粘膩+有血塊 options
-        _diagnoseForPurpleRedLittleBlood();
-      }
-    }
-
-    if (diagnosedIssue.bodyTypes?.length == 1) {
-      diagnosedIssue = diagnosedIssue.copyWith(diagnosedStep: 2);
-      return true;
-    } else if (diagnosedIssue.bodyTypes!.length > 1) {
-      return false;
-    }
-
-    throw Exception('Unexpected step!!');
+    return diagnosedIssue.diagnosedStep != null;
   }
 
   List<PeriodTexture> _setTexturesData() {
