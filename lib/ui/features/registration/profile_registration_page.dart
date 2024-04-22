@@ -4,7 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/provider/auth_provider.dart';
-import 'package:lixi/provider/shared_pref_provider.dart';
+import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
+import 'package:lixi/utils/logger.dart';
 
 class ProfileRegistrationPage extends HookConsumerWidget {
   const ProfileRegistrationPage({
@@ -95,14 +96,14 @@ class ProfileRegistrationPage extends HookConsumerWidget {
                   return '請輸入電話號碼';
                 }
                 if (value.length != 8) {
-                  return '請輸入有效電話號碼';
+                  return '請輸入有效的8位數字電話號碼';
                 }
                 return null;
               },
             ),
             const SizedBox(height: 10),
             TextFormField(
-              controller: phoneText,
+              controller: ageText,
               keyboardType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
@@ -126,17 +127,23 @@ class ProfileRegistrationPage extends HookConsumerWidget {
             ElevatedButton(
               onPressed: () async {
                 if (formKey.currentState?.validate() ?? false) {
-                  final diagnosedIssues = ref.read(diagnosedIssuesProvider);
-                  final userAnswers = ref.read(userAnswersProvider);
-                  await ref.read(authProvider).signUp(
-                        email: emailText.text,
-                        password: passwordText.text,
-                        name: nameText.text,
-                        phone: phoneText.text,
-                        age: int.tryParse(ageText.text),
-                        userAnswers: userAnswers,
-                        diagnosedIssues: diagnosedIssues,
-                      );
+                  final diagnosedIssues =
+                      ref.read(questionControllerProvider).diagnosedIssue;
+                  final userAnswers =
+                      ref.read(questionControllerProvider).userAnswers;
+                  try {
+                    await ref.read(authProvider).signUp(
+                          email: emailText.text,
+                          password: passwordText.text,
+                          name: nameText.text,
+                          phone: phoneText.text,
+                          age: int.tryParse(ageText.text),
+                          userAnswers: userAnswers,
+                          diagnosedIssues: diagnosedIssues,
+                        );
+                  } catch (e, stack) {
+                    log.severe('$e $stack');
+                  }
                 }
               },
               child: HookBuilder(

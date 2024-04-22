@@ -36,9 +36,10 @@ _$QuestionModelV2Impl _$$QuestionModelV2ImplFromJson(
       ),
       expectedAnsFormat:
           $enumDecode(_$AnswerFormatEnumMap, json['expectedAnsFormat']),
-      isOptional: json['isOptional'] as bool,
       canSkipChoice: json['canSkipChoice'] as bool,
+      showOtherInputOption: json['showOtherInputOption'] as bool,
       logicReference: json['logicReference'] as String?,
+      skipChoiceKeyword: json['skipChoiceKeyword'] as String?,
       reference: json['reference'] as String,
     );
 
@@ -72,9 +73,10 @@ Map<String, dynamic> _$$QuestionModelV2ImplToJson(
   val['isMultipleChoice'] = instance.isMultipleChoice;
   writeNotNull('showIf', instance.showIf);
   val['expectedAnsFormat'] = _$AnswerFormatEnumMap[instance.expectedAnsFormat]!;
-  val['isOptional'] = instance.isOptional;
   val['canSkipChoice'] = instance.canSkipChoice;
+  val['showOtherInputOption'] = instance.showOtherInputOption;
   writeNotNull('logicReference', instance.logicReference);
+  writeNotNull('skipChoiceKeyword', instance.skipChoiceKeyword);
   val['reference'] = instance.reference;
   return val;
 }

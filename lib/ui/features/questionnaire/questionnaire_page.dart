@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/l10n/translations.dart';
 import 'package:lixi/models/question_model_controller.dart';
 import 'package:lixi/models/question_model_v2.dart';
+import 'package:lixi/provider/auth_provider.dart';
 import 'package:lixi/provider/question_provider.dart';
 import 'package:lixi/ui/features/questionnaire/one_question_widgets.dart';
 import 'package:lixi/ui/features/registration/profile_registration_page.dart';
@@ -14,7 +15,7 @@ import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/styles.dart';
 import 'package:lixi/utils/logger.dart';
 
-final questionControllerProvider = Provider.autoDispose<QuestionControllerV2>(
+final questionControllerProvider = StateProvider<QuestionControllerV2>(
   (ref) => QuestionControllerV2(
     questions: ref.watch(questionsProvider),
     ref: ref,
@@ -77,9 +78,11 @@ class QuestionnaireContent extends HookConsumerWidget {
 
     final dateRange = useState<List<DateTime?>>([]);
 
+    AnimationController? animationController = useMemoized(() => null);
+    final scrollController = useScrollController();
     // useEffect(() {
     //   // controller.diagnose();
-    //   const nextPage = 4;
+    //   const nextPage = 2;
     //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //     if (nextPage != -1) {
     //       currentStep.value = nextPage;
@@ -131,8 +134,13 @@ class QuestionnaireContent extends HookConsumerWidget {
       dateRange.value = [];
     }
 
-    void nextQuestion([int? forceNextQuestionIndex]) {
-      if (!isValidated() && forceNextQuestionIndex == null) {
+    Future<void> nextQuestion([
+      int? forceNextQuestionIndex,
+      int? forceCurrentStep,
+    ]) async {
+      if (!isValidated() &&
+          forceNextQuestionIndex == null &&
+          forceCurrentStep == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('請回答完所有問題再繼續'),
@@ -140,7 +148,7 @@ class QuestionnaireContent extends HookConsumerWidget {
         );
         return;
       }
-      if (forceNextQuestionIndex != null) {
+      if (forceNextQuestionIndex != null && forceCurrentStep == null) {
         if (forceNextQuestionIndex == -1) {
           goToResult(context);
         } else {
@@ -150,38 +158,55 @@ class QuestionnaireContent extends HookConsumerWidget {
         return;
       }
       final nextStep = controller.saveAndGetNextQuestion(
-        currentStep.value,
+        forceCurrentStep ?? currentStep.value,
         answers.value,
       );
       if (nextStep == -1) {
-        goToResult(context);
+        await showModalBottomSheet(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+          ),
+          isScrollControlled: true,
+          backgroundColor: backgroundColor,
+          context: context,
+          builder: (BuildContext context) {
+            return const ProfileRegistrationPage();
+          },
+        );
+        if (ref.read(authProvider).currentUser != null && context.mounted) {
+          goToResult(context);
+        }
         return;
       }
       log.info('Next step: $nextStep');
+      scrollController.jumpTo(0);
       currentStep.value = nextStep;
+      animationController?.forward(from: 0);
       resetPage();
     }
 
     log.info('Current step: $currentStepValue');
 
     return SingleChildScrollView(
+      controller: scrollController,
       physics: const BouncingScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                '第${countsChinese[currentStepValue]}步',
-                style: TextStyle(
-                  fontSize: 36.0,
-                  fontWeight: FontWeight.bold,
-                  color: highlightColor.withOpacity(0.8),
+            if ((currentQuestions.first.displayIndex ?? -1) == 1)
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  '第${countsChinese[currentStepValue]}步',
+                  style: TextStyle(
+                    fontSize: 36.0,
+                    fontWeight: FontWeight.bold,
+                    color: highlightColor.withOpacity(0.8),
+                  ),
                 ),
               ),
-            ),
             Column(
               children: [
                 ...currentQuestions.map(
@@ -206,7 +231,7 @@ class QuestionnaireContent extends HookConsumerWidget {
                           ),
                         };
                         log.info(
-                          'onChanged called: $questionIndexInList ${answers.value[questionIndexInList]?.toJson()}',
+                          'onChanged called: $questionIndexInList ${answers.value}',
                         );
                       },
                     );
@@ -238,27 +263,13 @@ class QuestionnaireContent extends HookConsumerWidget {
               },
             ),
             if (isDebugMode.value) ...[
-              SizedBox(
-                height: 36,
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: questions.mapIndexed(
-                    (index, e) {
-                      return TextButton(
-                        child: Text(index.toString()),
-                        onPressed: () {
-                          nextQuestion(index);
-                        },
-                      );
-                    },
-                  ).toList(),
-                ),
-              ),
               const Gap(24),
               ElevatedButton(
                 onPressed: () {
-                  nextQuestion(controller.getNextUnansweredForDebugging());
+                  animationController
+                      // ?..reset()
+                      ?.forward(from: 0);
+                  // nextQuestion(controller.getNextUnansweredForDebugging());
                 },
                 child: const Text('Go to next'),
               ),
@@ -268,8 +279,12 @@ class QuestionnaireContent extends HookConsumerWidget {
               ),
               ElevatedButton(
                 onPressed: () {
+                  if (currentStepValue == 4) {
+                    controller.diagnoseForOtherSymptoms();
+                    return;
+                  }
                   controller.loadTestingSet(1);
-                  controller.saveAndGetNextQuestion(3, {});
+                  nextQuestion(null, 3);
                 },
                 child: const Text('Diagnose with test data'),
               ),

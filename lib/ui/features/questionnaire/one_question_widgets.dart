@@ -146,7 +146,8 @@ class OneQuestionWidgets extends HookConsumerWidget {
             if (question.expectedAnsFormat == AnswerFormat.otherSymptoms) {
               options = controller.getOtherQuestions(question.options);
             }
-            
+            final skipChoiceKeyword = question.skipChoiceKeyword;
+
             widget = HookBuilder(
               builder: (context) {
                 final optionsAnsMap =
@@ -184,7 +185,11 @@ class OneQuestionWidgets extends HookConsumerWidget {
                 return ListView(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: options.mapIndexed(
+                  children: options
+                      .append(
+                    skipChoiceKeyword == null ? [] : [skipChoiceKeyword],
+                  )
+                      .mapIndexed<Widget>(
                     (index, option) {
                       final selected =
                           optionsAnsMap[questionIndex]?.contains(index) ??
@@ -204,12 +209,24 @@ class OneQuestionWidgets extends HookConsumerWidget {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
+                            if (option == skipChoiceKeyword) {
+                              selectedOptionIndexNotifier.value = {
+                                ...optionsAnsMap,
+                                questionIndex: [options.length],
+                              };
+                              onChanged();
+                              return;
+                            }
                             selectedOptionIndexNotifier.value = {
                               ...optionsAnsMap,
                               questionIndex: <int>[
                                 if (question.isMultipleChoice)
                                   ...optionsAnsMap[questionIndex] ?? [],
-                              ].toggle(index),
+                              ]
+                                  .whereNot(
+                                    (index) => index == options.length,
+                                  )
+                                  .toggle(index),
                             };
                             onChanged();
                           },
@@ -256,6 +273,24 @@ class OneQuestionWidgets extends HookConsumerWidget {
                         ),
                       );
                     },
+                  ).append(
+                    [
+                      if (question.showOtherInputOption)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0,
+                          ),
+                          child: TextFormField(
+                            controller: textController,
+                            onChanged: (text) {
+                              onChanged();
+                            },
+                            decoration: const InputDecoration(
+                              labelText: '其他',
+                            ),
+                          ),
+                        ),
+                    ],
                   ).toList(),
                 );
               },
@@ -271,38 +306,32 @@ class OneQuestionWidgets extends HookConsumerWidget {
                 final optionsAnsMap =
                     useValueListenable(selectedOptionIndexNotifier);
                 final selectedOption = optionsAnsMap[questionIndex];
-                return Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                return Row(
                   children: List.generate(7, (index) {
                     final selected = selectedOption?.contains(index) ?? false;
-                    return InkWell(
-                      onTap: () {
-                        selectedOptionIndexNotifier.value = {
-                          ...optionsAnsMap,
-                          questionIndex: <int>[
-                            if (question.isMultipleChoice)
-                              ...optionsAnsMap[questionIndex] ?? [],
-                          ].toggle(index),
-                        };
-                        onChanged();
-                      },
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color:
-                                selected ? highlightColor : Colors.transparent,
-                            width: 2,
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.water_drop_rounded,
+                    return Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          selectedOptionIndexNotifier.value = {
+                            ...optionsAnsMap,
+                            questionIndex: <int>[
+                              if (question.isMultipleChoice)
+                                ...optionsAnsMap[questionIndex] ?? [],
+                            ].toggle(index),
+                          };
+                          onChanged();
+                        },
+                        child: Container(
+                          height: 128,
+                          decoration: BoxDecoration(
                             color: colorfromDex('FF${colors[index]}'),
-                            size: 72,
                           ),
+                          child: selected
+                              ? Icon(
+                                  Icons.check_circle,
+                                  color: normalColor,
+                                )
+                              : null,
                         ),
                       ),
                     );
@@ -398,8 +427,6 @@ class OneQuestionWidgets extends HookConsumerWidget {
                         },
                         min: 0,
                         max: 10,
-                        divisions: 10,
-                        label: textController.text,
                       ),
                     ),
                     Text(options.last),
@@ -412,7 +439,7 @@ class OneQuestionWidgets extends HookConsumerWidget {
 
         return Column(
           children: [
-            if (question.title != null)
+            if (question.title != null && question.title!.isNotEmpty)
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(

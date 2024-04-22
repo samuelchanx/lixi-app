@@ -85,6 +85,44 @@ class QuestionControllerV2 {
     return canDiagnose;
   }
 
+  /// Formula for Result page (prediction of period)
+  /// (i) 月經期 = [(1st day of last menstruation date + Q3 (月經週期))
+  /// to (1st day of last menstruation date + Q3 (月經週期)
+  /// + (last day of last menstruation date -first day of last menstruation date)]
+  /// (ii) 經後期 =  [ (1st day of last menstruation date + Q3 (月經週期) +
+  ///  (last day of last menstruation date -first day of last menstruation date) + 1
+  /// to (1st day of last menstruation date + Q3 (月經週期) +
+  /// (last day of last menstruation date -first day of last menstruation date) + 5 ]
+  /// (iii) 排卵期 = [ + 6 + 12]
+  /// (iv) 經前期 =  + 13 to + 21]
+  (List<DateTime>, List<DateTime>, List<DateTime>, List<DateTime>)
+      getPeriodPrediction() {
+    final firstDayOfLastMenstruation = userAnswers[0]!.dateRange!.first;
+    final lastDayOfLastMenstruation = userAnswers[0]!.dateRange!.last;
+    final lastPeiodDuration =
+        lastDayOfLastMenstruation.difference(firstDayOfLastMenstruation);
+    final periodCycleLength = int.parse(userAnswers[2]!.text!);
+    final periodLastDay =
+        firstDayOfLastMenstruation + periodCycleLength.days + lastPeiodDuration;
+    final period = [
+      firstDayOfLastMenstruation + periodCycleLength.days,
+      periodLastDay,
+    ];
+    final postPeriod = [
+      periodLastDay + 1.days,
+      periodLastDay + 5.days,
+    ];
+    final ovulutionPeriod = [
+      periodLastDay + 6.days,
+      periodLastDay + 12.days,
+    ];
+    final prePeriod = [
+      periodLastDay + 13.days,
+      periodLastDay + 21.days,
+    ];
+    return (period, postPeriod, ovulutionPeriod, prePeriod);
+  }
+
   List<DiagnosedBodyType> filterBodyTypesByData(
     List<Map<String, String>> data,
     bool Function(int, Map<String, String>) filter,
@@ -126,7 +164,6 @@ class QuestionControllerV2 {
       final bodyType = DiagnosedBodyType.fromString(element['BodyType']!);
       return userBodyTypes.contains(bodyType);
     }).toList();
-    log.info('Other questions: $otherQuestionUserSymptoms');
     allSymptoms = allSymptoms
         .where(
           (sym) => otherQuestionUserSymptoms
@@ -166,6 +203,7 @@ class QuestionControllerV2 {
     }
     if (currentStep == 4) {
       // TODO: Diagnose for final other questions
+      diagnoseForOtherSymptoms();
       return -1;
     }
     return currentStep + 1;
@@ -177,7 +215,7 @@ class QuestionControllerV2 {
   }
 
   void startTest() {
-    final testingIndexes = [1];
+    final testingIndexes = [2];
     // final testingIndexes = List.generate(15, (index) => index);
     final testingResults = <(Map<int, UserAnswer>, DiagnosedIssue, int)>[];
     for (var element in testingIndexes) {
@@ -203,8 +241,10 @@ class QuestionControllerV2 {
     if (painImprovement == null || painImprovement.isEmpty) {
       return [];
     }
-    final selectedOptions =
-        painImprovement.map((e) => questions[9].options[e]).toList();
+    final selectedOptions = painImprovement
+        .map((e) => questions[9].options.elementAtOrNull(e))
+        .whereNotNull()
+        .toList();
     log.info('Selected options for pain improvement: $selectedOptions');
     final signs = painImprovementData
         .mapIndexed(
@@ -224,19 +264,6 @@ class QuestionControllerV2 {
         .toList();
     log.info('Diagnosing for pain improvement...$signs');
     return signs;
-  }
-
-  /// (e) 月經過少+紫紅 options
-  void _diagnoseForPurpleRedLittleBlood() {
-    var (bodyTypes, _) = diagnoseForStep3PainTypes(
-      userAnswers,
-      questions,
-      diagnosedIssue,
-      filterByCurrentTypes: true,
-    );
-    if (bodyTypes.length > 1 || bodyTypes.isEmpty) {
-      bodyTypes = _diagnoseForPainImprovement();
-    }
   }
 
   bool _diagnoseForStep1Signs() {
@@ -527,6 +554,24 @@ class QuestionControllerV2 {
     }
     return userAnswers;
   }
+
+  void diagnoseForOtherSymptoms() {
+    final userSymptomOptions = getOtherQuestions(questions[11].options);
+    final selectedIndexes = userAnswers[11]?.selectedOptionIndex;
+    final selectedOptions = selectedIndexes
+            ?.map((e) => userSymptomOptions[e])
+            .whereNotNull()
+            .toList() ??
+        [];
+    log.info('Selected indexes: $selectedIndexes, $selectedOptions');
+    final finalBodyTypes = otherSymptomsData
+        .where((element) => selectedOptions.any((so) => element[so] == 'T'))
+        .map((e) => DiagnosedBodyType.fromString(e['BodyType']!))
+        .where((element) => diagnosedIssue.bodyTypes!.contains(element))
+        .toList();
+    log.info('Diagnosing for other symptoms...$finalBodyTypes');
+    diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: finalBodyTypes);
+  }
 }
 
 (List<DiagnosedBodyType>, bool) diagnoseForStep3PainTypes(
@@ -549,13 +594,19 @@ class QuestionControllerV2 {
   log.info(
     'Last answer indexes: $lastAnsIndexes, $painTypeIndexes',
   );
-  final selectedOptionsInText = painTypeIndexes.map(
-    (e) {
-      final options = questions[8].optionsByLastAnsIndex(lastAnsIndexes);
-      log.info(options);
-      return options[e];
-    },
-  ).toList();
+  final selectedOptionsInText = painTypeIndexes
+      .map(
+        (e) {
+          // 沒有 / N/A case
+          if (e >= lastAnsIndexes.length) {
+            return '';
+          }
+          final options = questions[8].optionsByLastAnsIndex(lastAnsIndexes);
+          return options[e];
+        },
+      )
+      .whereNot((element) => element.isEmpty)
+      .toList();
   log.info(
     'Selected options in text: $selectedOptionsInText, $painTypeIndexes',
   );

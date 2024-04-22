@@ -20,6 +20,7 @@ List<QuestionModelV2> parseDatabaseV2(List<Map<String, dynamic>> data) {
         horizontalOption: e['horizontalOption'],
         showByDiagnosis: e['showByDiagnosis'],
         imagesToShow: e['imagesToShow'],
+        showOtherInputOption: e['showOtherInputOption'] == true,
         image: e['image'],
         showIf: (e['showIf'] as Map<String, dynamic>?)?.let((e) {
           return e.map(
@@ -40,8 +41,8 @@ List<QuestionModelV2> parseDatabaseV2(List<Map<String, dynamic>> data) {
         isMultipleChoice: e['isMultipleChoice'] == 'TRUE',
         expectedAnsFormat: AnswerFormat.values.byName(e['expectedAnsFormat']),
         canSkipChoice: e['canSkipChoice'] == 'TRUE',
-        isOptional: e['isOptional'] == 'TRUE',
         logicReference: e['logicReference'],
+        skipChoiceKeyword: e['skipChoiceKeyword'],
         reference: e['reference']!,
       );
     },
@@ -72,9 +73,10 @@ class QuestionModelV2 with _$QuestionModelV2 {
     /// Question index in string to condition
     Map<String, QuestionShowIfNotCondition>? showIf,
     required AnswerFormat expectedAnsFormat,
-    required bool isOptional,
     required bool canSkipChoice,
+    required bool showOtherInputOption,
     required String? logicReference,
+    required String? skipChoiceKeyword,
     required String reference,
   }) = _QuestionModelV2;
 

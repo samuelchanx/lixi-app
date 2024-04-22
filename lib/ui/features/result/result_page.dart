@@ -3,28 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lixi/models/question_model_v2.dart';
+import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:lixi/ui/widgets/lixi_logo.dart';
 import 'package:lixi/ui/widgets/lixi_slogan.dart';
+import 'package:lixi/utils/date_formatter.dart';
 
 class ResultPage extends HookConsumerWidget {
   const ResultPage({
     super.key,
   });
 
+  String buildDateRangeText(List<DateTime> dates) {
+    return '${dates.first.yearMonthDay} - ${dates.last.yearMonthDay}';
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final diagnosedIssue = useMemoized(
-      () =>
-          ModalRoute.of(context)!.settings.arguments as DiagnosedIssue? ??
-          const DiagnosedIssue(
-            bodyTypes: [
-              DiagnosedBodyType.bloodDeficiency,
-              DiagnosedBodyType.bloodyColdReal,
-            ],
-          ),
-    );
+    final diagnosedIssue = ref.watch(questionControllerProvider).diagnosedIssue;
     final issues = diagnosedIssue.toJson();
+    final periodPrediction = useMemoized(
+      () => ref.watch(questionControllerProvider).getPeriodPrediction(),
+    );
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -83,14 +82,15 @@ class ResultPage extends HookConsumerWidget {
                 delay: const Duration(milliseconds: 500),
                 child: Builder(
                   builder: (context) {
-                    const periodText = '''月經期 [] 
-經後期 [] New Moon 早 (1) | 晚 (1)
-排卵期 [] Gibbous 早 (2.1) | 晚(2.2)
-經前期 [] Full Moon 早 (3.1) | 晚(3.2)''';
-                    return const Column(
+                    final periodText =
+                        '''月經期 [${buildDateRangeText(periodPrediction.$1)}] 
+經後期 [${buildDateRangeText(periodPrediction.$2)}] New Moon 早 (1) | 晚 (1)
+排卵期 [${buildDateRangeText(periodPrediction.$3)}] Bal samic 早 (2.1) | 晚(2.2)
+經前期 [${buildDateRangeText(periodPrediction.$4)}] Full Moon 早 (3.1) | 晚(3.2)''';
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'lixi使用方法：',
                           style: TextStyle(
                             fontSize: 24,
@@ -99,7 +99,7 @@ class ResultPage extends HookConsumerWidget {
                         ),
                         Text(
                           periodText,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                           ),
                         ),
@@ -111,21 +111,17 @@ class ResultPage extends HookConsumerWidget {
             ),
             SlideInLeft(
               duration: const Duration(seconds: 1),
-              child: Center(
+              child: const Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 20),
-                    ...issues.entries.map(
-                      (e) => ListTile(
-                        title: Text(e.key),
-                        trailing: Text(e.value.toString()),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'You should take some rest and drink lots of water.',
-                    ),
+                    SizedBox(height: 20),
+                    // ...issues.entries.map(
+                    //   (e) => ListTile(
+                    //     title: Text(e.key),
+                    //     trailing: Text(e.value.toString()),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

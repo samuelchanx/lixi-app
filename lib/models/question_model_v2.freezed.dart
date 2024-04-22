@@ -67,12 +67,14 @@ mixin _$QuestionModelV2 {
   AnswerFormat get expectedAnsFormat => throw _privateConstructorUsedError;
   set expectedAnsFormat(AnswerFormat value) =>
       throw _privateConstructorUsedError;
-  bool get isOptional => throw _privateConstructorUsedError;
-  set isOptional(bool value) => throw _privateConstructorUsedError;
   bool get canSkipChoice => throw _privateConstructorUsedError;
   set canSkipChoice(bool value) => throw _privateConstructorUsedError;
+  bool get showOtherInputOption => throw _privateConstructorUsedError;
+  set showOtherInputOption(bool value) => throw _privateConstructorUsedError;
   String? get logicReference => throw _privateConstructorUsedError;
   set logicReference(String? value) => throw _privateConstructorUsedError;
+  String? get skipChoiceKeyword => throw _privateConstructorUsedError;
+  set skipChoiceKeyword(String? value) => throw _privateConstructorUsedError;
   String get reference => throw _privateConstructorUsedError;
   set reference(String value) => throw _privateConstructorUsedError;
 
@@ -107,9 +109,10 @@ abstract class $QuestionModelV2CopyWith<$Res> {
       bool isMultipleChoice,
       Map<String, QuestionShowIfNotCondition>? showIf,
       AnswerFormat expectedAnsFormat,
-      bool isOptional,
       bool canSkipChoice,
+      bool showOtherInputOption,
       String? logicReference,
+      String? skipChoiceKeyword,
       String reference});
 }
 
@@ -144,9 +147,10 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
     Object? isMultipleChoice = null,
     Object? showIf = freezed,
     Object? expectedAnsFormat = null,
-    Object? isOptional = null,
     Object? canSkipChoice = null,
+    Object? showOtherInputOption = null,
     Object? logicReference = freezed,
+    Object? skipChoiceKeyword = freezed,
     Object? reference = null,
   }) {
     return _then(_value.copyWith(
@@ -222,17 +226,21 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
           ? _value.expectedAnsFormat
           : expectedAnsFormat // ignore: cast_nullable_to_non_nullable
               as AnswerFormat,
-      isOptional: null == isOptional
-          ? _value.isOptional
-          : isOptional // ignore: cast_nullable_to_non_nullable
-              as bool,
       canSkipChoice: null == canSkipChoice
           ? _value.canSkipChoice
           : canSkipChoice // ignore: cast_nullable_to_non_nullable
               as bool,
+      showOtherInputOption: null == showOtherInputOption
+          ? _value.showOtherInputOption
+          : showOtherInputOption // ignore: cast_nullable_to_non_nullable
+              as bool,
       logicReference: freezed == logicReference
           ? _value.logicReference
           : logicReference // ignore: cast_nullable_to_non_nullable
+              as String?,
+      skipChoiceKeyword: freezed == skipChoiceKeyword
+          ? _value.skipChoiceKeyword
+          : skipChoiceKeyword // ignore: cast_nullable_to_non_nullable
               as String?,
       reference: null == reference
           ? _value.reference
@@ -269,9 +277,10 @@ abstract class _$$QuestionModelV2ImplCopyWith<$Res>
       bool isMultipleChoice,
       Map<String, QuestionShowIfNotCondition>? showIf,
       AnswerFormat expectedAnsFormat,
-      bool isOptional,
       bool canSkipChoice,
+      bool showOtherInputOption,
       String? logicReference,
+      String? skipChoiceKeyword,
       String reference});
 }
 
@@ -304,9 +313,10 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
     Object? isMultipleChoice = null,
     Object? showIf = freezed,
     Object? expectedAnsFormat = null,
-    Object? isOptional = null,
     Object? canSkipChoice = null,
+    Object? showOtherInputOption = null,
     Object? logicReference = freezed,
+    Object? skipChoiceKeyword = freezed,
     Object? reference = null,
   }) {
     return _then(_$QuestionModelV2Impl(
@@ -382,17 +392,21 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
           ? _value.expectedAnsFormat
           : expectedAnsFormat // ignore: cast_nullable_to_non_nullable
               as AnswerFormat,
-      isOptional: null == isOptional
-          ? _value.isOptional
-          : isOptional // ignore: cast_nullable_to_non_nullable
-              as bool,
       canSkipChoice: null == canSkipChoice
           ? _value.canSkipChoice
           : canSkipChoice // ignore: cast_nullable_to_non_nullable
               as bool,
+      showOtherInputOption: null == showOtherInputOption
+          ? _value.showOtherInputOption
+          : showOtherInputOption // ignore: cast_nullable_to_non_nullable
+              as bool,
       logicReference: freezed == logicReference
           ? _value.logicReference
           : logicReference // ignore: cast_nullable_to_non_nullable
+              as String?,
+      skipChoiceKeyword: freezed == skipChoiceKeyword
+          ? _value.skipChoiceKeyword
+          : skipChoiceKeyword // ignore: cast_nullable_to_non_nullable
               as String?,
       reference: null == reference
           ? _value.reference
@@ -424,9 +438,10 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
       required this.isMultipleChoice,
       this.showIf,
       required this.expectedAnsFormat,
-      required this.isOptional,
       required this.canSkipChoice,
+      required this.showOtherInputOption,
       required this.logicReference,
+      required this.skipChoiceKeyword,
       required this.reference})
       : super._();
 
@@ -472,17 +487,19 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   @override
   AnswerFormat expectedAnsFormat;
   @override
-  bool isOptional;
-  @override
   bool canSkipChoice;
   @override
+  bool showOtherInputOption;
+  @override
   String? logicReference;
+  @override
+  String? skipChoiceKeyword;
   @override
   String reference;
 
   @override
   String toString() {
-    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, index: $index, displayIndex: $displayIndex, transformedQuestionText: $transformedQuestionText, title: $title, image: $image, imagesToShow: $imagesToShow, horizontalOption: $horizontalOption, showByDiagnosis: $showByDiagnosis, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, showIf: $showIf, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
+    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, index: $index, displayIndex: $displayIndex, transformedQuestionText: $transformedQuestionText, title: $title, image: $image, imagesToShow: $imagesToShow, horizontalOption: $horizontalOption, showByDiagnosis: $showByDiagnosis, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, showIf: $showIf, expectedAnsFormat: $expectedAnsFormat, canSkipChoice: $canSkipChoice, showOtherInputOption: $showOtherInputOption, logicReference: $logicReference, skipChoiceKeyword: $skipChoiceKeyword, reference: $reference)';
   }
 
   @JsonKey(ignore: true)
@@ -520,9 +537,10 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
       required bool isMultipleChoice,
       Map<String, QuestionShowIfNotCondition>? showIf,
       required AnswerFormat expectedAnsFormat,
-      required bool isOptional,
       required bool canSkipChoice,
+      required bool showOtherInputOption,
       required String? logicReference,
+      required String? skipChoiceKeyword,
       required String reference}) = _$QuestionModelV2Impl;
   _QuestionModelV2._() : super._();
 
@@ -588,14 +606,17 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   AnswerFormat get expectedAnsFormat;
   set expectedAnsFormat(AnswerFormat value);
   @override
-  bool get isOptional;
-  set isOptional(bool value);
-  @override
   bool get canSkipChoice;
   set canSkipChoice(bool value);
   @override
+  bool get showOtherInputOption;
+  set showOtherInputOption(bool value);
+  @override
   String? get logicReference;
   set logicReference(String? value);
+  @override
+  String? get skipChoiceKeyword;
+  set skipChoiceKeyword(String? value);
   @override
   String get reference;
   set reference(String value);

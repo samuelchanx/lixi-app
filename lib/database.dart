@@ -147,7 +147,7 @@ const databaseV2Json = [
     "optionAdditionalStep": "",
     "isMultipleChoice": "TRUE",
     "expectedAnsFormat": "options",
-    "canSkipChoice": "TRUE",
+    "skipChoiceKeyword": "皆不是",
     "showIf": {
       '7': {
         'questionAnswered': true,
@@ -174,6 +174,7 @@ const databaseV2Json = [
     "isMultipleChoice": "TRUE",
     "expectedAnsFormat": "options",
     "isOptional": "TRUE",
+    "skipChoiceKeyword": "不適用",
     "showByDiagnosis": true,
     "showIf": {
       '6': {
@@ -191,8 +192,10 @@ const databaseV2Json = [
     "options": "發熱,頭痛,吐血或流鼻血,大便洩瀉,乳房作脹,煩躁易怒，或感到抑鬱",
     "optionSeparator": "",
     "group": 3,
+    "skipChoiceKeyword": "沒有",
     "optionAdditionalStep": "",
-    "isMultipleChoice": "",
+    "isMultipleChoice": "TRUE",
+    "showOtherInputOption": true,
     "expectedAnsFormat": "options",
     "isOptional": "",
     "logicReference": "",
@@ -204,9 +207,9 @@ const databaseV2Json = [
     "options":
         "腰酸腿軟,周身痛,眼花,眼睛通紅且痛,聽覺較弱,耳鳴,頭暈,頭痛,口又苦又乾,口乾,精神不振,精神差,情緒波動大,經常嘆氣,身體發熱，比較傾向喝冷飲,怕冷,手腳冰冷,胸部、腹側或乳房脹痛,胸悶,心胸煩熱,自覺心臟不正常跳動,不夠氣,胃氣多,胃口不佳,腹脹,腹瀉,口淡味寡,大便硬,便秘,大便不成形,小便色黃,尿頻,尿多而頻,夜尿多,水腫,性慾減退,四肢麻痹、發抖,四肢無力,睡眠不足，發夢多,掌心熱,容易疲倦,身形較肥胖,容易受驚,健忘,指甲無血色,唇色淡,皮膚容易乾燥,口乾不欲飲,夜間出汗,身體長期低熱,黃昏後發熱",
     "optionSeparator": "",
+    "isMultipleChoice": "TRUE",
     "group": 4,
     "optionAdditionalStep": "",
-    "isMultipleChoice": "",
     "expectedAnsFormat": "otherSymptoms",
     "isOptional": "",
     "logicReference": "",

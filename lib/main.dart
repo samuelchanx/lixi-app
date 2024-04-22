@@ -41,7 +41,7 @@ class MyHealthcareApp extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider);
     return MaterialApp(
-      title: 'Healthcare Questionnaire',
+      title: 'lixi - your daily dose of magic',
       theme: appTheme,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       supportedLocales: const [

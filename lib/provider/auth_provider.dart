@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/models/question_model_v2.dart';
+import 'package:lixi/utils/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final authProvider = Provider((ref) => AuthProvider());
@@ -30,9 +31,24 @@ class AuthProvider {
     required Map<int, UserAnswer> userAnswers,
     required DiagnosedIssue diagnosedIssues,
   }) async {
-    final response = await client.auth.signUp(email: email, password: password);
-    final user = response.user;
+    if (currentUser == null) {
+      await client.auth.signUp(email: email, password: password);
+    }
+    log.info('signUp');
+    final res = await client.from('user').upsert(
+      {
+        'id': currentUser?.id,
+        'name': name,
+        'phone': phone,
+        'age': age,
+        'email': email,
+        'diagnosis': diagnosedIssues.toJson(),
+        'answer_map': userAnswers
+            .map((key, value) => MapEntry(key.toString(), value.toJson())),
+      },
+      onConflict: 'id',
+    ).select();
+    log.info(res);
     return null;
-
   }
 }
