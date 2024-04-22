@@ -281,9 +281,10 @@ class QuestionnaireContent extends HookConsumerWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  controller.diagnose();
+                  controller.loadTestingSet(1);
+                  controller.saveAndGetNextQuestion(3, {});
                 },
-                child: const Text('Diagnose'),
+                child: const Text('Diagnose with test data'),
               ),
               ElevatedButton(
                 onPressed: () {

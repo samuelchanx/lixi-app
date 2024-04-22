@@ -170,6 +170,11 @@ class QuestionControllerV2 {
     return currentStep + 1;
   }
 
+  void loadTestingSet(int index) {
+    final data = testingData[index];
+    userAnswers = _prepareQuestions(data);
+  }
+
   void startTest() {
     final testingIndexes = [1];
     // final testingIndexes = List.generate(15, (index) => index);
