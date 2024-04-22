@@ -192,129 +192,6 @@ class QuestionControllerV2 {
     });
   }
 
-  void _diagnoseFinalResult() {
-    // a
-    if (diagnosedIssue.periodAmount == PeriodAmountIssue.tooLittle &&
-        diagnosedIssue.periodColor == PeriodColor.lightRed &&
-        (diagnosedIssue.periodTexture?.contains(PeriodTexture.sticky) ??
-            false)) {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        period: PeriodIssue.early,
-        periodLength: PeriodLengthIssue.tooShort,
-      );
-    }
-    diagnosedIssue;
-  }
-
-  /// (c) 月經過少+鮮紅options
-  void _diagnoseForBrightRedLittleBlood() {
-    diagnosedIssue = diagnosedIssue.copyWith(
-      bodyTypes: [
-        DiagnosedBodyType.kidneyYinDeficiency,
-        DiagnosedBodyType.bloodyFeverVirtual,
-      ],
-    );
-  }
-
-  /// (d) 月經過多+深紅 options
-  void _diagnoseForBrightRedMuchBlood() {
-    if (textures.contains(PeriodTexture.sticky)) {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        bodyTypes: diagnosedIssue.bodyTypes!
-            .appendElement(DiagnosedBodyType.bloodyFeverReal)
-            .toList(),
-        diagnosedStep: textures.length == 1 ? 2 : null,
-      );
-    }
-    if (textures.contains(PeriodTexture.withBloodClots)) {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        bodyTypes: diagnosedIssue.bodyTypes!.append([
-          DiagnosedBodyType.bloodyFeverReal,
-          DiagnosedBodyType.liverQiStagnation,
-        ]).toList(),
-      );
-    }
-
-    final painTypeOptions =
-        questions[8].optionsByLastAnsIndex(userAnswers[7]!.selectedOptionIndex);
-    final painTypes = userAnswers[8]!
-        .selectedOptionIndex
-        .map((e) => painTypeOptions[e])
-        .toList();
-    if (painTypes.contains('灼痛')) {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        bodyTypes: [DiagnosedBodyType.bloodyFeverReal],
-      );
-    }
-    if (painTypes.contains('脹痛連及腹側')) {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        bodyTypes: (diagnosedIssue.bodyTypes ?? [])
-            .appendElement(DiagnosedBodyType.liverQiStagnation)
-            .toList(),
-      );
-    }
-  }
-
-  /// (a) 月經過少+淡紅 options
-  void _diagnoseForLightRedLittleBlood() {
-    if (textures.contains(PeriodTexture.sticky)) {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        bodyTypes: diagnosedIssue.bodyTypes!
-            .append([DiagnosedBodyType.spleenYangNotGoodDamp]).toList(),
-        diagnosedStep: 2,
-      );
-      return;
-    }
-    if (textures.contains(PeriodTexture.dilute)) {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        bodyTypes: diagnosedIssue.bodyTypes!.append([
-          DiagnosedBodyType.liverDeficiencyAndLittleBlood,
-          DiagnosedBodyType.bloodDeficiency,
-          DiagnosedBodyType.bloodyColdVirtual,
-        ]).toList(),
-      );
-    }
-
-    // Menstruation pain
-    if (q6MenstruationPainLevel > 0) {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        bodyTypes: diagnosedIssue.bodyTypes!.append([
-          DiagnosedBodyType.bloodDeficiency,
-        ]).toList(),
-        diagnosedStep: 2,
-      );
-      return;
-    } else {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        bodyTypes: diagnosedIssue.bodyTypes!.append([
-          DiagnosedBodyType.liverDeficiencyAndLittleBlood,
-          DiagnosedBodyType.bloodyColdVirtual,
-        ]).toList(),
-      );
-      // Further ask questions
-    }
-  }
-
-  /// (b)月經過多+淡紅 options
-  void _diagnoseForLightRedMuchBlood() {
-    if (q6MenstruationPainLevel > 0) {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        bodyTypes: diagnosedIssue.bodyTypes!.append([
-          DiagnosedBodyType.qiDeficiency,
-          DiagnosedBodyType.bloodDeficiency,
-        ]).toList(),
-        diagnosedStep: 2,
-      );
-      return;
-    } else {
-      diagnosedIssue = diagnosedIssue.copyWith(
-        bodyTypes: diagnosedIssue.bodyTypes!.append([
-          DiagnosedBodyType.weakSpleen,
-        ]).toList(),
-      );
-    }
-  }
-
   List<DiagnosedBodyType> _diagnoseForPainImprovement() {
     final painImprovement = userAnswers[9]?.selectedOptionIndex;
     if (painImprovement == null || painImprovement.isEmpty) {
@@ -429,7 +306,6 @@ class QuestionControllerV2 {
     }
 
     final userTextures = _setTexturesData();
-    final periodColor = diagnosedIssue.periodColor ?? [];
 
     final currentBodyTypesIndexes =
         currentBodyTypes.map((e) => e.index).toList();
