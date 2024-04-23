@@ -134,7 +134,7 @@ class ResultPage extends HookConsumerWidget {
                       .pushNamedAndRemoveUntil('/', (route) => false);
                 },
                 icon: const Icon(Icons.refresh),
-                label: const Text('Try again'),
+                label: const Text('重新開始'),
               ),
             ),
           ],
