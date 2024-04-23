@@ -5,7 +5,7 @@ import 'package:lixi/database.dart';
 import 'package:lixi/models/question_model.dart';
 import 'package:lixi/models/question_model_v2.dart';
 
-final questionsProvider = FutureProvider<List<QuestionModelV2>>((ref) {
+final questionsProvider = Provider<List<QuestionModelV2>>((ref) {
   return parseDatabaseV2(databaseV2Json);
 });
 

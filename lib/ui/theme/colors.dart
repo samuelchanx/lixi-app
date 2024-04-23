@@ -1,4 +1,4 @@
-import 'package:lixi/theme/theme_data.dart';
+import 'package:lixi/ui/theme/theme_data.dart';
 
 final highlightColor = colorfromDex('FFA79C85');
 final normalColor = colorfromDex('FF3A3937');

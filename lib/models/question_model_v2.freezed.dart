@@ -24,11 +24,27 @@ mixin _$QuestionModelV2 {
   set question(String value) => throw _privateConstructorUsedError;
   String get textReplaceData => throw _privateConstructorUsedError;
   set textReplaceData(String value) => throw _privateConstructorUsedError;
+  int get index => throw _privateConstructorUsedError;
+  set index(int value) => throw _privateConstructorUsedError;
+  int? get displayIndex => throw _privateConstructorUsedError;
+  set displayIndex(int? value) => throw _privateConstructorUsedError;
   String? get transformedQuestionText => throw _privateConstructorUsedError;
   set transformedQuestionText(String? value) =>
       throw _privateConstructorUsedError;
+  String? get title => throw _privateConstructorUsedError;
+  set title(String? value) => throw _privateConstructorUsedError;
+  String? get image => throw _privateConstructorUsedError;
+  set image(String? value) => throw _privateConstructorUsedError;
+  int? get imagesToShow => throw _privateConstructorUsedError;
+  set imagesToShow(int? value) => throw _privateConstructorUsedError;
+  bool? get horizontalOption => throw _privateConstructorUsedError;
+  set horizontalOption(bool? value) => throw _privateConstructorUsedError;
+  bool? get showByDiagnosis => throw _privateConstructorUsedError;
+  set showByDiagnosis(bool? value) => throw _privateConstructorUsedError;
   List<String> get rawOptions => throw _privateConstructorUsedError;
   set rawOptions(List<String> value) => throw _privateConstructorUsedError;
+  int get group => throw _privateConstructorUsedError;
+  set group(int value) => throw _privateConstructorUsedError;
   List<String>? get transformedOptions => throw _privateConstructorUsedError;
   set transformedOptions(List<String>? value) =>
       throw _privateConstructorUsedError;
@@ -40,15 +56,25 @@ mixin _$QuestionModelV2 {
       throw _privateConstructorUsedError;
   bool get isMultipleChoice => throw _privateConstructorUsedError;
   set isMultipleChoice(bool value) => throw _privateConstructorUsedError;
+
+  /// Question index in string to condition
+  Map<String, QuestionShowIfNotCondition>? get showIf =>
+      throw _privateConstructorUsedError;
+
+  /// Question index in string to condition
+  set showIf(Map<String, QuestionShowIfNotCondition>? value) =>
+      throw _privateConstructorUsedError;
   AnswerFormat get expectedAnsFormat => throw _privateConstructorUsedError;
   set expectedAnsFormat(AnswerFormat value) =>
       throw _privateConstructorUsedError;
-  bool get isOptional => throw _privateConstructorUsedError;
-  set isOptional(bool value) => throw _privateConstructorUsedError;
   bool get canSkipChoice => throw _privateConstructorUsedError;
   set canSkipChoice(bool value) => throw _privateConstructorUsedError;
+  bool get showOtherInputOption => throw _privateConstructorUsedError;
+  set showOtherInputOption(bool value) => throw _privateConstructorUsedError;
   String? get logicReference => throw _privateConstructorUsedError;
   set logicReference(String? value) => throw _privateConstructorUsedError;
+  String? get skipChoiceKeyword => throw _privateConstructorUsedError;
+  set skipChoiceKeyword(String? value) => throw _privateConstructorUsedError;
   String get reference => throw _privateConstructorUsedError;
   set reference(String value) => throw _privateConstructorUsedError;
 
@@ -67,16 +93,26 @@ abstract class $QuestionModelV2CopyWith<$Res> {
   $Res call(
       {String question,
       String textReplaceData,
+      int index,
+      int? displayIndex,
       String? transformedQuestionText,
+      String? title,
+      String? image,
+      int? imagesToShow,
+      bool? horizontalOption,
+      bool? showByDiagnosis,
       List<String> rawOptions,
+      int group,
       List<String>? transformedOptions,
       String? optionSeparator,
       OptionAdditionalStep? optionAdditionalStep,
       bool isMultipleChoice,
+      Map<String, QuestionShowIfNotCondition>? showIf,
       AnswerFormat expectedAnsFormat,
-      bool isOptional,
       bool canSkipChoice,
+      bool showOtherInputOption,
       String? logicReference,
+      String? skipChoiceKeyword,
       String reference});
 }
 
@@ -95,16 +131,26 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
   $Res call({
     Object? question = null,
     Object? textReplaceData = null,
+    Object? index = null,
+    Object? displayIndex = freezed,
     Object? transformedQuestionText = freezed,
+    Object? title = freezed,
+    Object? image = freezed,
+    Object? imagesToShow = freezed,
+    Object? horizontalOption = freezed,
+    Object? showByDiagnosis = freezed,
     Object? rawOptions = null,
+    Object? group = null,
     Object? transformedOptions = freezed,
     Object? optionSeparator = freezed,
     Object? optionAdditionalStep = freezed,
     Object? isMultipleChoice = null,
+    Object? showIf = freezed,
     Object? expectedAnsFormat = null,
-    Object? isOptional = null,
     Object? canSkipChoice = null,
+    Object? showOtherInputOption = null,
     Object? logicReference = freezed,
+    Object? skipChoiceKeyword = freezed,
     Object? reference = null,
   }) {
     return _then(_value.copyWith(
@@ -116,14 +162,46 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
           ? _value.textReplaceData
           : textReplaceData // ignore: cast_nullable_to_non_nullable
               as String,
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+      displayIndex: freezed == displayIndex
+          ? _value.displayIndex
+          : displayIndex // ignore: cast_nullable_to_non_nullable
+              as int?,
       transformedQuestionText: freezed == transformedQuestionText
           ? _value.transformedQuestionText
           : transformedQuestionText // ignore: cast_nullable_to_non_nullable
               as String?,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      image: freezed == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imagesToShow: freezed == imagesToShow
+          ? _value.imagesToShow
+          : imagesToShow // ignore: cast_nullable_to_non_nullable
+              as int?,
+      horizontalOption: freezed == horizontalOption
+          ? _value.horizontalOption
+          : horizontalOption // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      showByDiagnosis: freezed == showByDiagnosis
+          ? _value.showByDiagnosis
+          : showByDiagnosis // ignore: cast_nullable_to_non_nullable
+              as bool?,
       rawOptions: null == rawOptions
           ? _value.rawOptions
           : rawOptions // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      group: null == group
+          ? _value.group
+          : group // ignore: cast_nullable_to_non_nullable
+              as int,
       transformedOptions: freezed == transformedOptions
           ? _value.transformedOptions
           : transformedOptions // ignore: cast_nullable_to_non_nullable
@@ -140,21 +218,29 @@ class _$QuestionModelV2CopyWithImpl<$Res, $Val extends QuestionModelV2>
           ? _value.isMultipleChoice
           : isMultipleChoice // ignore: cast_nullable_to_non_nullable
               as bool,
+      showIf: freezed == showIf
+          ? _value.showIf
+          : showIf // ignore: cast_nullable_to_non_nullable
+              as Map<String, QuestionShowIfNotCondition>?,
       expectedAnsFormat: null == expectedAnsFormat
           ? _value.expectedAnsFormat
           : expectedAnsFormat // ignore: cast_nullable_to_non_nullable
               as AnswerFormat,
-      isOptional: null == isOptional
-          ? _value.isOptional
-          : isOptional // ignore: cast_nullable_to_non_nullable
-              as bool,
       canSkipChoice: null == canSkipChoice
           ? _value.canSkipChoice
           : canSkipChoice // ignore: cast_nullable_to_non_nullable
               as bool,
+      showOtherInputOption: null == showOtherInputOption
+          ? _value.showOtherInputOption
+          : showOtherInputOption // ignore: cast_nullable_to_non_nullable
+              as bool,
       logicReference: freezed == logicReference
           ? _value.logicReference
           : logicReference // ignore: cast_nullable_to_non_nullable
+              as String?,
+      skipChoiceKeyword: freezed == skipChoiceKeyword
+          ? _value.skipChoiceKeyword
+          : skipChoiceKeyword // ignore: cast_nullable_to_non_nullable
               as String?,
       reference: null == reference
           ? _value.reference
@@ -175,16 +261,26 @@ abstract class _$$QuestionModelV2ImplCopyWith<$Res>
   $Res call(
       {String question,
       String textReplaceData,
+      int index,
+      int? displayIndex,
       String? transformedQuestionText,
+      String? title,
+      String? image,
+      int? imagesToShow,
+      bool? horizontalOption,
+      bool? showByDiagnosis,
       List<String> rawOptions,
+      int group,
       List<String>? transformedOptions,
       String? optionSeparator,
       OptionAdditionalStep? optionAdditionalStep,
       bool isMultipleChoice,
+      Map<String, QuestionShowIfNotCondition>? showIf,
       AnswerFormat expectedAnsFormat,
-      bool isOptional,
       bool canSkipChoice,
+      bool showOtherInputOption,
       String? logicReference,
+      String? skipChoiceKeyword,
       String reference});
 }
 
@@ -201,16 +297,26 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
   $Res call({
     Object? question = null,
     Object? textReplaceData = null,
+    Object? index = null,
+    Object? displayIndex = freezed,
     Object? transformedQuestionText = freezed,
+    Object? title = freezed,
+    Object? image = freezed,
+    Object? imagesToShow = freezed,
+    Object? horizontalOption = freezed,
+    Object? showByDiagnosis = freezed,
     Object? rawOptions = null,
+    Object? group = null,
     Object? transformedOptions = freezed,
     Object? optionSeparator = freezed,
     Object? optionAdditionalStep = freezed,
     Object? isMultipleChoice = null,
+    Object? showIf = freezed,
     Object? expectedAnsFormat = null,
-    Object? isOptional = null,
     Object? canSkipChoice = null,
+    Object? showOtherInputOption = null,
     Object? logicReference = freezed,
+    Object? skipChoiceKeyword = freezed,
     Object? reference = null,
   }) {
     return _then(_$QuestionModelV2Impl(
@@ -222,14 +328,46 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
           ? _value.textReplaceData
           : textReplaceData // ignore: cast_nullable_to_non_nullable
               as String,
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+      displayIndex: freezed == displayIndex
+          ? _value.displayIndex
+          : displayIndex // ignore: cast_nullable_to_non_nullable
+              as int?,
       transformedQuestionText: freezed == transformedQuestionText
           ? _value.transformedQuestionText
           : transformedQuestionText // ignore: cast_nullable_to_non_nullable
               as String?,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      image: freezed == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imagesToShow: freezed == imagesToShow
+          ? _value.imagesToShow
+          : imagesToShow // ignore: cast_nullable_to_non_nullable
+              as int?,
+      horizontalOption: freezed == horizontalOption
+          ? _value.horizontalOption
+          : horizontalOption // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      showByDiagnosis: freezed == showByDiagnosis
+          ? _value.showByDiagnosis
+          : showByDiagnosis // ignore: cast_nullable_to_non_nullable
+              as bool?,
       rawOptions: null == rawOptions
           ? _value.rawOptions
           : rawOptions // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      group: null == group
+          ? _value.group
+          : group // ignore: cast_nullable_to_non_nullable
+              as int,
       transformedOptions: freezed == transformedOptions
           ? _value.transformedOptions
           : transformedOptions // ignore: cast_nullable_to_non_nullable
@@ -246,21 +384,29 @@ class __$$QuestionModelV2ImplCopyWithImpl<$Res>
           ? _value.isMultipleChoice
           : isMultipleChoice // ignore: cast_nullable_to_non_nullable
               as bool,
+      showIf: freezed == showIf
+          ? _value.showIf
+          : showIf // ignore: cast_nullable_to_non_nullable
+              as Map<String, QuestionShowIfNotCondition>?,
       expectedAnsFormat: null == expectedAnsFormat
           ? _value.expectedAnsFormat
           : expectedAnsFormat // ignore: cast_nullable_to_non_nullable
               as AnswerFormat,
-      isOptional: null == isOptional
-          ? _value.isOptional
-          : isOptional // ignore: cast_nullable_to_non_nullable
-              as bool,
       canSkipChoice: null == canSkipChoice
           ? _value.canSkipChoice
           : canSkipChoice // ignore: cast_nullable_to_non_nullable
               as bool,
+      showOtherInputOption: null == showOtherInputOption
+          ? _value.showOtherInputOption
+          : showOtherInputOption // ignore: cast_nullable_to_non_nullable
+              as bool,
       logicReference: freezed == logicReference
           ? _value.logicReference
           : logicReference // ignore: cast_nullable_to_non_nullable
+              as String?,
+      skipChoiceKeyword: freezed == skipChoiceKeyword
+          ? _value.skipChoiceKeyword
+          : skipChoiceKeyword // ignore: cast_nullable_to_non_nullable
               as String?,
       reference: null == reference
           ? _value.reference
@@ -276,16 +422,26 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   _$QuestionModelV2Impl(
       {required this.question,
       required this.textReplaceData,
+      required this.index,
+      required this.displayIndex,
       this.transformedQuestionText,
+      this.title,
+      this.image,
+      this.imagesToShow,
+      this.horizontalOption,
+      this.showByDiagnosis,
       required this.rawOptions,
+      required this.group,
       this.transformedOptions,
       required this.optionSeparator,
       required this.optionAdditionalStep,
       required this.isMultipleChoice,
+      this.showIf,
       required this.expectedAnsFormat,
-      required this.isOptional,
       required this.canSkipChoice,
+      required this.showOtherInputOption,
       required this.logicReference,
+      required this.skipChoiceKeyword,
       required this.reference})
       : super._();
 
@@ -297,9 +453,25 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   @override
   String textReplaceData;
   @override
+  int index;
+  @override
+  int? displayIndex;
+  @override
   String? transformedQuestionText;
   @override
+  String? title;
+  @override
+  String? image;
+  @override
+  int? imagesToShow;
+  @override
+  bool? horizontalOption;
+  @override
+  bool? showByDiagnosis;
+  @override
   List<String> rawOptions;
+  @override
+  int group;
   @override
   List<String>? transformedOptions;
   @override
@@ -308,20 +480,26 @@ class _$QuestionModelV2Impl extends _QuestionModelV2 {
   OptionAdditionalStep? optionAdditionalStep;
   @override
   bool isMultipleChoice;
+
+  /// Question index in string to condition
+  @override
+  Map<String, QuestionShowIfNotCondition>? showIf;
   @override
   AnswerFormat expectedAnsFormat;
   @override
-  bool isOptional;
-  @override
   bool canSkipChoice;
   @override
+  bool showOtherInputOption;
+  @override
   String? logicReference;
+  @override
+  String? skipChoiceKeyword;
   @override
   String reference;
 
   @override
   String toString() {
-    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, transformedQuestionText: $transformedQuestionText, rawOptions: $rawOptions, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, expectedAnsFormat: $expectedAnsFormat, isOptional: $isOptional, canSkipChoice: $canSkipChoice, logicReference: $logicReference, reference: $reference)';
+    return 'QuestionModelV2(question: $question, textReplaceData: $textReplaceData, index: $index, displayIndex: $displayIndex, transformedQuestionText: $transformedQuestionText, title: $title, image: $image, imagesToShow: $imagesToShow, horizontalOption: $horizontalOption, showByDiagnosis: $showByDiagnosis, rawOptions: $rawOptions, group: $group, transformedOptions: $transformedOptions, optionSeparator: $optionSeparator, optionAdditionalStep: $optionAdditionalStep, isMultipleChoice: $isMultipleChoice, showIf: $showIf, expectedAnsFormat: $expectedAnsFormat, canSkipChoice: $canSkipChoice, showOtherInputOption: $showOtherInputOption, logicReference: $logicReference, skipChoiceKeyword: $skipChoiceKeyword, reference: $reference)';
   }
 
   @JsonKey(ignore: true)
@@ -343,16 +521,26 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   factory _QuestionModelV2(
       {required String question,
       required String textReplaceData,
+      required int index,
+      required int? displayIndex,
       String? transformedQuestionText,
+      String? title,
+      String? image,
+      int? imagesToShow,
+      bool? horizontalOption,
+      bool? showByDiagnosis,
       required List<String> rawOptions,
+      required int group,
       List<String>? transformedOptions,
       required String? optionSeparator,
       required OptionAdditionalStep? optionAdditionalStep,
       required bool isMultipleChoice,
+      Map<String, QuestionShowIfNotCondition>? showIf,
       required AnswerFormat expectedAnsFormat,
-      required bool isOptional,
       required bool canSkipChoice,
+      required bool showOtherInputOption,
       required String? logicReference,
+      required String? skipChoiceKeyword,
       required String reference}) = _$QuestionModelV2Impl;
   _QuestionModelV2._() : super._();
 
@@ -366,11 +554,35 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   String get textReplaceData;
   set textReplaceData(String value);
   @override
+  int get index;
+  set index(int value);
+  @override
+  int? get displayIndex;
+  set displayIndex(int? value);
+  @override
   String? get transformedQuestionText;
   set transformedQuestionText(String? value);
   @override
+  String? get title;
+  set title(String? value);
+  @override
+  String? get image;
+  set image(String? value);
+  @override
+  int? get imagesToShow;
+  set imagesToShow(int? value);
+  @override
+  bool? get horizontalOption;
+  set horizontalOption(bool? value);
+  @override
+  bool? get showByDiagnosis;
+  set showByDiagnosis(bool? value);
+  @override
   List<String> get rawOptions;
   set rawOptions(List<String> value);
+  @override
+  int get group;
+  set group(int value);
   @override
   List<String>? get transformedOptions;
   set transformedOptions(List<String>? value);
@@ -384,17 +596,27 @@ abstract class _QuestionModelV2 extends QuestionModelV2 {
   bool get isMultipleChoice;
   set isMultipleChoice(bool value);
   @override
+
+  /// Question index in string to condition
+  Map<String, QuestionShowIfNotCondition>? get showIf;
+
+  /// Question index in string to condition
+  set showIf(Map<String, QuestionShowIfNotCondition>? value);
+  @override
   AnswerFormat get expectedAnsFormat;
   set expectedAnsFormat(AnswerFormat value);
-  @override
-  bool get isOptional;
-  set isOptional(bool value);
   @override
   bool get canSkipChoice;
   set canSkipChoice(bool value);
   @override
+  bool get showOtherInputOption;
+  set showOtherInputOption(bool value);
+  @override
   String? get logicReference;
   set logicReference(String? value);
+  @override
+  String? get skipChoiceKeyword;
+  set skipChoiceKeyword(String? value);
   @override
   String get reference;
   set reference(String value);
@@ -412,6 +634,7 @@ UserAnswer _$UserAnswerFromJson(Map<String, dynamic> json) {
 mixin _$UserAnswer {
   List<int> get selectedOptionIndex => throw _privateConstructorUsedError;
   DateTime? get date => throw _privateConstructorUsedError;
+  List<DateTime>? get dateRange => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -426,7 +649,11 @@ abstract class $UserAnswerCopyWith<$Res> {
           UserAnswer value, $Res Function(UserAnswer) then) =
       _$UserAnswerCopyWithImpl<$Res, UserAnswer>;
   @useResult
-  $Res call({List<int> selectedOptionIndex, DateTime? date, String? text});
+  $Res call(
+      {List<int> selectedOptionIndex,
+      DateTime? date,
+      List<DateTime>? dateRange,
+      String? text});
 }
 
 /// @nodoc
@@ -444,6 +671,7 @@ class _$UserAnswerCopyWithImpl<$Res, $Val extends UserAnswer>
   $Res call({
     Object? selectedOptionIndex = null,
     Object? date = freezed,
+    Object? dateRange = freezed,
     Object? text = freezed,
   }) {
     return _then(_value.copyWith(
@@ -455,6 +683,10 @@ class _$UserAnswerCopyWithImpl<$Res, $Val extends UserAnswer>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      dateRange: freezed == dateRange
+          ? _value.dateRange
+          : dateRange // ignore: cast_nullable_to_non_nullable
+              as List<DateTime>?,
       text: freezed == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -471,7 +703,11 @@ abstract class _$$UserAnswerImplCopyWith<$Res>
       __$$UserAnswerImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<int> selectedOptionIndex, DateTime? date, String? text});
+  $Res call(
+      {List<int> selectedOptionIndex,
+      DateTime? date,
+      List<DateTime>? dateRange,
+      String? text});
 }
 
 /// @nodoc
@@ -487,6 +723,7 @@ class __$$UserAnswerImplCopyWithImpl<$Res>
   $Res call({
     Object? selectedOptionIndex = null,
     Object? date = freezed,
+    Object? dateRange = freezed,
     Object? text = freezed,
   }) {
     return _then(_$UserAnswerImpl(
@@ -498,6 +735,10 @@ class __$$UserAnswerImplCopyWithImpl<$Res>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      dateRange: freezed == dateRange
+          ? _value._dateRange
+          : dateRange // ignore: cast_nullable_to_non_nullable
+              as List<DateTime>?,
       text: freezed == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -510,8 +751,12 @@ class __$$UserAnswerImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserAnswerImpl extends _UserAnswer {
   const _$UserAnswerImpl(
-      {final List<int> selectedOptionIndex = const [], this.date, this.text})
+      {final List<int> selectedOptionIndex = const [],
+      this.date,
+      final List<DateTime>? dateRange,
+      this.text})
       : _selectedOptionIndex = selectedOptionIndex,
+        _dateRange = dateRange,
         super._();
 
   factory _$UserAnswerImpl.fromJson(Map<String, dynamic> json) =>
@@ -529,12 +774,22 @@ class _$UserAnswerImpl extends _UserAnswer {
 
   @override
   final DateTime? date;
+  final List<DateTime>? _dateRange;
+  @override
+  List<DateTime>? get dateRange {
+    final value = _dateRange;
+    if (value == null) return null;
+    if (_dateRange is EqualUnmodifiableListView) return _dateRange;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final String? text;
 
   @override
   String toString() {
-    return 'UserAnswer(selectedOptionIndex: $selectedOptionIndex, date: $date, text: $text)';
+    return 'UserAnswer(selectedOptionIndex: $selectedOptionIndex, date: $date, dateRange: $dateRange, text: $text)';
   }
 
   @override
@@ -545,13 +800,19 @@ class _$UserAnswerImpl extends _UserAnswer {
             const DeepCollectionEquality()
                 .equals(other._selectedOptionIndex, _selectedOptionIndex) &&
             (identical(other.date, date) || other.date == date) &&
+            const DeepCollectionEquality()
+                .equals(other._dateRange, _dateRange) &&
             (identical(other.text, text) || other.text == text));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_selectedOptionIndex), date, text);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_selectedOptionIndex),
+      date,
+      const DeepCollectionEquality().hash(_dateRange),
+      text);
 
   @JsonKey(ignore: true)
   @override
@@ -571,6 +832,7 @@ abstract class _UserAnswer extends UserAnswer {
   const factory _UserAnswer(
       {final List<int> selectedOptionIndex,
       final DateTime? date,
+      final List<DateTime>? dateRange,
       final String? text}) = _$UserAnswerImpl;
   const _UserAnswer._() : super._();
 
@@ -581,6 +843,8 @@ abstract class _UserAnswer extends UserAnswer {
   List<int> get selectedOptionIndex;
   @override
   DateTime? get date;
+  @override
+  List<DateTime>? get dateRange;
   @override
   String? get text;
   @override
@@ -599,9 +863,9 @@ mixin _$DiagnosedIssue {
   PeriodIssue? get period => throw _privateConstructorUsedError; // Step 2
   PeriodLengthIssue? get periodLength => throw _privateConstructorUsedError;
   PeriodAmountIssue? get periodAmount => throw _privateConstructorUsedError;
-  PeriodColor? get periodColor => throw _privateConstructorUsedError;
-  List<PeriodTexture>? get periodTexture =>
-      throw _privateConstructorUsedError; // Step 3
+  List<PeriodColor>? get periodColor => throw _privateConstructorUsedError;
+  List<PeriodTexture>? get periodTexture => throw _privateConstructorUsedError;
+  int? get diagnosedStep => throw _privateConstructorUsedError; // Step 3
   List<DiagnosedBodyType>? get bodyTypes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -620,8 +884,9 @@ abstract class $DiagnosedIssueCopyWith<$Res> {
       {PeriodIssue? period,
       PeriodLengthIssue? periodLength,
       PeriodAmountIssue? periodAmount,
-      PeriodColor? periodColor,
+      List<PeriodColor>? periodColor,
       List<PeriodTexture>? periodTexture,
+      int? diagnosedStep,
       List<DiagnosedBodyType>? bodyTypes});
 }
 
@@ -643,6 +908,7 @@ class _$DiagnosedIssueCopyWithImpl<$Res, $Val extends DiagnosedIssue>
     Object? periodAmount = freezed,
     Object? periodColor = freezed,
     Object? periodTexture = freezed,
+    Object? diagnosedStep = freezed,
     Object? bodyTypes = freezed,
   }) {
     return _then(_value.copyWith(
@@ -661,11 +927,15 @@ class _$DiagnosedIssueCopyWithImpl<$Res, $Val extends DiagnosedIssue>
       periodColor: freezed == periodColor
           ? _value.periodColor
           : periodColor // ignore: cast_nullable_to_non_nullable
-              as PeriodColor?,
+              as List<PeriodColor>?,
       periodTexture: freezed == periodTexture
           ? _value.periodTexture
           : periodTexture // ignore: cast_nullable_to_non_nullable
               as List<PeriodTexture>?,
+      diagnosedStep: freezed == diagnosedStep
+          ? _value.diagnosedStep
+          : diagnosedStep // ignore: cast_nullable_to_non_nullable
+              as int?,
       bodyTypes: freezed == bodyTypes
           ? _value.bodyTypes
           : bodyTypes // ignore: cast_nullable_to_non_nullable
@@ -686,8 +956,9 @@ abstract class _$$DiagnosedIssueImplCopyWith<$Res>
       {PeriodIssue? period,
       PeriodLengthIssue? periodLength,
       PeriodAmountIssue? periodAmount,
-      PeriodColor? periodColor,
+      List<PeriodColor>? periodColor,
       List<PeriodTexture>? periodTexture,
+      int? diagnosedStep,
       List<DiagnosedBodyType>? bodyTypes});
 }
 
@@ -707,6 +978,7 @@ class __$$DiagnosedIssueImplCopyWithImpl<$Res>
     Object? periodAmount = freezed,
     Object? periodColor = freezed,
     Object? periodTexture = freezed,
+    Object? diagnosedStep = freezed,
     Object? bodyTypes = freezed,
   }) {
     return _then(_$DiagnosedIssueImpl(
@@ -723,13 +995,17 @@ class __$$DiagnosedIssueImplCopyWithImpl<$Res>
           : periodAmount // ignore: cast_nullable_to_non_nullable
               as PeriodAmountIssue?,
       periodColor: freezed == periodColor
-          ? _value.periodColor
+          ? _value._periodColor
           : periodColor // ignore: cast_nullable_to_non_nullable
-              as PeriodColor?,
+              as List<PeriodColor>?,
       periodTexture: freezed == periodTexture
           ? _value._periodTexture
           : periodTexture // ignore: cast_nullable_to_non_nullable
               as List<PeriodTexture>?,
+      diagnosedStep: freezed == diagnosedStep
+          ? _value.diagnosedStep
+          : diagnosedStep // ignore: cast_nullable_to_non_nullable
+              as int?,
       bodyTypes: freezed == bodyTypes
           ? _value._bodyTypes
           : bodyTypes // ignore: cast_nullable_to_non_nullable
@@ -745,10 +1021,12 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
       {this.period,
       this.periodLength,
       this.periodAmount,
-      this.periodColor,
+      final List<PeriodColor>? periodColor,
       final List<PeriodTexture>? periodTexture,
+      this.diagnosedStep,
       final List<DiagnosedBodyType>? bodyTypes})
-      : _periodTexture = periodTexture,
+      : _periodColor = periodColor,
+        _periodTexture = periodTexture,
         _bodyTypes = bodyTypes,
         super._();
 
@@ -763,8 +1041,16 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
   final PeriodLengthIssue? periodLength;
   @override
   final PeriodAmountIssue? periodAmount;
+  final List<PeriodColor>? _periodColor;
   @override
-  final PeriodColor? periodColor;
+  List<PeriodColor>? get periodColor {
+    final value = _periodColor;
+    if (value == null) return null;
+    if (_periodColor is EqualUnmodifiableListView) return _periodColor;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<PeriodTexture>? _periodTexture;
   @override
   List<PeriodTexture>? get periodTexture {
@@ -775,6 +1061,8 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
     return EqualUnmodifiableListView(value);
   }
 
+  @override
+  final int? diagnosedStep;
 // Step 3
   final List<DiagnosedBodyType>? _bodyTypes;
 // Step 3
@@ -789,7 +1077,7 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
 
   @override
   String toString() {
-    return 'DiagnosedIssue(period: $period, periodLength: $periodLength, periodAmount: $periodAmount, periodColor: $periodColor, periodTexture: $periodTexture, bodyTypes: $bodyTypes)';
+    return 'DiagnosedIssue(period: $period, periodLength: $periodLength, periodAmount: $periodAmount, periodColor: $periodColor, periodTexture: $periodTexture, diagnosedStep: $diagnosedStep, bodyTypes: $bodyTypes)';
   }
 
   @override
@@ -802,10 +1090,12 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
                 other.periodLength == periodLength) &&
             (identical(other.periodAmount, periodAmount) ||
                 other.periodAmount == periodAmount) &&
-            (identical(other.periodColor, periodColor) ||
-                other.periodColor == periodColor) &&
+            const DeepCollectionEquality()
+                .equals(other._periodColor, _periodColor) &&
             const DeepCollectionEquality()
                 .equals(other._periodTexture, _periodTexture) &&
+            (identical(other.diagnosedStep, diagnosedStep) ||
+                other.diagnosedStep == diagnosedStep) &&
             const DeepCollectionEquality()
                 .equals(other._bodyTypes, _bodyTypes));
   }
@@ -817,8 +1107,9 @@ class _$DiagnosedIssueImpl extends _DiagnosedIssue {
       period,
       periodLength,
       periodAmount,
-      periodColor,
+      const DeepCollectionEquality().hash(_periodColor),
       const DeepCollectionEquality().hash(_periodTexture),
+      diagnosedStep,
       const DeepCollectionEquality().hash(_bodyTypes));
 
   @JsonKey(ignore: true)
@@ -841,8 +1132,9 @@ abstract class _DiagnosedIssue extends DiagnosedIssue {
       {final PeriodIssue? period,
       final PeriodLengthIssue? periodLength,
       final PeriodAmountIssue? periodAmount,
-      final PeriodColor? periodColor,
+      final List<PeriodColor>? periodColor,
       final List<PeriodTexture>? periodTexture,
+      final int? diagnosedStep,
       final List<DiagnosedBodyType>? bodyTypes}) = _$DiagnosedIssueImpl;
   const _DiagnosedIssue._() : super._();
 
@@ -856,13 +1148,370 @@ abstract class _DiagnosedIssue extends DiagnosedIssue {
   @override
   PeriodAmountIssue? get periodAmount;
   @override
-  PeriodColor? get periodColor;
+  List<PeriodColor>? get periodColor;
   @override
   List<PeriodTexture>? get periodTexture;
+  @override
+  int? get diagnosedStep;
   @override // Step 3
   List<DiagnosedBodyType>? get bodyTypes;
   @override
   @JsonKey(ignore: true)
   _$$DiagnosedIssueImplCopyWith<_$DiagnosedIssueImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+QuestionShowIfNotCondition _$QuestionShowIfNotConditionFromJson(
+    Map<String, dynamic> json) {
+  return _QuestionShowIfNotCondition.fromJson(json);
+}
+
+/// @nodoc
+mixin _$QuestionShowIfNotCondition {
+  int? get option => throw _privateConstructorUsedError;
+  ComparisonCondition? get text => throw _privateConstructorUsedError;
+  bool? get questionAnswered => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $QuestionShowIfNotConditionCopyWith<QuestionShowIfNotCondition>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $QuestionShowIfNotConditionCopyWith<$Res> {
+  factory $QuestionShowIfNotConditionCopyWith(QuestionShowIfNotCondition value,
+          $Res Function(QuestionShowIfNotCondition) then) =
+      _$QuestionShowIfNotConditionCopyWithImpl<$Res,
+          QuestionShowIfNotCondition>;
+  @useResult
+  $Res call({int? option, ComparisonCondition? text, bool? questionAnswered});
+
+  $ComparisonConditionCopyWith<$Res>? get text;
+}
+
+/// @nodoc
+class _$QuestionShowIfNotConditionCopyWithImpl<$Res,
+        $Val extends QuestionShowIfNotCondition>
+    implements $QuestionShowIfNotConditionCopyWith<$Res> {
+  _$QuestionShowIfNotConditionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? option = freezed,
+    Object? text = freezed,
+    Object? questionAnswered = freezed,
+  }) {
+    return _then(_value.copyWith(
+      option: freezed == option
+          ? _value.option
+          : option // ignore: cast_nullable_to_non_nullable
+              as int?,
+      text: freezed == text
+          ? _value.text
+          : text // ignore: cast_nullable_to_non_nullable
+              as ComparisonCondition?,
+      questionAnswered: freezed == questionAnswered
+          ? _value.questionAnswered
+          : questionAnswered // ignore: cast_nullable_to_non_nullable
+              as bool?,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ComparisonConditionCopyWith<$Res>? get text {
+    if (_value.text == null) {
+      return null;
+    }
+
+    return $ComparisonConditionCopyWith<$Res>(_value.text!, (value) {
+      return _then(_value.copyWith(text: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$QuestionShowIfNotConditionImplCopyWith<$Res>
+    implements $QuestionShowIfNotConditionCopyWith<$Res> {
+  factory _$$QuestionShowIfNotConditionImplCopyWith(
+          _$QuestionShowIfNotConditionImpl value,
+          $Res Function(_$QuestionShowIfNotConditionImpl) then) =
+      __$$QuestionShowIfNotConditionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int? option, ComparisonCondition? text, bool? questionAnswered});
+
+  @override
+  $ComparisonConditionCopyWith<$Res>? get text;
+}
+
+/// @nodoc
+class __$$QuestionShowIfNotConditionImplCopyWithImpl<$Res>
+    extends _$QuestionShowIfNotConditionCopyWithImpl<$Res,
+        _$QuestionShowIfNotConditionImpl>
+    implements _$$QuestionShowIfNotConditionImplCopyWith<$Res> {
+  __$$QuestionShowIfNotConditionImplCopyWithImpl(
+      _$QuestionShowIfNotConditionImpl _value,
+      $Res Function(_$QuestionShowIfNotConditionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? option = freezed,
+    Object? text = freezed,
+    Object? questionAnswered = freezed,
+  }) {
+    return _then(_$QuestionShowIfNotConditionImpl(
+      freezed == option
+          ? _value.option
+          : option // ignore: cast_nullable_to_non_nullable
+              as int?,
+      freezed == text
+          ? _value.text
+          : text // ignore: cast_nullable_to_non_nullable
+              as ComparisonCondition?,
+      freezed == questionAnswered
+          ? _value.questionAnswered
+          : questionAnswered // ignore: cast_nullable_to_non_nullable
+              as bool?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$QuestionShowIfNotConditionImpl extends _QuestionShowIfNotCondition {
+  const _$QuestionShowIfNotConditionImpl(
+      this.option, this.text, this.questionAnswered)
+      : super._();
+
+  factory _$QuestionShowIfNotConditionImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$QuestionShowIfNotConditionImplFromJson(json);
+
+  @override
+  final int? option;
+  @override
+  final ComparisonCondition? text;
+  @override
+  final bool? questionAnswered;
+
+  @override
+  String toString() {
+    return 'QuestionShowIfNotCondition(option: $option, text: $text, questionAnswered: $questionAnswered)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$QuestionShowIfNotConditionImpl &&
+            (identical(other.option, option) || other.option == option) &&
+            (identical(other.text, text) || other.text == text) &&
+            (identical(other.questionAnswered, questionAnswered) ||
+                other.questionAnswered == questionAnswered));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, option, text, questionAnswered);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$QuestionShowIfNotConditionImplCopyWith<_$QuestionShowIfNotConditionImpl>
+      get copyWith => __$$QuestionShowIfNotConditionImplCopyWithImpl<
+          _$QuestionShowIfNotConditionImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$QuestionShowIfNotConditionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _QuestionShowIfNotCondition extends QuestionShowIfNotCondition {
+  const factory _QuestionShowIfNotCondition(
+      final int? option,
+      final ComparisonCondition? text,
+      final bool? questionAnswered) = _$QuestionShowIfNotConditionImpl;
+  const _QuestionShowIfNotCondition._() : super._();
+
+  factory _QuestionShowIfNotCondition.fromJson(Map<String, dynamic> json) =
+      _$QuestionShowIfNotConditionImpl.fromJson;
+
+  @override
+  int? get option;
+  @override
+  ComparisonCondition? get text;
+  @override
+  bool? get questionAnswered;
+  @override
+  @JsonKey(ignore: true)
+  _$$QuestionShowIfNotConditionImplCopyWith<_$QuestionShowIfNotConditionImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+ComparisonCondition _$ComparisonConditionFromJson(Map<String, dynamic> json) {
+  return _ComparisonCondition.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ComparisonCondition {
+  String? get neq => throw _privateConstructorUsedError;
+  String? get eq => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ComparisonConditionCopyWith<ComparisonCondition> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ComparisonConditionCopyWith<$Res> {
+  factory $ComparisonConditionCopyWith(
+          ComparisonCondition value, $Res Function(ComparisonCondition) then) =
+      _$ComparisonConditionCopyWithImpl<$Res, ComparisonCondition>;
+  @useResult
+  $Res call({String? neq, String? eq});
+}
+
+/// @nodoc
+class _$ComparisonConditionCopyWithImpl<$Res, $Val extends ComparisonCondition>
+    implements $ComparisonConditionCopyWith<$Res> {
+  _$ComparisonConditionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? neq = freezed,
+    Object? eq = freezed,
+  }) {
+    return _then(_value.copyWith(
+      neq: freezed == neq
+          ? _value.neq
+          : neq // ignore: cast_nullable_to_non_nullable
+              as String?,
+      eq: freezed == eq
+          ? _value.eq
+          : eq // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ComparisonConditionImplCopyWith<$Res>
+    implements $ComparisonConditionCopyWith<$Res> {
+  factory _$$ComparisonConditionImplCopyWith(_$ComparisonConditionImpl value,
+          $Res Function(_$ComparisonConditionImpl) then) =
+      __$$ComparisonConditionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? neq, String? eq});
+}
+
+/// @nodoc
+class __$$ComparisonConditionImplCopyWithImpl<$Res>
+    extends _$ComparisonConditionCopyWithImpl<$Res, _$ComparisonConditionImpl>
+    implements _$$ComparisonConditionImplCopyWith<$Res> {
+  __$$ComparisonConditionImplCopyWithImpl(_$ComparisonConditionImpl _value,
+      $Res Function(_$ComparisonConditionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? neq = freezed,
+    Object? eq = freezed,
+  }) {
+    return _then(_$ComparisonConditionImpl(
+      freezed == neq
+          ? _value.neq
+          : neq // ignore: cast_nullable_to_non_nullable
+              as String?,
+      freezed == eq
+          ? _value.eq
+          : eq // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ComparisonConditionImpl extends _ComparisonCondition {
+  const _$ComparisonConditionImpl(this.neq, this.eq) : super._();
+
+  factory _$ComparisonConditionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ComparisonConditionImplFromJson(json);
+
+  @override
+  final String? neq;
+  @override
+  final String? eq;
+
+  @override
+  String toString() {
+    return 'ComparisonCondition(neq: $neq, eq: $eq)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ComparisonConditionImpl &&
+            (identical(other.neq, neq) || other.neq == neq) &&
+            (identical(other.eq, eq) || other.eq == eq));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, neq, eq);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ComparisonConditionImplCopyWith<_$ComparisonConditionImpl> get copyWith =>
+      __$$ComparisonConditionImplCopyWithImpl<_$ComparisonConditionImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ComparisonConditionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ComparisonCondition extends ComparisonCondition {
+  const factory _ComparisonCondition(final String? neq, final String? eq) =
+      _$ComparisonConditionImpl;
+  const _ComparisonCondition._() : super._();
+
+  factory _ComparisonCondition.fromJson(Map<String, dynamic> json) =
+      _$ComparisonConditionImpl.fromJson;
+
+  @override
+  String? get neq;
+  @override
+  String? get eq;
+  @override
+  @JsonKey(ignore: true)
+  _$$ComparisonConditionImplCopyWith<_$ComparisonConditionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

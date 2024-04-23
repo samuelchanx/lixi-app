@@ -1,15 +1,37 @@
+import 'package:dartx/dartx.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:lixi/models/question_model_controller.dart';
+import 'package:lixi/utils/dart_helper.dart';
 
 part 'question_model_v2.freezed.dart';
 part 'question_model_v2.g.dart';
 
-List<QuestionModelV2> parseDatabaseV2(List<Map<String, String>> data) {
-  return data.map(
-    (e) {
+List<QuestionModelV2> parseDatabaseV2(List<Map<String, dynamic>> data) {
+  return data.mapIndexed(
+    (index, e) {
       return QuestionModelV2(
         question: e['question']!,
+        index: index,
+        displayIndex: e['displayIndex'],
         textReplaceData: e['textReplaceData'] ?? '',
         rawOptions: e['options']?.split(',') ?? [],
+        group: e['group'] ?? -1,
+        title: e['title'],
+        horizontalOption: e['horizontalOption'],
+        showByDiagnosis: e['showByDiagnosis'],
+        imagesToShow: e['imagesToShow'],
+        showOtherInputOption: e['showOtherInputOption'] == true,
+        image: e['image'],
+        showIf: (e['showIf'] as Map<String, dynamic>?)?.let((e) {
+          return e.map(
+            (key, value) {
+              return MapEntry(
+                key,
+                QuestionShowIfNotCondition.fromJson(value),
+              );
+            },
+          );
+        }),
         optionSeparator: e['optionSeparator'],
         optionAdditionalStep: e['optionAdditionalStep'] == 'colorParser'
             ? OptionAdditionalStep.colorParser
@@ -17,14 +39,10 @@ List<QuestionModelV2> parseDatabaseV2(List<Map<String, String>> data) {
                 ? OptionAdditionalStep.filteringByLastAnsIndex
                 : null,
         isMultipleChoice: e['isMultipleChoice'] == 'TRUE',
-        expectedAnsFormat: e['expectedAnsFormat'] == 'bool'
-            ? AnswerFormat.bool
-            : e['expectedAnsFormat'] == 'date'
-                ? AnswerFormat.date
-                : AnswerFormat.options,
+        expectedAnsFormat: AnswerFormat.values.byName(e['expectedAnsFormat']),
         canSkipChoice: e['canSkipChoice'] == 'TRUE',
-        isOptional: e['isOptional'] == 'TRUE',
         logicReference: e['logicReference'],
+        skipChoiceKeyword: e['skipChoiceKeyword'],
         reference: e['reference']!,
       );
     },
@@ -37,20 +55,70 @@ class QuestionModelV2 with _$QuestionModelV2 {
   factory QuestionModelV2({
     required String question,
     required String textReplaceData,
+    required int index,
+    required int? displayIndex,
     String? transformedQuestionText,
+    String? title,
+    String? image,
+    int? imagesToShow,
+    bool? horizontalOption,
+    bool? showByDiagnosis,
     required List<String> rawOptions,
+    required int group,
     List<String>? transformedOptions,
     required String? optionSeparator,
     required OptionAdditionalStep? optionAdditionalStep,
     required bool isMultipleChoice,
+
+    /// Question index in string to condition
+    Map<String, QuestionShowIfNotCondition>? showIf,
     required AnswerFormat expectedAnsFormat,
-    required bool isOptional,
     required bool canSkipChoice,
+    required bool showOtherInputOption,
     required String? logicReference,
+    required String? skipChoiceKeyword,
     required String reference,
   }) = _QuestionModelV2;
 
+  bool shouldNotShow(
+    Map<int, UserAnswer>? answers,
+    List<QuestionModelV2> questions,
+  ) {
+    if (showIf == null) return false;
+    if (showByDiagnosis == true) {
+      final canDetermineAlready = diagnoseForStep3PainTypes(
+        answers!,
+        questions,
+        const DiagnosedIssue(),
+      );
+      if (canDetermineAlready.$2) {
+        return true;
+      }
+    }
+    return showIf!.entries.any(
+      (entry) {
+        final condition = entry.value;
+        final questionIndex = int.parse(entry.key);
+        return condition.shouldNotShow(answers?[questionIndex]);
+      },
+    );
+  }
+
   List<String> get options => transformedOptions ?? rawOptions;
+
+  List<String> optionsByLastAnsIndex(List<int> lastAnsIndex) {
+    if (optionAdditionalStep != OptionAdditionalStep.filteringByLastAnsIndex) {
+      return options;
+    }
+    return rawOptions
+        .whereIndexed(
+          (element, index) => lastAnsIndex.contains(index),
+        )
+        .map((e) => e.split(optionSeparator!))
+        .flatten()
+        .distinct()
+        .toList();
+  }
 
   String get questionText => transformedQuestionText ?? question;
 
@@ -64,6 +132,7 @@ class UserAnswer with _$UserAnswer {
   const factory UserAnswer({
     @Default([]) List<int> selectedOptionIndex,
     DateTime? date,
+    List<DateTime>? dateRange,
     String? text,
   }) = _UserAnswer;
 
@@ -80,8 +149,9 @@ class DiagnosedIssue with _$DiagnosedIssue {
     // Step 2
     PeriodLengthIssue? periodLength,
     PeriodAmountIssue? periodAmount,
-    PeriodColor? periodColor,
+    List<PeriodColor>? periodColor,
     List<PeriodTexture>? periodTexture,
+    int? diagnosedStep,
     // Step 3
     List<DiagnosedBodyType>? bodyTypes,
   }) = _DiagnosedIssue;
@@ -102,7 +172,13 @@ enum AnswerFormat {
   // Deprecated
   bool,
   date,
+  numberText,
+  imageCount,
+  bloodColors,
+  bloodTexture,
+  slider,
   options,
+  otherSymptoms,
 }
 
 enum PeriodIssue {
@@ -119,21 +195,21 @@ enum PeriodIssue {
 enum PeriodColor {
   lightRed,
   lightDark,
+  normal,
   brightRed,
   deepRed,
   purpleRed,
-  deepPurple,
-  normal;
+  deepPurple;
 
   String get title {
     return [
       '淡紅',
       '淡黯',
+      '正常',
       '鮮紅',
       '深紅',
-      '紫紅',
       '深紫',
-      '正常',
+      '紫紅',
     ][index];
   }
 }
@@ -165,32 +241,50 @@ const bodyTypesBigCategory = [
   '肝鬱化火',
   '血虛',
   '血瘀',
-  '血熱',
-  '血熱',
-  '血寒',
-  '血寒',
+  '血熱(實)',
+  '血熱(虛)',
+  '血寒(實)',
+  '血寒(虛)',
 ];
 
 enum DiagnosedBodyType {
+  // 腎氣虛
+  // 腎陰虛
+  // 肝氣鬱結
+  // 濕熱蘊結
+  // 脾氣虛弱
+  // 脾陽不振(痰濕)
+  // 肝虛血少(心脾兩虛)
+  // 氣虛
+  // 肝鬱化火
+  // 血虛
+  // 血瘀
+  // 血熱 (實）
+  // 血熱 (虛）
+  // 血寒（實）
+  // 血寒（虛）
   kidneyQiDeficiency,
   kidneyYinDeficiency,
   liverQiStagnation,
   dampheat,
-  weakTemper,
-  spleenYangIsNotCheerfulPhlegmWet,
-  liverDeficiencyAndBloodHeartAndSpleenDeficiency,
+  weakSpleen,
+  spleenYangNotGoodDamp,
+  liverDeficiencyAndLittleBlood,
   qiDeficiency,
   liverStagnationFire,
   bloodDeficiency,
   bloodStasis,
-  bloodyFeverVirtual,
   bloodyFeverReal,
-  bloodyVirtual,
-  bloodyReal;
+  bloodyFeverVirtual,
+  bloodyColdReal,
+  bloodyColdVirtual;
 
   String get biggerCategory {
     return bodyTypesBigCategory[index];
   }
+
+  @override
+  String toString() => title;
 
   static DiagnosedBodyType fromString(String type) {
     return DiagnosedBodyType.values.firstWhere(
@@ -211,10 +305,10 @@ enum DiagnosedBodyType {
       '肝鬱化火',
       '血虛',
       '血瘀',
-      '血熱(虛)',
       '血熱(實)',
-      '血寒(虛)',
+      '血熱(虛)',
       '血寒(實)',
+      '血寒(虛)',
     ][index];
   }
 }
@@ -224,7 +318,49 @@ enum PeriodTexture {
   sticky,
   withBloodClots;
 
+  int get answerIndex => [0, 2, 3][index];
+
   String get title {
     return ['稀', '黏稠', '有血塊'][index];
   }
+}
+
+@freezed
+class QuestionShowIfNotCondition with _$QuestionShowIfNotCondition {
+  const QuestionShowIfNotCondition._();
+  const factory QuestionShowIfNotCondition(
+    int? option,
+    ComparisonCondition? text,
+    bool? questionAnswered,
+  ) = _QuestionShowIfNotCondition;
+
+  bool shouldNotShow(UserAnswer? answer) {
+    if (questionAnswered != null) {
+      return answer == null;
+    }
+    if (option != null) {
+      return answer?.selectedOptionIndex.contains(option) ?? false;
+    } else if (text != null) {
+      if (text?.neq != null) {
+        return answer?.text == text!.neq!;
+      }
+    }
+
+    return true;
+  }
+
+  factory QuestionShowIfNotCondition.fromJson(Map<String, dynamic> json) =>
+      _$QuestionShowIfNotConditionFromJson(json);
+}
+
+@freezed
+class ComparisonCondition with _$ComparisonCondition {
+  const ComparisonCondition._();
+  const factory ComparisonCondition(
+    String? neq,
+    String? eq,
+  ) = _ComparisonCondition;
+
+  factory ComparisonCondition.fromJson(Map<String, dynamic> json) =>
+      _$ComparisonConditionFromJson(json);
 }

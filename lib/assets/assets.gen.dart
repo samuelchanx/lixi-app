@@ -20,8 +20,16 @@ class $AssetsImagesGen {
   AssetGenImage get appIcon =>
       const AssetGenImage('assets/images/app_icon.png');
 
+  /// File path: assets/images/m-gun.png
+  AssetGenImage get mGun => const AssetGenImage('assets/images/m-gun.png');
+
+  /// File path: assets/images/pregnancy.png
+  AssetGenImage get pregnancy =>
+      const AssetGenImage('assets/images/pregnancy.png');
+
   /// List of all assets
-  List<dynamic> get values => [animation1709482057336, appIcon];
+  List<dynamic> get values =>
+      [animation1709482057336, appIcon, mGun, pregnancy];
 }
 
 class $AssetsTextGen {

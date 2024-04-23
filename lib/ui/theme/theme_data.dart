@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lixi/theme/colors.dart';
+import 'package:lixi/ui/theme/colors.dart';
 
 final baseTheme = ThemeData(
+  useMaterial3: true,
   primarySwatch: Colors.blue,
   primaryColor: highlightColor,
   highlightColor: highlightColor,
@@ -14,9 +15,15 @@ final appTheme = baseTheme.copyWith(
     onPrimary: normalColor,
     secondary: normalColor,
   ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      maximumSize: const Size.fromHeight(48),
+    ),
+  ),
   textTheme: GoogleFonts.gildaDisplayTextTheme()
       .apply(bodyColor: normalColor, displayColor: normalColor),
   scaffoldBackgroundColor: backgroundColor,
+  unselectedWidgetColor: Colors.red,
 );
 
 // Color from dex string
