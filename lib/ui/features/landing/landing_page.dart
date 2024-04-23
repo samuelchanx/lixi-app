@@ -70,7 +70,7 @@ class LandingPage extends HookConsumerWidget {
                       ),
                       const Gap(24),
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Checkbox(
                             value: checked.value,

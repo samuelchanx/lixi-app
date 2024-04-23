@@ -35,6 +35,9 @@ class AuthProvider {
       await client.auth.signUp(email: email, password: password);
     }
     log.info('signUp');
+    final Map<String, dynamic> answers = userAnswers.map(
+      (key, value) => MapEntry(key.toString(), value.toJson()),
+    );
     final res = await client.from('user').upsert(
       {
         'id': currentUser?.id,
@@ -43,8 +46,7 @@ class AuthProvider {
         'age': age,
         'email': email,
         'diagnosis': diagnosedIssues.toJson(),
-        'answer_map': userAnswers
-            .map((key, value) => MapEntry(key.toString(), value.toJson())),
+        'answer_map': answers,
       },
       onConflict: 'id',
     ).select();

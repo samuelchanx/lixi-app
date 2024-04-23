@@ -13,16 +13,59 @@ class QuestionControllerV2 {
   QuestionControllerV2({
     required this.questions,
     required this.ref,
-  }) {
-    diagnosedIssue = ref.read(diagnosedIssuesProvider);
-    userAnswers = ref.read(userAnswersProvider);
-  }
+  });
 
   final Ref ref;
 
-  DiagnosedIssue diagnosedIssue = const DiagnosedIssue();
+  /// Formula for Result page (prediction of period)
+  /// (i) 月經期 = [(1st day of last menstruation date + Q3 (月經週期))
+  /// to (1st day of last menstruation date + Q3 (月經週期)
+  /// + (last day of last menstruation date -first day of last menstruation date)]
+  /// (ii) 經後期 =  [ (1st day of last menstruation date + Q3 (月經週期) +
+  ///  (last day of last menstruation date -first day of last menstruation date) + 1
+  /// to (1st day of last menstruation date + Q3 (月經週期) +
+  /// (last day of last menstruation date -first day of last menstruation date) + 5 ]
+  /// (iii) 排卵期 = [ + 6 + 12]
+  /// (iv) 經前期 =  + 13 to + 21]
+  (List<DateTime>, List<DateTime>, List<DateTime>, List<DateTime>)
+      getPeriodPrediction() {
+    final firstDayOfLastMenstruation = userAnswers[0]!.dateRange!.first;
+    final lastDayOfLastMenstruation = userAnswers[0]!.dateRange!.last;
+    final lastPeiodDuration =
+        lastDayOfLastMenstruation.difference(firstDayOfLastMenstruation);
+    final periodCycleLength = int.parse(userAnswers[2]!.text!);
+    final periodLastDay =
+        firstDayOfLastMenstruation + periodCycleLength.days + lastPeiodDuration;
+    final period = [
+      firstDayOfLastMenstruation + periodCycleLength.days,
+      periodLastDay,
+    ];
+    final postPeriod = [
+      periodLastDay + 1.days,
+      periodLastDay + 5.days,
+    ];
+    final ovulutionPeriod = [
+      periodLastDay + 6.days,
+      periodLastDay + 12.days,
+    ];
+    final prePeriod = [
+      periodLastDay + 13.days,
+      periodLastDay + 21.days,
+    ];
+    return (period, postPeriod, ovulutionPeriod, prePeriod);
+  }
+
+  DiagnosedIssue get diagnosedIssue => ref.read(diagnosedIssuesProvider);
   List<QuestionModelV2> questions;
-  Map<int, UserAnswer> userAnswers = {};
+  Map<int, UserAnswer> get userAnswers => ref.read(userAnswersProvider);
+  set userAnswers(Map<int, UserAnswer> ans) {
+    ref.read(userAnswersProvider.notifier).update((state) => ans);
+  }
+
+  set diagnosedIssue(DiagnosedIssue issue) {
+    ref.read(diagnosedIssuesProvider.notifier).update((state) => issue);
+  }
+
   // Map<int, UserAnswer> userAnswers = {
   //   /// Group 0, only for predicting menstruation cycle
   //   0: UserAnswer(
@@ -85,42 +128,22 @@ class QuestionControllerV2 {
     return canDiagnose;
   }
 
-  /// Formula for Result page (prediction of period)
-  /// (i) 月經期 = [(1st day of last menstruation date + Q3 (月經週期))
-  /// to (1st day of last menstruation date + Q3 (月經週期)
-  /// + (last day of last menstruation date -first day of last menstruation date)]
-  /// (ii) 經後期 =  [ (1st day of last menstruation date + Q3 (月經週期) +
-  ///  (last day of last menstruation date -first day of last menstruation date) + 1
-  /// to (1st day of last menstruation date + Q3 (月經週期) +
-  /// (last day of last menstruation date -first day of last menstruation date) + 5 ]
-  /// (iii) 排卵期 = [ + 6 + 12]
-  /// (iv) 經前期 =  + 13 to + 21]
-  (List<DateTime>, List<DateTime>, List<DateTime>, List<DateTime>)
-      getPeriodPrediction() {
-    final firstDayOfLastMenstruation = userAnswers[0]!.dateRange!.first;
-    final lastDayOfLastMenstruation = userAnswers[0]!.dateRange!.last;
-    final lastPeiodDuration =
-        lastDayOfLastMenstruation.difference(firstDayOfLastMenstruation);
-    final periodCycleLength = int.parse(userAnswers[2]!.text!);
-    final periodLastDay =
-        firstDayOfLastMenstruation + periodCycleLength.days + lastPeiodDuration;
-    final period = [
-      firstDayOfLastMenstruation + periodCycleLength.days,
-      periodLastDay,
-    ];
-    final postPeriod = [
-      periodLastDay + 1.days,
-      periodLastDay + 5.days,
-    ];
-    final ovulutionPeriod = [
-      periodLastDay + 6.days,
-      periodLastDay + 12.days,
-    ];
-    final prePeriod = [
-      periodLastDay + 13.days,
-      periodLastDay + 21.days,
-    ];
-    return (period, postPeriod, ovulutionPeriod, prePeriod);
+  void diagnoseForOtherSymptoms() {
+    final userSymptomOptions = getOtherQuestions(questions[11].options);
+    final selectedIndexes = userAnswers[11]?.selectedOptionIndex;
+    final selectedOptions = selectedIndexes
+            ?.map((e) => userSymptomOptions[e])
+            .whereNotNull()
+            .toList() ??
+        [];
+    log.info('Selected indexes: $selectedIndexes, $selectedOptions');
+    final finalBodyTypes = otherSymptomsData
+        .where((element) => selectedOptions.any((so) => element[so] == 'T'))
+        .map((e) => DiagnosedBodyType.fromString(e['BodyType']!))
+        .where((element) => diagnosedIssue.bodyTypes!.contains(element))
+        .toList();
+    log.info('Diagnosing for other symptoms...$finalBodyTypes');
+    diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: finalBodyTypes);
   }
 
   List<DiagnosedBodyType> filterBodyTypesByData(
@@ -174,6 +197,11 @@ class QuestionControllerV2 {
     return allSymptoms;
   }
 
+  void loadTestingSet(int index) {
+    final data = testingData[index];
+    userAnswers = _prepareQuestions(data);
+  }
+
   int saveAndGetNextQuestion(
     int currentStep,
     Map<int, UserAnswer> latestAnswers,
@@ -182,6 +210,7 @@ class QuestionControllerV2 {
       ...userAnswers,
       ...latestAnswers,
     };
+    log.info('userAnswerssaving, $userAnswers');
     prefs.setString(
       userAnswerSaveKey,
       jsonEncode(
@@ -207,11 +236,6 @@ class QuestionControllerV2 {
       return -1;
     }
     return currentStep + 1;
-  }
-
-  void loadTestingSet(int index) {
-    final data = testingData[index];
-    userAnswers = _prepareQuestions(data);
   }
 
   void startTest() {
@@ -444,26 +468,6 @@ class QuestionControllerV2 {
     return diagnosedIssue.diagnosedStep != null;
   }
 
-  List<PeriodTexture> _setTexturesData() {
-    final textures = userAnswers[5]
-            ?.selectedOptionIndex
-            .map(
-              (e) => PeriodTexture.values
-                  .firstOrNullWhere((tt) => tt.answerIndex == e),
-            )
-            .whereNotNull()
-            .toList() ??
-        [];
-    // FIXME: Should not happen in future in the questionnaire
-    if (textures.contains(PeriodTexture.withBloodClots)) {
-      textures.remove(PeriodTexture.dilute);
-    }
-    diagnosedIssue = diagnosedIssue.copyWith(
-      periodTexture: textures,
-    );
-    return textures;
-  }
-
   Map<int, UserAnswer> _prepareQuestions(Map<String, Object> data) {
     Map<int, UserAnswer> userAnswers = {};
     for (var e in data.entries) {
@@ -555,22 +559,24 @@ class QuestionControllerV2 {
     return userAnswers;
   }
 
-  void diagnoseForOtherSymptoms() {
-    final userSymptomOptions = getOtherQuestions(questions[11].options);
-    final selectedIndexes = userAnswers[11]?.selectedOptionIndex;
-    final selectedOptions = selectedIndexes
-            ?.map((e) => userSymptomOptions[e])
+  List<PeriodTexture> _setTexturesData() {
+    final textures = userAnswers[5]
+            ?.selectedOptionIndex
+            .map(
+              (e) => PeriodTexture.values
+                  .firstOrNullWhere((tt) => tt.answerIndex == e),
+            )
             .whereNotNull()
             .toList() ??
         [];
-    log.info('Selected indexes: $selectedIndexes, $selectedOptions');
-    final finalBodyTypes = otherSymptomsData
-        .where((element) => selectedOptions.any((so) => element[so] == 'T'))
-        .map((e) => DiagnosedBodyType.fromString(e['BodyType']!))
-        .where((element) => diagnosedIssue.bodyTypes!.contains(element))
-        .toList();
-    log.info('Diagnosing for other symptoms...$finalBodyTypes');
-    diagnosedIssue = diagnosedIssue.copyWith(bodyTypes: finalBodyTypes);
+    // FIXME: Should not happen in future in the questionnaire
+    if (textures.contains(PeriodTexture.withBloodClots)) {
+      textures.remove(PeriodTexture.dilute);
+    }
+    diagnosedIssue = diagnosedIssue.copyWith(
+      periodTexture: textures,
+    );
+    return textures;
   }
 }
 

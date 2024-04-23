@@ -15,6 +15,11 @@ final appTheme = baseTheme.copyWith(
     onPrimary: normalColor,
     secondary: normalColor,
   ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      maximumSize: const Size.fromHeight(48),
+    ),
+  ),
   textTheme: GoogleFonts.gildaDisplayTextTheme()
       .apply(bodyColor: normalColor, displayColor: normalColor),
   scaffoldBackgroundColor: backgroundColor,
