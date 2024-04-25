@@ -17,7 +17,7 @@ final appTheme = baseTheme.copyWith(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      maximumSize: const Size.fromHeight(48),
+      maximumSize: const Size.fromHeight(60),
     ),
   ),
   textTheme: GoogleFonts.gildaDisplayTextTheme()
