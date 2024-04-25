@@ -3,7 +3,6 @@ import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/models/question_model_v2.dart';
@@ -74,11 +73,10 @@ class OneQuestionWidgets extends HookConsumerWidget {
                               currentImageCount.value = imageIndex;
                               onChanged();
                             },
-                            child: SvgPicture.asset(
+                            child: Image.asset(
                               isSelected
-                                  ? 'images/m-gun-red.svg'
-                                  : question.image!,
-                              // color: isSelected ? Colors.red : null,
+                                  ? 'assets/images/m-gun-red.png'
+                                  : 'assets/images/m-gun.png',
                               width: width / 6,
                             ),
                           );
