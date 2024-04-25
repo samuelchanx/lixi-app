@@ -39,6 +39,7 @@ class OneQuestionWidgets extends HookConsumerWidget {
     final imageRowsToShow = useState(1);
     final currentImageCount = useState<int?>(null);
     final controller = ref.watch(questionControllerProvider);
+    final inPeriodCheck = useState(false);
     return HookBuilder(
       builder: (context) {
         final answers = useValueListenable(currentAnswers);
@@ -101,18 +102,52 @@ class OneQuestionWidgets extends HookConsumerWidget {
               children: [
                 CalendarDatePicker2(
                   config: CalendarDatePicker2Config(
-                    calendarType: CalendarDatePicker2Type.range,
+                    calendarType: inPeriodCheck.value
+                        ? CalendarDatePicker2Type.single
+                        : CalendarDatePicker2Type.range,
                     lastDate: DateTime.now(),
                   ),
-                  value: dateRange.value,
+                  value: inPeriodCheck.value
+                      ? dateRange.value.take(1).toList()
+                      : dateRange.value,
                   onValueChanged: (dates) {
                     dateRange.value = dates;
                     onChanged();
                   },
                 ),
-                if (dateRange.value.length == 2)
+                if (dateRange.value.length == 2 && !inPeriodCheck.value)
                   Text(
                     '${dateRange.value.first!.yearMonthDay} - ${dateRange.value.last?.yearMonthDay}',
+                  ),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: inPeriodCheck.value,
+                      onChanged: (val) {
+                        inPeriodCheck.value = val!;
+                        onChanged();
+                      },
+                    ),
+                    const Expanded(
+                      child: Text('正值經期（請在日曆中劃出本次月經的第一天）'),
+                    ),
+                  ],
+                ),
+                if (inPeriodCheck.value)
+                  TextFormField(
+                    controller: textController,
+                    onChanged: (text) {
+                      onChanged();
+                    },
+                    decoration: const InputDecoration(
+                      labelText: '一般來說，你的月經期有多少天？',
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^[1-9][0-9]*'),
+                      ),
+                    ],
+                    keyboardType: TextInputType.number,
                   ),
               ],
             );

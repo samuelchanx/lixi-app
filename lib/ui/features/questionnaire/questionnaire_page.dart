@@ -73,7 +73,6 @@ class QuestionnaireContent extends HookConsumerWidget {
     final answers = useState<Map<int, UserAnswer>>({});
     final selectedOptionIndexNotifier = useState<Map<int, List<int>>>({});
 
-    final textController = useTextEditingController();
     final controller = ref.watch(questionControllerProvider);
 
     final dateRange = useState<List<DateTime?>>([]);
@@ -97,20 +96,26 @@ class QuestionnaireContent extends HookConsumerWidget {
     final currentQuestions = questions
         .where((element) => element.group == currentStepValue)
         .toList();
-    // final question = currentQuestions.first;
+    final textControllers = List.generate(
+      5,
+      (index) => useTextEditingController(),
+    );
 
     // FIXME: text controller cannot be used for multiple questions
     bool isValidated() {
-      final unfinishedQuestions = currentQuestions.whereNot((question) {
+      final unfinishedQuestions =
+          currentQuestions.whereNotIndexed((question, index) {
         final userAnswer = answers.value[questions.indexOf(question)];
         if (question.shouldNotShow(answers.value, questions)) return true;
+        final textController = textControllers[index];
         switch (question.expectedAnsFormat) {
           case AnswerFormat.bool:
             return true;
           case AnswerFormat.imageCount:
             return textController.text.isNotEmpty;
           case AnswerFormat.date:
-            return userAnswer?.dateRange?.length == 2;
+            return userAnswer?.dateRange?.length == 2 ||
+                textController.text.isNotEmpty;
           case AnswerFormat.numberText:
           case AnswerFormat.slider:
             return textController.text.isNotEmpty &&
@@ -130,7 +135,9 @@ class QuestionnaireContent extends HookConsumerWidget {
     }
 
     void resetPage() {
-      textController.text = '';
+      for (var element in textControllers) {
+        element.text = '';
+      }
       dateRange.value = [];
     }
 
@@ -209,9 +216,10 @@ class QuestionnaireContent extends HookConsumerWidget {
               ),
             Column(
               children: [
-                ...currentQuestions.map(
-                  (question) {
+                ...currentQuestions.mapIndexed(
+                  (index, question) {
                     final questionIndexInList = questions.indexOf(question);
+                    final textController = textControllers[index];
                     return OneQuestionWidgets(
                       question: question,
                       dateRange: dateRange,
@@ -226,7 +234,10 @@ class QuestionnaireContent extends HookConsumerWidget {
                             selectedOptionIndex: selectedOptionIndexNotifier
                                     .value[questionIndexInList] ??
                                 [],
-                            dateRange: dateRange.value.whereNotNull().toList(),
+                            dateRange:
+                                question.expectedAnsFormat == AnswerFormat.date
+                                    ? dateRange.value.whereNotNull().toList()
+                                    : null,
                             text: textController.text,
                           ),
                         };

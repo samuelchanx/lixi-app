@@ -30,7 +30,11 @@ class QuestionControllerV2 {
   (List<DateTime>, List<DateTime>, List<DateTime>, List<DateTime>)
       getPeriodPrediction() {
     final firstDayOfLastMenstruation = userAnswers[0]!.dateRange!.first;
-    final lastDayOfLastMenstruation = userAnswers[0]!.dateRange!.last;
+    log.info('First day of last menstruation: ${userAnswers[0]}');
+    final lastDayOfLastMenstruation = userAnswers[0]!.dateRange?.lastOrNull ??
+        firstDayOfLastMenstruation.add(
+          Duration(days: userAnswers[0]!.text!.toInt()),
+        );
     final lastPeiodDuration =
         lastDayOfLastMenstruation.difference(firstDayOfLastMenstruation);
     final periodCycleLength = int.parse(userAnswers[2]!.text!);
