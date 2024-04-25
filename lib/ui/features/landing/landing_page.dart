@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/assets/assets.gen.dart';
 import 'package:lixi/models/question_model_controller.dart';
@@ -114,10 +115,7 @@ class LandingPage extends HookConsumerWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               if (checked.value) {
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/questionnaire',
-                                  (route) => false,
-                                );
+                                context.go('/questionnaire');
                               }
                             },
                             style: elevatedButtonStyle.copyWith(

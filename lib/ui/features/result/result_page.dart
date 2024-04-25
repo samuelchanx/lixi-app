@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:lixi/ui/widgets/lixi_logo.dart';
@@ -130,8 +131,7 @@ class ResultPage extends HookConsumerWidget {
               padding: const EdgeInsets.all(36.0),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/', (route) => false);
+                  context.go('/');
                 },
                 icon: const Icon(Icons.refresh),
                 label: const Text('重新開始'),

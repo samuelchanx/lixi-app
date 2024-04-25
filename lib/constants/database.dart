@@ -72,7 +72,7 @@ const databaseV2Json = [
     "displayIndex": 1,
     "group": 1,
     "optionAdditionalStep": "",
-    "image": "assets/images/m-gun.png",
+    "image": "images/m-gun.svg",
     "expectedAnsFormat": "imageCount",
     "imagesToShow": 5,
     "isMultipleChoice": "",

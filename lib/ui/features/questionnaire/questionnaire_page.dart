@@ -59,10 +59,7 @@ class QuestionnaireContent extends HookConsumerWidget {
   final List<QuestionModelV2> questions;
 
   void goToResult(BuildContext context) {
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      '/result',
-      (route) => false,
-    );
+    context.go('/result');
   }
 
   void navigateNextStep(BuildContext context, int nextStep) {
@@ -322,12 +319,6 @@ class QuestionnaireContent extends HookConsumerWidget {
                         return const ProfileRegistrationPage();
                       },
                     );
-
-                    // Navigator.of(context).pushNamedAndRemoveUntil(
-                    //   '/result',
-                    //   (route) => false,
-                    //   arguments: controller.diagnosedIssue,
-                    // );
                   },
                   child: const Text('Profile'),
                 ),
