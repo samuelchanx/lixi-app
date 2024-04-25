@@ -53,7 +53,7 @@ class LandingPage extends HookConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('澄清'),
+                      const Text('聲明'),
                       const Text(
                         '如果妳正在懷孕或有懷疑，為保障妳的安全，妳不能參與此計劃。',
                         style: TextStyle(
