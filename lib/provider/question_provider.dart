@@ -1,7 +1,7 @@
 import 'package:csv/csv.dart';
 import 'package:dartx/dartx.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lixi/database.dart';
+import 'package:lixi/constants/database.dart';
 import 'package:lixi/models/question_model.dart';
 import 'package:lixi/models/question_model_v2.dart';
 

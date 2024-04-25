@@ -480,7 +480,7 @@ class OneQuestionWidgets extends HookConsumerWidget {
                 child: Text(
                   '${question.displayIndex}. ${question.title!}',
                   style: TextStyle(
-                    fontSize: 28.0,
+                    fontSize: 24.0,
                     fontWeight: FontWeight.w600,
                     color: normalColor,
                   ),
