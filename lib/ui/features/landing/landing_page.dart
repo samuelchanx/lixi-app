@@ -66,7 +66,7 @@ class LandingPage extends HookConsumerWidget {
                       const Gap(24),
                       Center(
                         child: Assets.images.pregnancy.image(
-                          width: width / 4,
+                          height: MediaQuery.of(context).size.height / 2.5,
                         ),
                       ),
                       const Gap(24),

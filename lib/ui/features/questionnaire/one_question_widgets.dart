@@ -75,8 +75,10 @@ class OneQuestionWidgets extends HookConsumerWidget {
                               onChanged();
                             },
                             child: SvgPicture.asset(
-                              question.image!,
-                              color: isSelected ? Colors.red : null,
+                              isSelected
+                                  ? 'images/m-gun-red.svg'
+                                  : question.image!,
+                              // color: isSelected ? Colors.red : null,
                               width: width / 6,
                             ),
                           );
