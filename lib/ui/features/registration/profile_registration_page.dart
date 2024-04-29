@@ -38,9 +38,6 @@ class ProfileRegistrationPage extends HookConsumerWidget {
                 '登記資料',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              const Text(
-                '我們將會把結果以電郵發送給你',
-              ),
               const SizedBox(height: 20),
               TextFormField(
                 controller: nameText,
