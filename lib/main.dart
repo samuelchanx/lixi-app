@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lixi/models/question_model_controller.dart';
 import 'package:lixi/provider/auth_provider.dart';
+import 'package:lixi/provider/question_provider.dart';
 import 'package:lixi/provider/shared_pref_provider.dart';
 import 'package:lixi/router/router.dart';
+import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:lixi/ui/theme/theme_data.dart';
 import 'package:lixi/utils/app_initializer.dart';
 import 'package:logging/logging.dart';
@@ -25,6 +28,12 @@ Future<void> main() async {
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWith((ref) => prefs),
+        questionControllerProvider.overrideWith(
+          (ref) => QuestionControllerV2(
+            questions: ref.watch(questionsProvider),
+            ref: ref,
+          ),
+        ),
       ],
       child: const MyHealthcareApp(),
     ),

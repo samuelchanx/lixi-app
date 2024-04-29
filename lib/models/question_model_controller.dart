@@ -17,48 +17,6 @@ class QuestionControllerV2 {
 
   final Ref ref;
 
-  /// Formula for Result page (prediction of period)
-  /// (i) 月經期 = [(1st day of last menstruation date + Q3 (月經週期))
-  /// to (1st day of last menstruation date + Q3 (月經週期)
-  /// + (last day of last menstruation date -first day of last menstruation date)]
-  /// (ii) 經後期 =  [ (1st day of last menstruation date + Q3 (月經週期) +
-  ///  (last day of last menstruation date -first day of last menstruation date) + 1
-  /// to (1st day of last menstruation date + Q3 (月經週期) +
-  /// (last day of last menstruation date -first day of last menstruation date) + 5 ]
-  /// (iii) 排卵期 = [ + 6 + 12]
-  /// (iv) 經前期 =  + 13 to + 21]
-  (List<DateTime>, List<DateTime>, List<DateTime>, List<DateTime>)
-      getPeriodPrediction() {
-    final firstDayOfLastMenstruation = userAnswers[0]!.dateRange!.first;
-    log.info('First day of last menstruation: ${userAnswers[0]}');
-    final lastDayOfLastMenstruation = userAnswers[0]!.dateRange?.lastOrNull ??
-        firstDayOfLastMenstruation.add(
-          Duration(days: userAnswers[0]!.text!.toInt()),
-        );
-    final lastPeiodDuration =
-        lastDayOfLastMenstruation.difference(firstDayOfLastMenstruation);
-    final periodCycleLength = int.parse(userAnswers[2]!.text!);
-    final periodLastDay =
-        firstDayOfLastMenstruation + periodCycleLength.days + lastPeiodDuration;
-    final period = [
-      firstDayOfLastMenstruation + periodCycleLength.days,
-      periodLastDay,
-    ];
-    final postPeriod = [
-      periodLastDay + 1.days,
-      periodLastDay + 5.days,
-    ];
-    final ovulutionPeriod = [
-      periodLastDay + 6.days,
-      periodLastDay + 12.days,
-    ];
-    final prePeriod = [
-      periodLastDay + 13.days,
-      periodLastDay + 21.days,
-    ];
-    return (period, postPeriod, ovulutionPeriod, prePeriod);
-  }
-
   DiagnosedIssue get diagnosedIssue => ref.read(diagnosedIssuesProvider);
   List<QuestionModelV2> questions;
   Map<int, UserAnswer> get userAnswers => ref.read(userAnswersProvider);
@@ -240,6 +198,13 @@ class QuestionControllerV2 {
       return -1;
     }
     return currentStep + 1;
+  }
+
+  void diagnoseCurrentAnswers() {
+    final canDianose = diagnose();
+    if (!canDianose) {
+      diagnoseForOtherSymptoms();
+    }
   }
 
   void startTest() {
@@ -582,6 +547,10 @@ class QuestionControllerV2 {
     );
     return textures;
   }
+
+  void updateAnswers(Map<int, UserAnswer> ans) {
+    userAnswers = ans;
+  }
 }
 
 (List<DiagnosedBodyType>, bool) diagnoseForStep3PainTypes(
@@ -635,4 +604,47 @@ class QuestionControllerV2 {
       .toList();
   // log.info('Diagnosing for step 3 pain types...$bodyTypes');
   return (bodyTypes, bodyTypes.isNotEmpty);
+}
+
+/// Formula for Result page (prediction of period)
+/// (i) 月經期 = [(1st day of last menstruation date + Q3 (月經週期))
+/// to (1st day of last menstruation date + Q3 (月經週期)
+/// + (last day of last menstruation date -first day of last menstruation date)]
+/// (ii) 經後期 =  [ (1st day of last menstruation date + Q3 (月經週期) +
+///  (last day of last menstruation date -first day of last menstruation date) + 1
+/// to (1st day of last menstruation date + Q3 (月經週期) +
+/// (last day of last menstruation date -first day of last menstruation date) + 5 ]
+/// (iii) 排卵期 = [ + 6 + 12]
+/// (iv) 經前期 =  + 13 to + 21]
+(List<DateTime>, List<DateTime>, List<DateTime>, List<DateTime>)
+    getPeriodPrediction(Map<int, UserAnswer> userAnswers) {
+  final firstDayOfLastMenstruation = userAnswers[0]!.dateRange!.first;
+  log.info('First day of last menstruation: ${userAnswers[0]}');
+  final lastDayOfLastMenstruation = userAnswers[0]!.dateRange!.length > 1
+      ? userAnswers[0]!.dateRange!.last
+      : firstDayOfLastMenstruation.add(
+          Duration(days: userAnswers[0]!.text!.toInt()),
+        );
+  final lastPeiodDuration =
+      lastDayOfLastMenstruation.difference(firstDayOfLastMenstruation);
+  final periodCycleLength = int.parse(userAnswers[2]!.text!);
+  final periodLastDay =
+      firstDayOfLastMenstruation + periodCycleLength.days + lastPeiodDuration;
+  final period = [
+    firstDayOfLastMenstruation + periodCycleLength.days,
+    periodLastDay,
+  ];
+  final postPeriod = [
+    periodLastDay + 1.days,
+    periodLastDay + 5.days,
+  ];
+  final ovulutionPeriod = [
+    periodLastDay + 6.days,
+    periodLastDay + 12.days,
+  ];
+  final prePeriod = [
+    periodLastDay + 13.days,
+    periodLastDay + 21.days,
+  ];
+  return (period, postPeriod, ovulutionPeriod, prePeriod);
 }

@@ -18,10 +18,7 @@ import 'package:lixi/ui/theme/styles.dart';
 import 'package:lixi/utils/logger.dart';
 
 final questionControllerProvider = StateProvider<QuestionControllerV2>(
-  (ref) => QuestionControllerV2(
-    questions: ref.watch(questionsProvider),
-    ref: ref,
-  ),
+  (ref) => throw UnimplementedError(),
 );
 
 class QuestionnairePage extends HookConsumerWidget {
@@ -174,7 +171,7 @@ class QuestionnaireContent extends HookConsumerWidget {
         answers.value,
       );
       if (nextStep == -1) {
-        await showModalBottomSheet(
+        final finished = await showModalBottomSheet<bool>(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
           ),
@@ -185,7 +182,9 @@ class QuestionnaireContent extends HookConsumerWidget {
             return const ProfileRegistrationPage();
           },
         );
-        if (ref.read(authProvider).currentUser != null && context.mounted) {
+        if (ref.read(authProvider).currentUser != null &&
+            context.mounted &&
+            finished == true) {
           goToResult(context);
         }
         return;

@@ -32,7 +32,16 @@ class AuthProvider {
     required DiagnosedIssue diagnosedIssues,
   }) async {
     if (currentUser == null) {
-      await client.auth.signUp(email: email, password: password);
+      try {
+        await client.auth.signUp(email: email, password: password);
+      } on AuthException catch (e) {
+        if (e.statusCode.toString() == '422') {
+          await client.auth.signInWithPassword(
+            email: email,
+            password: password,
+          );
+        }
+      }
     }
     log.info('signUp');
     final Map<String, dynamic> answers = userAnswers.map(
