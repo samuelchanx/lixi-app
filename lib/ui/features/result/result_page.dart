@@ -36,8 +36,6 @@ class ResultPage extends HookConsumerWidget {
             ...results.when(
               data: (data) {
                 final periodPrediction = getPeriodPrediction(data.$2);
-                controller.updateAnswers(data.$2);
-                controller.diagnoseCurrentAnswers();
                 return [
                   Align(
                     alignment: Alignment.centerLeft,

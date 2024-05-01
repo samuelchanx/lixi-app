@@ -1,11 +1,15 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/models/question_model_v2.dart';
+import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final userDataFutureProvider =
     FutureProvider.autoDispose<(DiagnosedIssue, Map<int, UserAnswer>)>(
   (ref) async {
     final userData = await UserDataProvider().getUserData();
+    ref.watch(questionControllerProvider)
+      ..updateAnswers(userData.$2)
+      ..diagnoseCurrentAnswers();
     return userData;
   },
 );
