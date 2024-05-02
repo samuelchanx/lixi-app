@@ -434,6 +434,9 @@ class QuestionControllerV2 {
     performDiagnosisWhenPainS2();
     performDiagnosisPainSymptomsS3();
     performDiagnosisPainChangesS4();
+    diagnosedIssue = diagnosedIssue.copyWith(
+      bodyTypes: diagnosedIssue.bodyTypes!.distinct().toList(),
+    );
     return diagnosedIssue.diagnosedStep != null;
   }
 
