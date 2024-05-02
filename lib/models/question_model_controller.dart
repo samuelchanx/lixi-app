@@ -93,6 +93,11 @@ class QuestionControllerV2 {
   void diagnoseForOtherSymptoms() {
     final userSymptomOptions = getOtherQuestions(questions[11].options);
     final selectedIndexes = userAnswers[11]?.selectedOptionIndex;
+    if ((selectedIndexes?.length ?? 0) == 1 &&
+        selectedIndexes!.first == userSymptomOptions.length) {
+      // No options selected
+      return;
+    }
     final selectedOptions = selectedIndexes
             ?.map((e) => userSymptomOptions[e])
             .whereNotNull()
