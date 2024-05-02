@@ -62,4 +62,8 @@ class AuthProvider {
     log.info(res);
     return null;
   }
+
+  Future<void> signOut() {
+    return client.auth.signOut();
+  }
 }

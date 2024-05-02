@@ -85,11 +85,14 @@ class ResultPage extends HookConsumerWidget {
                       delay: const Duration(milliseconds: 500),
                       child: Builder(
                         builder: (context) {
-                          final periodText =
-                              '''月經期 [${buildDateRangeText(periodPrediction.$1)}] 
-經後期 [${buildDateRangeText(periodPrediction.$2)}] New Moon 早 (1) | 晚 (1)
+                          var periodText =
+                              '''經後期 [${buildDateRangeText(periodPrediction.$2)}] New Moon 早 (1) | 晚 (1)
 排卵期 [${buildDateRangeText(periodPrediction.$3)}] Bal samic 早 (2.1) | 晚(2.2)
 經前期 [${buildDateRangeText(periodPrediction.$4)}] Full Moon 早 (3.1) | 晚(3.2)''';
+                          if (periodPrediction.$1.isNotEmpty) {
+                            periodText =
+                                '月經期 [${buildDateRangeText(periodPrediction.$1)}]\n$periodText';
+                          }
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

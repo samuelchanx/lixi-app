@@ -198,7 +198,6 @@ class QuestionControllerV2 {
       return -1;
     }
     if (currentStep == 4) {
-      // TODO: Diagnose for final other questions
       diagnoseForOtherSymptoms();
       return -1;
     }
@@ -635,12 +634,19 @@ class QuestionControllerV2 {
         );
   final lastPeiodDuration =
       lastDayOfLastMenstruation.difference(firstDayOfLastMenstruation);
-  final periodCycleLength = int.parse(userAnswers[2]!.text!);
-  final periodLastDay =
-      firstDayOfLastMenstruation + periodCycleLength.days + lastPeiodDuration;
+
+  final periodCycleLength = int.tryParse(userAnswers[2]?.text ?? '');
+  late DateTime periodLastDay;
+  if (periodCycleLength != null) {
+    periodLastDay =
+        firstDayOfLastMenstruation + periodCycleLength.days + lastPeiodDuration;
+  } else {
+    periodLastDay = DateTime.now() - 1.days;
+  }
   final period = [
-    firstDayOfLastMenstruation + periodCycleLength.days,
-    periodLastDay,
+    if (periodCycleLength != null)
+      firstDayOfLastMenstruation + periodCycleLength.days,
+    if (periodCycleLength != null) periodLastDay,
   ];
   final postPeriod = [
     periodLastDay + 1.days,

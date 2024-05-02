@@ -5,7 +5,6 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/assets/assets.gen.dart';
-import 'package:lixi/provider/auth_provider.dart';
 import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/styles.dart';
@@ -20,7 +19,6 @@ class LandingPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final width = useMemoized(() => MediaQuery.of(context).size.width);
     final checked = useState(false);
 
     return Scaffold(
@@ -140,10 +138,6 @@ class LandingPage extends HookConsumerWidget {
                     if (kDebugMode)
                       ElevatedButton(
                         onPressed: () async {
-                          await ref.read(authProvider).signIn(
-                                email: 'cchin.samuel@gmail.com',
-                                password: '123456789',
-                              );
                         },
                         child: const Text('Login'),
                       ),

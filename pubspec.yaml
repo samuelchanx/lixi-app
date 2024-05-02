@@ -52,7 +52,6 @@ flutter:
     - assets/images/
     - assets/svgs/
     - assets/icons/
-    - assets/text/
 
 flutter_gen:
   output: lib/assets/
