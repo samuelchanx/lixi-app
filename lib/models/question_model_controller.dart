@@ -205,10 +205,18 @@ class QuestionControllerV2 {
   }
 
   void diagnoseCurrentAnswers() {
+    diagnosedIssue = const DiagnosedIssue();
     final canDianose = diagnose();
     if (!canDianose) {
       diagnoseForOtherSymptoms();
     }
+  }
+
+  Map<int, UserAnswer> fromTestData() {
+    return Map.fromIterables(
+      userAnswerMap.keys.map((e) => e.toInt()),
+      userAnswerMap.values.map((e) => UserAnswer.fromJson(e)),
+    );
   }
 
   void startTest() {
@@ -216,12 +224,16 @@ class QuestionControllerV2 {
     // final testingIndexes = List.generate(15, (index) => index);
     final testingResults = <(Map<int, UserAnswer>, DiagnosedIssue, int)>[];
     for (var element in testingIndexes) {
-      log.info('Testing for index $element');
+      log.info('---\nTesting for index $element');
       final data = testingData[element];
       diagnosedIssue = const DiagnosedIssue();
 
-      userAnswers = _prepareQuestions(data);
-      diagnose();
+      userAnswers = Map.fromIterables(
+        userAnswerMap.keys.map((e) => e.toInt()),
+        userAnswerMap.values.map((e) => UserAnswer.fromJson(e)),
+      );
+      // userAnswers = _prepareQuestions(data);
+      diagnoseCurrentAnswers();
       testingResults.add(
         (userAnswers, diagnosedIssue, element),
       );
@@ -315,7 +327,7 @@ class QuestionControllerV2 {
       bodyTypes: issuesFromMatch,
     );
     log.info(
-      'Diagnosing for step 2...$periodAmountIssue, $colors, cannotDiagnose: $cannotDiagnose $issuesFromMatch',
+      'Diagnosing for step 1...$periodAmountIssue, $colors, cannotDiagnose: $cannotDiagnose $issuesFromMatch',
     );
     return issuesFromMatch.length == 1 && !cannotDiagnose;
   }

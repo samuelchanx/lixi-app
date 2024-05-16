@@ -1,3 +1,38 @@
+const userAnswerMap = {
+  "0": {
+    "text": "5",
+    "dateRange": ["2024-05-05T00:00:00.000"],
+    "selectedOptionIndex": [],
+  },
+  "1": {
+    "text": "",
+    "selectedOptionIndex": [0],
+  },
+  "2": {"text": "35", "selectedOptionIndex": []},
+  "3": {"text": "4", "selectedOptionIndex": []},
+  "4": {
+    "text": "",
+    "selectedOptionIndex": [3, 2, 4],
+  },
+  "5": {
+    "text": "",
+    "selectedOptionIndex": [1, 3],
+  },
+  "6": {"text": "2", "selectedOptionIndex": []},
+  "7": {
+    "text": "",
+    "selectedOptionIndex": [0, 1],
+  },
+  "8": {
+    "text": "",
+    "selectedOptionIndex": [0, 3, 6],
+  },
+  "10": {
+    "text": "",
+    "selectedOptionIndex": [1, 4],
+  },
+};
+
 const testingData = [
   {
     "1": "20240317-20240321",
