@@ -1,35 +1,42 @@
 const userAnswerMap = {
   "0": {
-    "text": "5",
-    "dateRange": ["2024-05-05T00:00:00.000"],
+    "text": "",
+    "dateRange": ["2023-01-29T00:00:00.000", "2023-02-03T00:00:00.000"],
     "selectedOptionIndex": [],
   },
   "1": {
     "text": "",
-    "selectedOptionIndex": [0],
+    "selectedOptionIndex": [1],
   },
-  "2": {"text": "35", "selectedOptionIndex": []},
-  "3": {"text": "4", "selectedOptionIndex": []},
+  "3": {"text": "2", "selectedOptionIndex": []},
   "4": {
     "text": "",
-    "selectedOptionIndex": [3, 2, 4],
+    "selectedOptionIndex": [5],
   },
   "5": {
     "text": "",
-    "selectedOptionIndex": [1, 3],
+    "selectedOptionIndex": [2],
   },
   "6": {"text": "2", "selectedOptionIndex": []},
   "7": {
     "text": "",
-    "selectedOptionIndex": [0, 1],
+    "selectedOptionIndex": [1, 0],
   },
   "8": {
     "text": "",
-    "selectedOptionIndex": [0, 3, 6],
+    "selectedOptionIndex": [6, 9],
+  },
+  "9": {
+    "text": "",
+    "selectedOptionIndex": [4],
   },
   "10": {
     "text": "",
-    "selectedOptionIndex": [1, 4],
+    "selectedOptionIndex": [3, 5],
+  },
+  "11": {
+    "text": "",
+    "selectedOptionIndex": [2, 5],
   },
 };
 
