@@ -279,9 +279,9 @@ class QuestionControllerV2 {
     final periodAmount = int.parse(userAnswers[3]!.text!);
 
     PeriodAmountIssue? periodAmountIssue;
-    if (periodAmount < 2) {
+    if (periodAmount < 3) {
       periodAmountIssue = PeriodAmountIssue.tooLittle;
-    } else if (periodAmount > 4) {
+    } else if (periodAmount > 6) {
       periodAmountIssue = PeriodAmountIssue.tooMuch;
     }
 
