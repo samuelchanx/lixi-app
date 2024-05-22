@@ -198,8 +198,8 @@ enum PeriodColor {
   normal,
   brightRed,
   deepRed,
-  purpleRed,
-  deepPurple;
+  deepPurple,
+  purpleRed;
 
   String get title {
     return [
@@ -208,8 +208,8 @@ enum PeriodColor {
       '正常',
       '鮮紅',
       '深紅',
-      '深紫',
       '紫紅',
+      '深紫',
     ][index];
   }
 }

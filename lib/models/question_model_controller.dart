@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:dartx/dartx.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lixi/database.dart';
+import 'package:lixi/constants/database.dart';
+import 'package:lixi/constants/testing_db.dart';
 import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/provider/shared_pref_provider.dart';
-import 'package:lixi/testing_db.dart';
 import 'package:lixi/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,44 +16,6 @@ class QuestionControllerV2 {
   });
 
   final Ref ref;
-
-  /// Formula for Result page (prediction of period)
-  /// (i) 月經期 = [(1st day of last menstruation date + Q3 (月經週期))
-  /// to (1st day of last menstruation date + Q3 (月經週期)
-  /// + (last day of last menstruation date -first day of last menstruation date)]
-  /// (ii) 經後期 =  [ (1st day of last menstruation date + Q3 (月經週期) +
-  ///  (last day of last menstruation date -first day of last menstruation date) + 1
-  /// to (1st day of last menstruation date + Q3 (月經週期) +
-  /// (last day of last menstruation date -first day of last menstruation date) + 5 ]
-  /// (iii) 排卵期 = [ + 6 + 12]
-  /// (iv) 經前期 =  + 13 to + 21]
-  (List<DateTime>, List<DateTime>, List<DateTime>, List<DateTime>)
-      getPeriodPrediction() {
-    final firstDayOfLastMenstruation = userAnswers[0]!.dateRange!.first;
-    final lastDayOfLastMenstruation = userAnswers[0]!.dateRange!.last;
-    final lastPeiodDuration =
-        lastDayOfLastMenstruation.difference(firstDayOfLastMenstruation);
-    final periodCycleLength = int.parse(userAnswers[2]!.text!);
-    final periodLastDay =
-        firstDayOfLastMenstruation + periodCycleLength.days + lastPeiodDuration;
-    final period = [
-      firstDayOfLastMenstruation + periodCycleLength.days,
-      periodLastDay,
-    ];
-    final postPeriod = [
-      periodLastDay + 1.days,
-      periodLastDay + 5.days,
-    ];
-    final ovulutionPeriod = [
-      periodLastDay + 6.days,
-      periodLastDay + 12.days,
-    ];
-    final prePeriod = [
-      periodLastDay + 13.days,
-      periodLastDay + 21.days,
-    ];
-    return (period, postPeriod, ovulutionPeriod, prePeriod);
-  }
 
   DiagnosedIssue get diagnosedIssue => ref.read(diagnosedIssuesProvider);
   List<QuestionModelV2> questions;
@@ -131,6 +93,11 @@ class QuestionControllerV2 {
   void diagnoseForOtherSymptoms() {
     final userSymptomOptions = getOtherQuestions(questions[11].options);
     final selectedIndexes = userAnswers[11]?.selectedOptionIndex;
+    if ((selectedIndexes?.length ?? 0) == 1 &&
+        selectedIndexes!.first == userSymptomOptions.length) {
+      // No options selected
+      return;
+    }
     final selectedOptions = selectedIndexes
             ?.map((e) => userSymptomOptions[e])
             .whereNotNull()
@@ -231,11 +198,25 @@ class QuestionControllerV2 {
       return -1;
     }
     if (currentStep == 4) {
-      // TODO: Diagnose for final other questions
       diagnoseForOtherSymptoms();
       return -1;
     }
     return currentStep + 1;
+  }
+
+  void diagnoseCurrentAnswers() {
+    diagnosedIssue = const DiagnosedIssue();
+    final canDianose = diagnose();
+    if (!canDianose) {
+      diagnoseForOtherSymptoms();
+    }
+  }
+
+  Map<int, UserAnswer> fromTestData() {
+    return Map.fromIterables(
+      userAnswerMap.keys.map((e) => e.toInt()),
+      userAnswerMap.values.map((e) => UserAnswer.fromJson(e)),
+    );
   }
 
   void startTest() {
@@ -243,12 +224,16 @@ class QuestionControllerV2 {
     // final testingIndexes = List.generate(15, (index) => index);
     final testingResults = <(Map<int, UserAnswer>, DiagnosedIssue, int)>[];
     for (var element in testingIndexes) {
-      log.info('Testing for index $element');
+      log.info('---\nTesting for index $element');
       final data = testingData[element];
       diagnosedIssue = const DiagnosedIssue();
 
-      userAnswers = _prepareQuestions(data);
-      diagnose();
+      userAnswers = Map.fromIterables(
+        userAnswerMap.keys.map((e) => e.toInt()),
+        userAnswerMap.values.map((e) => UserAnswer.fromJson(e)),
+      );
+      // userAnswers = _prepareQuestions(data);
+      diagnoseCurrentAnswers();
       testingResults.add(
         (userAnswers, diagnosedIssue, element),
       );
@@ -342,7 +327,7 @@ class QuestionControllerV2 {
       bodyTypes: issuesFromMatch,
     );
     log.info(
-      'Diagnosing for step 2...$periodAmountIssue, $colors, cannotDiagnose: $cannotDiagnose $issuesFromMatch',
+      'Diagnosing for step 1...$periodAmountIssue, $colors, cannotDiagnose: $cannotDiagnose $issuesFromMatch',
     );
     return issuesFromMatch.length == 1 && !cannotDiagnose;
   }
@@ -465,6 +450,9 @@ class QuestionControllerV2 {
     performDiagnosisWhenPainS2();
     performDiagnosisPainSymptomsS3();
     performDiagnosisPainChangesS4();
+    diagnosedIssue = diagnosedIssue.copyWith(
+      bodyTypes: diagnosedIssue.bodyTypes!.distinct().toList(),
+    );
     return diagnosedIssue.diagnosedStep != null;
   }
 
@@ -578,6 +566,10 @@ class QuestionControllerV2 {
     );
     return textures;
   }
+
+  void updateAnswers(Map<int, UserAnswer> ans) {
+    userAnswers = ans;
+  }
 }
 
 (List<DiagnosedBodyType>, bool) diagnoseForStep3PainTypes(
@@ -631,4 +623,54 @@ class QuestionControllerV2 {
       .toList();
   // log.info('Diagnosing for step 3 pain types...$bodyTypes');
   return (bodyTypes, bodyTypes.isNotEmpty);
+}
+
+/// Formula for Result page (prediction of period)
+/// (i) 月經期 = [(1st day of last menstruation date + Q3 (月經週期))
+/// to (1st day of last menstruation date + Q3 (月經週期)
+/// + (last day of last menstruation date -first day of last menstruation date)]
+/// (ii) 經後期 =  [ (1st day of last menstruation date + Q3 (月經週期) +
+///  (last day of last menstruation date -first day of last menstruation date) + 1
+/// to (1st day of last menstruation date + Q3 (月經週期) +
+/// (last day of last menstruation date -first day of last menstruation date) + 5 ]
+/// (iii) 排卵期 = [ + 6 + 12]
+/// (iv) 經前期 =  + 13 to + 21]
+(List<DateTime>, List<DateTime>, List<DateTime>, List<DateTime>)
+    getPeriodPrediction(Map<int, UserAnswer> userAnswers) {
+  final firstDayOfLastMenstruation = userAnswers[0]!.dateRange!.first;
+  log.info('First day of last menstruation: ${userAnswers[0]}');
+  final lastDayOfLastMenstruation = userAnswers[0]!.dateRange!.length > 1
+      ? userAnswers[0]!.dateRange!.last
+      : firstDayOfLastMenstruation.add(
+          Duration(days: userAnswers[0]!.text!.toInt()),
+        );
+  final lastPeiodDuration =
+      lastDayOfLastMenstruation.difference(firstDayOfLastMenstruation);
+
+  final periodCycleLength = int.tryParse(userAnswers[2]?.text ?? '');
+  late DateTime periodLastDay;
+  if (periodCycleLength != null) {
+    periodLastDay =
+        firstDayOfLastMenstruation + periodCycleLength.days + lastPeiodDuration;
+  } else {
+    periodLastDay = DateTime.now() - 1.days;
+  }
+  final period = [
+    if (periodCycleLength != null)
+      firstDayOfLastMenstruation + periodCycleLength.days,
+    if (periodCycleLength != null) periodLastDay,
+  ];
+  final postPeriod = [
+    periodLastDay + 1.days,
+    periodLastDay + 5.days,
+  ];
+  final ovulutionPeriod = [
+    periodLastDay + 6.days,
+    periodLastDay + 12.days,
+  ];
+  final prePeriod = [
+    periodLastDay + 13.days,
+    periodLastDay + 21.days,
+  ];
+  return (period, postPeriod, ovulutionPeriod, prePeriod);
 }

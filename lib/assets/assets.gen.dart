@@ -8,6 +8,8 @@
 // ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
@@ -20,33 +22,65 @@ class $AssetsImagesGen {
   AssetGenImage get appIcon =>
       const AssetGenImage('assets/images/app_icon.png');
 
+  /// File path: assets/images/m-gun-red.png
+  AssetGenImage get mGunRedPng =>
+      const AssetGenImage('assets/images/m-gun-red.png');
+
+  /// File path: assets/images/m-gun-red.svg
+  SvgGenImage get mGunRedSvg =>
+      const SvgGenImage('assets/images/m-gun-red.svg');
+
   /// File path: assets/images/m-gun.png
-  AssetGenImage get mGun => const AssetGenImage('assets/images/m-gun.png');
+  AssetGenImage get mGunPng => const AssetGenImage('assets/images/m-gun.png');
+
+  /// File path: assets/images/m-gun.svg
+  SvgGenImage get mGunSvg => const SvgGenImage('assets/images/m-gun.svg');
+
+  /// File path: assets/images/pregnancy-new.png
+  AssetGenImage get pregnancyNew =>
+      const AssetGenImage('assets/images/pregnancy-new.png');
 
   /// File path: assets/images/pregnancy.png
   AssetGenImage get pregnancy =>
       const AssetGenImage('assets/images/pregnancy.png');
 
+  /// File path: assets/images/texture_1.png
+  AssetGenImage get texture1 =>
+      const AssetGenImage('assets/images/texture_1.png');
+
+  /// File path: assets/images/texture_2.png
+  AssetGenImage get texture2 =>
+      const AssetGenImage('assets/images/texture_2.png');
+
+  /// File path: assets/images/texture_3.png
+  AssetGenImage get texture3 =>
+      const AssetGenImage('assets/images/texture_3.png');
+
+  /// File path: assets/images/texture_4.png
+  AssetGenImage get texture4 =>
+      const AssetGenImage('assets/images/texture_4.png');
+
   /// List of all assets
-  List<dynamic> get values =>
-      [animation1709482057336, appIcon, mGun, pregnancy];
-}
-
-class $AssetsTextGen {
-  const $AssetsTextGen();
-
-  /// File path: assets/text/database.csv
-  String get database => 'assets/text/database.csv';
-
-  /// List of all assets
-  List<String> get values => [database];
+  List<dynamic> get values => [
+        animation1709482057336,
+        appIcon,
+        mGunRedPng,
+        mGunRedSvg,
+        mGunPng,
+        mGunSvg,
+        pregnancyNew,
+        pregnancy,
+        texture1,
+        texture2,
+        texture3,
+        texture4
+      ];
 }
 
 class Assets {
   Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
-  static const $AssetsTextGen text = $AssetsTextGen();
 }
 
 class AssetGenImage {
@@ -115,6 +149,59 @@ class AssetGenImage {
       _assetName,
       bundle: bundle,
       package: package,
+    );
+  }
+
+  String get path => _assetName;
+
+  String get keyName => _assetName;
+}
+
+class SvgGenImage {
+  const SvgGenImage(this._assetName);
+
+  final String _assetName;
+
+  SvgPicture svg({
+    Key? key,
+    bool matchTextDirection = false,
+    AssetBundle? bundle,
+    String? package,
+    double? width,
+    double? height,
+    BoxFit fit = BoxFit.contain,
+    AlignmentGeometry alignment = Alignment.center,
+    bool allowDrawingOutsideViewBox = false,
+    WidgetBuilder? placeholderBuilder,
+    String? semanticsLabel,
+    bool excludeFromSemantics = false,
+    SvgTheme theme = const SvgTheme(),
+    ColorFilter? colorFilter,
+    Clip clipBehavior = Clip.hardEdge,
+    @deprecated Color? color,
+    @deprecated BlendMode colorBlendMode = BlendMode.srcIn,
+    @deprecated bool cacheColorFilter = false,
+  }) {
+    return SvgPicture.asset(
+      _assetName,
+      key: key,
+      matchTextDirection: matchTextDirection,
+      bundle: bundle,
+      package: package,
+      width: width,
+      height: height,
+      fit: fit,
+      alignment: alignment,
+      allowDrawingOutsideViewBox: allowDrawingOutsideViewBox,
+      placeholderBuilder: placeholderBuilder,
+      semanticsLabel: semanticsLabel,
+      excludeFromSemantics: excludeFromSemantics,
+      theme: theme,
+      colorFilter: colorFilter,
+      color: color,
+      colorBlendMode: colorBlendMode,
+      clipBehavior: clipBehavior,
+      cacheColorFilter: cacheColorFilter,
     );
   }
 

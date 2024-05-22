@@ -53,6 +53,11 @@ const databaseV2Json = [
     "optionAdditionalStep": "",
     "isMultipleChoice": "",
     "group": 0,
+    "showIf": {
+      '1': {
+        'option': 1,
+      },
+    },
     "expectedAnsFormat": "numberText",
     "isOptional": "",
     "logicReference":
@@ -67,7 +72,7 @@ const databaseV2Json = [
     "displayIndex": 1,
     "group": 1,
     "optionAdditionalStep": "",
-    "image": "assets/images/m-gun.png",
+    "image": "images/m-gun.svg",
     "expectedAnsFormat": "imageCount",
     "imagesToShow": 5,
     "isMultipleChoice": "",
@@ -148,23 +153,13 @@ const databaseV2Json = [
     "isMultipleChoice": "TRUE",
     "expectedAnsFormat": "options",
     "skipChoiceKeyword": "皆不是",
-    "showIf": {
-      '7': {
-        'questionAnswered': true,
-      },
-      '6': {
-        'text': {
-          'neq': '0',
-        },
-      },
-    },
     "isOptional": "",
     "logicReference":
         "月經來得不暢\",\"絞痛\",\"長期隱隱痛\",\"冷痛\",\"灼痛\",\"有固定痛點，如針刺狀\",\"脹痛連及腹側\",\"有下墜感\",\"腹部有包塊，而此包塊推之可移，按之可散\"\n\"經前\",\"血瘀\",\"血寒\",\"\",\"血寒\",\"濕熱蘊結\n血熱\",\"血瘀\",\"肝氣鬱結\n肝鬱化火\",\"\"\n\"經期間\",\"血瘀\",\"血寒\",\"氣虛\n血虛\",\"血寒\",\"濕熱蘊結\n血熱\",\"血瘀\",\"肝氣鬱結\n肝鬱化火\",\"氣虛\"\n\"經後\",\"\",\"\",\"氣虛\n血虛\",\"\",\"\",\"\",\"\",\"氣虛",
     "reference": "Step3,q3",
   },
   {
-    "question": "下列情況能否舒緩或加強痛感？",
+    "question": "下列情況能否舒緩或加強痛感？（可選多項）",
     "title": "⁠更多關於妳的不適",
     "displayIndex": 2,
     "options": "舒緩: 用暖東西敷肚,舒緩: 按壓會減少痛楚,加強: 按壓會更痛,舒緩: 血塊排出後疼痛減少",
@@ -187,7 +182,7 @@ const databaseV2Json = [
     "reference": "Step3,q4",
   },
   {
-    "question": "妳有否以下情況？",
+    "question": "妳有否以下情況？（可選多項）",
     "title": "",
     "options": "發熱,頭痛,吐血或流鼻血,大便洩瀉,乳房作脹,煩躁易怒，或感到抑鬱",
     "optionSeparator": "",
@@ -202,13 +197,14 @@ const databaseV2Json = [
     "reference": "Step3,q5",
   },
   {
-    "question": "請選擇其他徵狀",
+    "question": "請選擇其他徵狀（可選多項）",
     "title": "",
     "options":
         "腰酸腿軟,周身痛,眼花,眼睛通紅且痛,聽覺較弱,耳鳴,頭暈,頭痛,口又苦又乾,口乾,精神不振,精神差,情緒波動大,經常嘆氣,身體發熱，比較傾向喝冷飲,怕冷,手腳冰冷,胸部、腹側或乳房脹痛,胸悶,心胸煩熱,自覺心臟不正常跳動,不夠氣,胃氣多,胃口不佳,腹脹,腹瀉,口淡味寡,大便硬,便秘,大便不成形,小便色黃,尿頻,尿多而頻,夜尿多,水腫,性慾減退,四肢麻痹、發抖,四肢無力,睡眠不足，發夢多,掌心熱,容易疲倦,身形較肥胖,容易受驚,健忘,指甲無血色,唇色淡,皮膚容易乾燥,口乾不欲飲,夜間出汗,身體長期低熱,黃昏後發熱",
     "optionSeparator": "",
     "isMultipleChoice": "TRUE",
     "group": 4,
+    "skipChoiceKeyword": "以上皆沒有",
     "optionAdditionalStep": "",
     "expectedAnsFormat": "otherSymptoms",
     "isOptional": "",

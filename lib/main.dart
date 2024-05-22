@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lixi/models/question_model_controller.dart';
 import 'package:lixi/provider/auth_provider.dart';
+import 'package:lixi/provider/question_provider.dart';
 import 'package:lixi/provider/shared_pref_provider.dart';
-import 'package:lixi/ui/features/landing/landing_page.dart';
+import 'package:lixi/router/router.dart';
 import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
-import 'package:lixi/ui/features/result/result_page.dart';
 import 'package:lixi/ui/theme/theme_data.dart';
 import 'package:lixi/utils/app_initializer.dart';
 import 'package:logging/logging.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -28,6 +28,12 @@ Future<void> main() async {
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWith((ref) => prefs),
+        questionControllerProvider.overrideWith(
+          (ref) => QuestionControllerV2(
+            questions: ref.watch(questionsProvider),
+            ref: ref,
+          ),
+        ),
       ],
       child: const MyHealthcareApp(),
     ),
@@ -40,30 +46,15 @@ class MyHealthcareApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider);
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'lixi - your daily dose of magic',
       theme: appTheme,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       supportedLocales: const [
         Locale('zh', 'HK'),
       ],
-      routes: {
-        '/': (context) => const LandingPage(),
-        '/questionnaire': (context) => const QuestionnairePage(),
-        '/result': (context) => const ResultPage(),
-      },
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case '/result':
-            return PageTransition(
-              type: PageTransitionType.bottomToTop,
-              child: const ResultPage(),
-            );
-          default:
-            return null;
-        }
-      },
-      initialRoute: auth.isSignedIn ? '/profile' : '/',
+      routerConfig: router,
+      // initialRoute: auth.isSignedIn ? '/profile' : '/',
     );
   }
 }

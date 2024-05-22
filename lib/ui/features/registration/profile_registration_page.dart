@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/provider/auth_provider.dart';
 import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
@@ -36,9 +37,6 @@ class ProfileRegistrationPage extends HookConsumerWidget {
               Text(
                 '登記資料',
                 style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              const Text(
-                '我們將會把結果以電郵發送給你',
               ),
               const SizedBox(height: 20),
               TextFormField(
@@ -145,7 +143,7 @@ class ProfileRegistrationPage extends HookConsumerWidget {
                             userAnswers: userAnswers,
                             diagnosedIssues: diagnosedIssues,
                           );
-                      if (context.mounted) Navigator.pop(context);
+                      if (context.mounted) context.pop(true);
                     } catch (e, stack) {
                       log.severe('$e $stack');
                     }
