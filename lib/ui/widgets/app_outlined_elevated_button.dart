@@ -12,23 +12,31 @@ class AppOutlinedElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100.0),
-          side: const BorderSide(
-            color: buttonStrokeColor,
-            width: 1,
-          ),
+    return MaterialButton(
+      onPressed: () {
+        onPressed();
+      },
+      color: mainPinkColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(100.0),
+        side: const BorderSide(
+          color: buttonStrokeColor,
+          width: 1,
         ),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 100.0,
-          vertical: 13.5,
+          horizontal: 120.0,
+          vertical: 18,
         ),
-        child: child,
+        child: DefaultTextStyle(
+          style: const TextStyle(
+            fontSize: 24.0,
+            fontFamily: 'Ming',
+            color: Colors.white,
+          ),
+          child: child,
+        ),
       ),
     );
   }
