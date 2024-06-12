@@ -31,6 +31,7 @@ dependencies:
   page_transition: ^2.1.0
   shared_preferences: ^2.2.2
   supabase_flutter: ^2.4.0
+  logger: ^2.3.0
 
 dev_dependencies:
   # flutter_test:
@@ -42,9 +43,9 @@ dev_dependencies:
   freezed: ^2.4.7
   json_serializable: ^6.7.1
   flutter_launcher_icons: ^0.13.1
-  dart_style: ^2.3.4
+  dart_style: ^2.3.6
 dependency_overrides:
-  dart_style: ^2.3.4
+  dart_style: ^2.3.6
 flutter:
   uses-material-design: true
 
@@ -52,6 +53,11 @@ flutter:
     - assets/images/
     - assets/svgs/
     - assets/icons/
+  
+  fonts:
+    - family: Ming
+      fonts:
+        - asset: assets/fonts/cwTexMing-medium.ttf
 
 flutter_gen:
   output: lib/assets/

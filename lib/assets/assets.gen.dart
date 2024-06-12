@@ -22,6 +22,13 @@ class $AssetsImagesGen {
   AssetGenImage get appIcon =>
       const AssetGenImage('assets/images/app_icon.png');
 
+  /// File path: assets/images/lixi_splash.gif
+  AssetGenImage get lixiSplash =>
+      const AssetGenImage('assets/images/lixi_splash.gif');
+
+  /// File path: assets/images/logo.svg
+  SvgGenImage get logo => const SvgGenImage('assets/images/logo.svg');
+
   /// File path: assets/images/m-gun-red.png
   AssetGenImage get mGunRedPng =>
       const AssetGenImage('assets/images/m-gun-red.png');
@@ -64,6 +71,8 @@ class $AssetsImagesGen {
   List<dynamic> get values => [
         animation1709482057336,
         appIcon,
+        lixiSplash,
+        logo,
         mGunRedPng,
         mGunRedSvg,
         mGunPng,

@@ -8,8 +8,10 @@ import 'package:lixi/assets/assets.gen.dart';
 import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/styles.dart';
+import 'package:lixi/ui/widgets/app_outlined_elevated_button.dart';
 import 'package:lixi/ui/widgets/lixi_logo.dart';
 import 'package:lixi/ui/widgets/lixi_slogan.dart';
+import 'package:lixi/ui/widgets/page_wrapper.dart';
 import 'package:lixi/utils/logger.dart';
 
 class LandingPage extends HookConsumerWidget {
@@ -19,8 +21,28 @@ class LandingPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final started = useState(false);
     final checked = useState(false);
-
+    final height = MediaQuery.of(context).size.height;
+    if (!started.value) {
+      return PageWrapper(
+        showLogo: true,
+        child: Positioned(
+          top: height * 703 / 932,
+          child: Center(
+            child: AppOutlinedElevatedButton(
+              child: const Text(
+                '點擊開始',
+                style: TextStyle(
+                  fontSize: 24.0,
+                ),
+              ),
+              onPressed: () {},
+            ),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -107,7 +129,7 @@ class LandingPage extends HookConsumerWidget {
                             }
                           },
                           style: elevatedButtonStyle.copyWith(
-                            backgroundColor: MaterialStatePropertyAll(
+                            backgroundColor: WidgetStatePropertyAll(
                               checked.value ? highlightColor : Colors.grey,
                             ),
                           ),
@@ -137,8 +159,7 @@ class LandingPage extends HookConsumerWidget {
                       ),
                     if (kDebugMode)
                       ElevatedButton(
-                        onPressed: () async {
-                        },
+                        onPressed: () async {},
                         child: const Text('Login'),
                       ),
                     if (kDebugMode)
