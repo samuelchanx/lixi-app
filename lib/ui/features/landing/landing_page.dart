@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -30,14 +31,16 @@ class LandingPage extends HookConsumerWidget {
         child: Positioned(
           top: height * 703 / 932,
           child: Center(
-            child: AppOutlinedElevatedButton(
-              child: const Text(
-                '點擊開始',
-                style: TextStyle(
-                  fontSize: 24.0,
+            child: SlideInDown(
+              child: AppOutlinedElevatedButton(
+                child: const Text(
+                  '點擊開始',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                  ),
                 ),
+                onPressed: () {},
               ),
-              onPressed: () {},
             ),
           ),
         ),
