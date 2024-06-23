@@ -26,27 +26,27 @@ class LandingPage extends HookConsumerWidget {
     if (!started.value) {
       return PageWrapper(
         showLogo: true,
+        stars: getFirstPageStars(context),
         child: Positioned(
           top: height * 703 / 932,
-          child: Center(
-            child: SlideInDown(
-              child: AppOutlinedElevatedButton(
-                child: const Text(
-                  '點擊開始',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                  ),
+          child: SlideInDown(
+            child: AppOutlinedElevatedButton(
+              child: const Text(
+                '點擊開始',
+                style: TextStyle(
+                  fontSize: 24.0,
                 ),
-                onPressed: () {
-                  started.value = true;
-                },
               ),
+              onPressed: () {
+                started.value = true;
+              },
             ),
           ),
         ),
       );
     }
     return PageWrapper(
+      stars: getSecondPageStars(context),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(

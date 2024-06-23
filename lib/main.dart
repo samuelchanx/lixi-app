@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -25,17 +27,20 @@ Future<void> main() async {
   });
 
   runApp(
-    ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWith((ref) => prefs),
-        questionControllerProvider.overrideWith(
-          (ref) => QuestionControllerV2(
-            questions: ref.watch(questionsProvider),
-            ref: ref,
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (_) => ProviderScope(
+        overrides: [
+          sharedPreferencesProvider.overrideWith((ref) => prefs),
+          questionControllerProvider.overrideWith(
+            (ref) => QuestionControllerV2(
+              questions: ref.watch(questionsProvider),
+              ref: ref,
+            ),
           ),
-        ),
-      ],
-      child: const MyHealthcareApp(),
+        ],
+        child: const MyHealthcareApp(),
+      ),
     ),
   );
 }
@@ -54,6 +59,7 @@ class MyHealthcareApp extends HookConsumerWidget {
         Locale('zh', 'HK'),
       ],
       routerConfig: router,
+      builder: DevicePreview.appBuilder,
       // initialRoute: auth.isSignedIn ? '/profile' : '/',
     );
   }

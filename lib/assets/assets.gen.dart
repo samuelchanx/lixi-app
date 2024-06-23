@@ -26,6 +26,14 @@ class $AssetsImagesGen {
   AssetGenImage get lixiSplash =>
       const AssetGenImage('assets/images/lixi_splash.gif');
 
+  /// File path: assets/images/lixi_splash_flash.gif
+  AssetGenImage get lixiSplashFlash =>
+      const AssetGenImage('assets/images/lixi_splash_flash.gif');
+
+  /// File path: assets/images/lixi_splash_rotate.gif
+  AssetGenImage get lixiSplashRotate =>
+      const AssetGenImage('assets/images/lixi_splash_rotate.gif');
+
   /// File path: assets/images/logo.svg
   SvgGenImage get logo => const SvgGenImage('assets/images/logo.svg');
 
@@ -72,6 +80,8 @@ class $AssetsImagesGen {
         animation1709482057336,
         appIcon,
         lixiSplash,
+        lixiSplashFlash,
+        lixiSplashRotate,
         logo,
         mGunRedPng,
         mGunRedSvg,
@@ -86,10 +96,22 @@ class $AssetsImagesGen {
       ];
 }
 
+class $AssetsSvgsGen {
+  const $AssetsSvgsGen();
+
+  /// File path: assets/svgs/static_splash.svg
+  SvgGenImage get staticSplash =>
+      const SvgGenImage('assets/svgs/static_splash.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [staticSplash];
+}
+
 class Assets {
   Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsSvgsGen svgs = $AssetsSvgsGen();
 }
 
 class AssetGenImage {

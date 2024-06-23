@@ -12,30 +12,32 @@ class AppOutlinedElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: () {
-        onPressed();
-      },
-      color: mainPinkColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(100.0),
-        side: const BorderSide(
-          color: buttonStrokeColor,
-          width: 1,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 120.0,
-          vertical: 18,
-        ),
-        child: DefaultTextStyle(
-          style: const TextStyle(
-            fontSize: 24.0,
-            fontFamily: 'Ming',
-            color: Colors.white,
+    return SizedBox(
+      width: MediaQuery.of(context).size.width - 48,
+      child: MaterialButton(
+        onPressed: () {
+          onPressed();
+        },
+        color: mainPinkColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100.0),
+          side: const BorderSide(
+            color: buttonStrokeColor,
+            width: 1,
           ),
-          child: child,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12,
+          ),
+          child: DefaultTextStyle(
+            style: const TextStyle(
+              fontSize: 24.0,
+              fontFamily: 'Ming',
+              color: Colors.white,
+            ),
+            child: child,
+          ),
         ),
       ),
     );
