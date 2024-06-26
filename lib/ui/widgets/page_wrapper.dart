@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lixi/assets/assets.gen.dart';
 
+const calculatingPageWidth = 393;
+const calculatingPageHeight = 852;
+
 List<Widget> getFirstPageStars(BuildContext context) {
   final width = MediaQuery.of(context).size.width;
   final height = MediaQuery.of(context).size.height;
@@ -132,37 +135,48 @@ class PageWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: SizedBox(
-        width: width,
-        height: height,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            if (stars != null) ...stars!,
-            Positioned(
-              top: height * 878.7 / 932,
-              child: Center(
-                child: Text(
+    return Stack(
+      children: [
+        if (stars != null) ...stars!,
+        Scaffold(
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
                   '@journeywithlixi',
                   style: GoogleFonts.gildaDisplay(
                     fontSize: 18,
                     color: const Color(0xffDFCAC1),
                   ),
                 ),
+              ],
+            ),
+          ),
+          body: SafeArea(
+            child: SizedBox(
+              width: width,
+              height: height,
+              child: Stack(
+                alignment: showLogo ? Alignment.center : Alignment.topCenter,
+                children: [
+                  if (stars != null) ...stars!,
+                  if (showLogo)
+                    Positioned(
+                      top: height * 242 / 932,
+                      child: Center(
+                        child: Assets.images.logo.svg(),
+                      ),
+                    ),
+                  child,
+                ],
               ),
             ),
-            if (showLogo)
-              Positioned(
-                top: height * 242 / 932,
-                child: Center(
-                  child: Assets.images.logo.svg(),
-                ),
-              ),
-            child,
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

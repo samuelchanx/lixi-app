@@ -73,7 +73,9 @@ class LandingPage extends HookConsumerWidget {
             const Gap(48),
             AppOutlinedElevatedButton(
               child: const Text('我沒有懷孕'),
-              onPressed: () {},
+              onPressed: () {
+                context.go('/diagnosis');
+              },
             ),
             const Gap(40),
             const Padding(

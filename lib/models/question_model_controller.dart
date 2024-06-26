@@ -169,6 +169,7 @@ class QuestionControllerV2 {
     userAnswers = _prepareQuestions(data);
   }
 
+  /// returns the next step
   int saveAndGetNextQuestion(
     int currentStep,
     Map<int, UserAnswer> latestAnswers,
@@ -177,7 +178,7 @@ class QuestionControllerV2 {
       ...userAnswers,
       ...latestAnswers,
     };
-    log.info('userAnswerssaving, $userAnswers');
+    logger.i('userAnswerssaving, $userAnswers');
     prefs.setString(
       userAnswerSaveKey,
       jsonEncode(
@@ -188,7 +189,7 @@ class QuestionControllerV2 {
       diagnosedIssueSaveKey,
       jsonEncode(diagnosedIssue),
     );
-    log.info('Current index: $currentStep, User answers: $latestAnswers');
+    logger.i('Current index: $currentStep, User answers: $latestAnswers');
     if (currentStep == 3) {
       log.info('Ending questionnaire, doing final diagnosis');
       final canDiagnose = diagnose();
