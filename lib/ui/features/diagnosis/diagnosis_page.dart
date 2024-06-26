@@ -1,8 +1,10 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/assets/assets.gen.dart';
 import 'package:lixi/ui/features/diagnosis/app_progress_indicator.dart';
 import 'package:lixi/ui/features/diagnosis/q1_period_content.dart';
+import 'package:lixi/ui/features/diagnosis/q2_blood_content.dart';
 import 'package:lixi/ui/widgets/page_wrapper.dart';
 import 'package:lixi/utils/logger.dart';
 
@@ -27,7 +29,14 @@ class DiagnosisPage extends HookConsumerWidget {
           AppProgressIndicator(
             step: getStep(),
           ),
-          if (currentStep == 0) const Q1PeriodContent(),
+          if (currentStep == 0)
+            SlideInDown(
+              child: const Q1PeriodContent(),
+            ),
+          if (currentStep == 1)
+            SlideInRight(
+              child: const Q2BloodContent(),
+            ),
         ],
       ),
     );

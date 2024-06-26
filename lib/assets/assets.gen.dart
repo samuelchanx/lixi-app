@@ -37,6 +37,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/logo.svg
   SvgGenImage get logo => const SvgGenImage('assets/images/logo.svg');
 
+  /// File path: assets/images/m-gun-new.png
+  AssetGenImage get mGunNew =>
+      const AssetGenImage('assets/images/m-gun-new.png');
+
   /// File path: assets/images/m-gun-red.png
   AssetGenImage get mGunRedPng =>
       const AssetGenImage('assets/images/m-gun-red.png');
@@ -83,6 +87,7 @@ class $AssetsImagesGen {
         lixiSplashFlash,
         lixiSplashRotate,
         logo,
+        mGunNew,
         mGunRedPng,
         mGunRedSvg,
         mGunPng,

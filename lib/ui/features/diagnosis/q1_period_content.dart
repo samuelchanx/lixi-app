@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
@@ -165,7 +166,7 @@ class Q1PeriodContent extends HookConsumerWidget {
             }
 
             final controller = ref.read(questionControllerProvider);
-            controller.saveAndGetNextQuestion(0, {
+            final nextStep = controller.saveAndGetNextQuestion(0, {
               0: UserAnswer(
                 dateRange: dateRange.value,
                 text: usualPeriodDays.value?.toString(),
@@ -175,6 +176,8 @@ class Q1PeriodContent extends HookConsumerWidget {
                 text: periodIntervalDurationInDays.value?.toString(),
               ),
             });
+            context.go('/diagnosis?step=$nextStep');
+
           },
           child: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),
