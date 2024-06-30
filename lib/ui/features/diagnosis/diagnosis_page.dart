@@ -37,6 +37,7 @@ class DiagnosisPage extends HookConsumerWidget {
             SlideInRight(
               child: const Q2BloodContent(),
             ),
+          const Center(child: PageFooter()),
         ],
       ),
     );

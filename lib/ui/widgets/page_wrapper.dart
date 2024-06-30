@@ -125,11 +125,13 @@ class PageWrapper extends StatelessWidget {
     required this.child,
     this.stars,
     this.showLogo = false,
+    this.showFooter = false,
   });
 
   final Widget child;
   final List<Widget>? stars;
   final bool showLogo;
+  final bool showFooter;
 
   @override
   Widget build(BuildContext context) {
@@ -139,22 +141,18 @@ class PageWrapper extends StatelessWidget {
       children: [
         if (stars != null) ...stars!,
         Scaffold(
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '@journeywithlixi',
-                  style: GoogleFonts.gildaDisplay(
-                    fontSize: 18,
-                    color: const Color(0xffDFCAC1),
+          bottomNavigationBar: showFooter
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      PageFooter(),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ),
+                )
+              : null,
           body: SafeArea(
             child: SizedBox(
               width: width,
@@ -177,6 +175,26 @@ class PageWrapper extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class PageFooter extends StatelessWidget {
+  const PageFooter({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Text(
+        '@journeywithlixi',
+        style: GoogleFonts.gildaDisplay(
+          fontSize: 18,
+          color: const Color(0xffDFCAC1),
+        ),
+      ),
     );
   }
 }

@@ -8,7 +8,9 @@ import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/theme_data.dart';
+import 'package:lixi/ui/widgets/app_outlined_elevated_button.dart';
 import 'package:lixi/ui/widgets/form/number_input_field.dart';
+import 'package:lixi/utils/iterable_utils.dart';
 
 class Q2BloodContent extends HookConsumerWidget {
   const Q2BloodContent({
@@ -17,17 +19,17 @@ class Q2BloodContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final inPeriod = useState(false);
-    final dateRange = useState(<DateTime>[]);
-    final regularPeriod = useState(true);
-    final periodIntervalDurationInDays = useState<int?>(null);
-    final usualPeriodDays = useState<int?>(null);
+    final numberOfMGuns = useState<int?>(null);
+    final useMCup = useState(false);
     final width = MediaQuery.of(context).size.width;
+    final inputController = useTextEditingController();
+    final selectedColorIndex = useState<List<int>>([]);
+    final textureSelection = useState<int?>(null);
+    final hasBloodClots = useState<bool>(false);
     bool isValidated() {
-      if (inPeriod.value && usualPeriodDays.value == null) return false;
-      return (dateRange.value.length == 2 ||
-              (inPeriod.value && dateRange.value.length == 1)) &&
-          (periodIntervalDurationInDays.value != null || !regularPeriod.value);
+      return numberOfMGuns.value != null &&
+          selectedColorIndex.value.isNotEmpty &&
+          textureSelection.value != null;
     }
 
     return Column(
@@ -60,11 +62,16 @@ class Q2BloodContent extends HookConsumerWidget {
                     flex: 4,
                     child: Column(
                       children: [
-                        Assets.images.mGunNew.image(width: width * 0.28),
+                        SizedBox(
+                          height: 140,
+                          child: useMCup.value
+                              ? Assets.images.mCup.svg()
+                              : Assets.images.mGunNew.image(),
+                        ),
                         const Gap(8),
-                        const Text(
-                          '日用 23cm',
-                          style: TextStyle(fontSize: 18),
+                        Text(
+                          useMCup.value ? '月經杯（ml）' : '日用 23cm',
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
@@ -78,18 +85,44 @@ class Q2BloodContent extends HookConsumerWidget {
                           style: TextStyle(fontSize: 25),
                         ),
                         const Gap(16),
-                        const Text(
-                          '月經最多的一天\n使用多少塊衛生巾？',
-                          style: TextStyle(fontSize: 18),
+                        Text(
+                          useMCup.value
+                              ? '月經最多的一天\n流量是多少？'
+                              : '月經最多的一天\n使用多少塊衛生巾？',
+                          style: const TextStyle(fontSize: 18),
                           textAlign: TextAlign.center,
                         ),
-                        const Gap(16),
+                        const Gap(12),
                         SizedBox(
                           height: 48,
                           width: width / 3,
                           child: NumberInputField(
-                            onChanged: (text) {},
+                            controller: inputController,
+                            onChanged: (text) {
+                              numberOfMGuns.value = int.tryParse(text) ?? 0;
+                            },
                           ),
+                        ),
+                        const Gap(8),
+                        ActionChip(
+                          onPressed: () {
+                            useMCup.value = !useMCup.value;
+                            numberOfMGuns.value = null;
+                            inputController.clear();
+                          },
+                          backgroundColor: mainPinkColor,
+                          side: const BorderSide(
+                            width: 0,
+                            color: Colors.transparent,
+                          ),
+                          elevation: 0,
+                          label: Text(
+                            useMCup.value ? '使用衞生巾' : '使用月經杯',
+                            style: TextStyle(
+                              color: normalColor,
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(),
                         ),
                       ],
                     ),
@@ -141,9 +174,14 @@ class Q2BloodContent extends HookConsumerWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          selectedColorIndex.value =
+                                              selectedColorIndex.value
+                                                  .toggle(index);
+                                        },
                                         child: Container(
                                           height: 30,
+                                          width: double.infinity,
                                           decoration: BoxDecoration(
                                             color: color,
                                             borderRadius: BorderRadius.only(
@@ -161,6 +199,13 @@ class Q2BloodContent extends HookConsumerWidget {
                                               ),
                                             ),
                                           ),
+                                          child: selectedColorIndex.value
+                                                  .contains(index)
+                                              ? const Icon(
+                                                  Icons.check,
+                                                  color: Colors.white,
+                                                )
+                                              : null,
                                         ),
                                       ),
                                       if (index != 6) const Divider(height: 1),
@@ -179,13 +224,45 @@ class Q2BloodContent extends HookConsumerWidget {
                       width: 2,
                       thickness: 2,
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         children: [
-                          Gap(16),
-                          Text('質地', style: TextStyle(fontSize: 25)),
-                          Text('(可選多項)', style: TextStyle(fontSize: 18)),
-                          Gap(8),
+                          const Gap(16),
+                          const Text('質地', style: TextStyle(fontSize: 25)),
+                          const Text('(可選多項)', style: TextStyle(fontSize: 18)),
+                          const Gap(8),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Column(
+                              children: [
+                                ...['稀', '正常', '黏稠'].mapIndexed((index, e) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 4.0,
+                                    ),
+                                    child: AppOutlinedElevatedButton(
+                                      onPressed: () {
+                                        textureSelection.value = index;
+                                      },
+                                      selected: textureSelection.value == index,
+                                      fontSize: 16,
+                                      child: Text(e),
+                                    ),
+                                  );
+                                }),
+                                const Divider(),
+                                AppOutlinedElevatedButton(
+                                  fontSize: 16,
+                                  selected: hasBloodClots.value,
+                                  onPressed: () {
+                                    hasBloodClots.value = !hasBloodClots.value;
+                                  },
+                                  child: const Text('有血塊'),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -209,13 +286,15 @@ class Q2BloodContent extends HookConsumerWidget {
 
             final controller = ref.read(questionControllerProvider);
             controller.saveAndGetNextQuestion(0, {
-              0: UserAnswer(
-                dateRange: dateRange.value,
-                text: usualPeriodDays.value?.toString(),
+              3: UserAnswer(
+                text: numberOfMGuns.value?.toString(),
               ),
-              1: UserAnswer(selectedOptionIndex: [inPeriod.value ? 0 : 1]),
-              2: UserAnswer(
-                text: periodIntervalDurationInDays.value?.toString(),
+              4: UserAnswer(selectedOptionIndex: selectedColorIndex.value),
+              5: UserAnswer(
+                selectedOptionIndex: [
+                  textureSelection.value!,
+                  if (hasBloodClots.value) 3,
+                ],
               ),
             });
           },

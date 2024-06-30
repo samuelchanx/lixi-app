@@ -5,12 +5,15 @@ class NumberInputField extends StatelessWidget {
   const NumberInputField({
     super.key,
     this.onChanged,
+    this.controller,
   });
+  final TextEditingController? controller;
   final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       onChanged: onChanged,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
@@ -18,6 +21,7 @@ class NumberInputField extends StatelessWidget {
       keyboardType: TextInputType.number,
       textAlign: TextAlign.center,
       decoration: const InputDecoration(
+        contentPadding: EdgeInsets.only(top: 4),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(100)),
         ),

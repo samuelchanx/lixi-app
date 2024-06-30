@@ -26,6 +26,7 @@ class LandingPage extends HookConsumerWidget {
     if (!started.value) {
       return PageWrapper(
         showLogo: true,
+        showFooter: true,
         stars: getFirstPageStars(context),
         child: Positioned(
           top: height * 703 / 932,
@@ -47,6 +48,7 @@ class LandingPage extends HookConsumerWidget {
     }
     return PageWrapper(
       stars: getSecondPageStars(context),
+      showFooter: true,
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(

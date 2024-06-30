@@ -83,7 +83,12 @@ class Q1PeriodContent extends HookConsumerWidget {
               ),
             ),
             const Gap(16),
-            const Expanded(flex: 6, child: Text('請選取第一天到最後一天')),
+            Expanded(
+              flex: 6,
+              child: Text(
+                inPeriod.value ? '請選取經期的第一天' : '請選取第一天到最後一天',
+              ),
+            ),
           ],
         ),
         if (inPeriod.value)
