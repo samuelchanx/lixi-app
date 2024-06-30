@@ -5,6 +5,8 @@ import 'package:lixi/assets/assets.gen.dart';
 import 'package:lixi/ui/features/diagnosis/app_progress_indicator.dart';
 import 'package:lixi/ui/features/diagnosis/q1_period_content.dart';
 import 'package:lixi/ui/features/diagnosis/q2_blood_content.dart';
+import 'package:lixi/ui/features/diagnosis/q3_pain_content.dart';
+import 'package:lixi/ui/features/diagnosis/q4_symptoms_content.dart';
 import 'package:lixi/ui/widgets/page_wrapper.dart';
 import 'package:lixi/utils/logger.dart';
 
@@ -23,7 +25,10 @@ class DiagnosisPage extends HookConsumerWidget {
     return PageWrapper(
       stars: getStars(context),
       child: ListView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 24.0,
+          vertical: 24,
+        ),
         shrinkWrap: true,
         children: [
           AppProgressIndicator(
@@ -36,6 +41,14 @@ class DiagnosisPage extends HookConsumerWidget {
           if (currentStep == 1)
             SlideInRight(
               child: const Q2BloodContent(),
+            ),
+          if (currentStep == 2)
+            SlideInRight(
+              child: const Q3PainContent(),
+            ),
+          if (currentStep == 3)
+            SlideInRight(
+              child: const Q4SymptomsContent(),
             ),
           const Center(child: PageFooter()),
         ],

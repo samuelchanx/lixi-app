@@ -39,7 +39,7 @@ _$SymtomOptionImpl _$$SymtomOptionImplFromJson(Map<String, dynamic> json) =>
     _$SymtomOptionImpl(
       json['symtom'] as String,
       json['option'] as String,
-      json['symtomQuestionIndex'] as int,
+      (json['symtomQuestionIndex'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$SymtomOptionImplToJson(_$SymtomOptionImpl instance) =>

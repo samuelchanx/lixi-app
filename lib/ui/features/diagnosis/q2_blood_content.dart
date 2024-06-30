@@ -2,6 +2,7 @@ import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/assets/assets.gen.dart';
 import 'package:lixi/models/question_model_v2.dart';
@@ -11,6 +12,7 @@ import 'package:lixi/ui/theme/theme_data.dart';
 import 'package:lixi/ui/widgets/app_outlined_elevated_button.dart';
 import 'package:lixi/ui/widgets/form/number_input_field.dart';
 import 'package:lixi/utils/iterable_utils.dart';
+import 'package:lixi/utils/logger.dart';
 
 class Q2BloodContent extends HookConsumerWidget {
   const Q2BloodContent({
@@ -35,7 +37,7 @@ class Q2BloodContent extends HookConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Gap(32),
+        const Gap(16),
         Text(
           '關於妳的經血',
           style: TextStyle(
@@ -285,9 +287,10 @@ class Q2BloodContent extends HookConsumerWidget {
             }
 
             final controller = ref.read(questionControllerProvider);
-            controller.saveAndGetNextQuestion(0, {
+            final nextStep = controller.saveAndGetNextQuestion(1, {
               3: UserAnswer(
                 text: numberOfMGuns.value?.toString(),
+                remarks: useMCup.value ? 'mcup' : null,
               ),
               4: UserAnswer(selectedOptionIndex: selectedColorIndex.value),
               5: UserAnswer(
@@ -297,6 +300,8 @@ class Q2BloodContent extends HookConsumerWidget {
                 ],
               ),
             });
+            logger.i(nextStep);
+            context.go('/diagnosis?step=$nextStep');
           },
           child: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),

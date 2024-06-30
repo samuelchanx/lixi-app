@@ -636,6 +636,7 @@ mixin _$UserAnswer {
   DateTime? get date => throw _privateConstructorUsedError;
   List<DateTime>? get dateRange => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
+  String? get remarks => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -653,7 +654,8 @@ abstract class $UserAnswerCopyWith<$Res> {
       {List<int> selectedOptionIndex,
       DateTime? date,
       List<DateTime>? dateRange,
-      String? text});
+      String? text,
+      String? remarks});
 }
 
 /// @nodoc
@@ -673,6 +675,7 @@ class _$UserAnswerCopyWithImpl<$Res, $Val extends UserAnswer>
     Object? date = freezed,
     Object? dateRange = freezed,
     Object? text = freezed,
+    Object? remarks = freezed,
   }) {
     return _then(_value.copyWith(
       selectedOptionIndex: null == selectedOptionIndex
@@ -691,6 +694,10 @@ class _$UserAnswerCopyWithImpl<$Res, $Val extends UserAnswer>
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
               as String?,
+      remarks: freezed == remarks
+          ? _value.remarks
+          : remarks // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -707,7 +714,8 @@ abstract class _$$UserAnswerImplCopyWith<$Res>
       {List<int> selectedOptionIndex,
       DateTime? date,
       List<DateTime>? dateRange,
-      String? text});
+      String? text,
+      String? remarks});
 }
 
 /// @nodoc
@@ -725,6 +733,7 @@ class __$$UserAnswerImplCopyWithImpl<$Res>
     Object? date = freezed,
     Object? dateRange = freezed,
     Object? text = freezed,
+    Object? remarks = freezed,
   }) {
     return _then(_$UserAnswerImpl(
       selectedOptionIndex: null == selectedOptionIndex
@@ -743,6 +752,10 @@ class __$$UserAnswerImplCopyWithImpl<$Res>
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
               as String?,
+      remarks: freezed == remarks
+          ? _value.remarks
+          : remarks // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -754,7 +767,8 @@ class _$UserAnswerImpl extends _UserAnswer {
       {final List<int> selectedOptionIndex = const [],
       this.date,
       final List<DateTime>? dateRange,
-      this.text})
+      this.text,
+      this.remarks})
       : _selectedOptionIndex = selectedOptionIndex,
         _dateRange = dateRange,
         super._();
@@ -786,10 +800,12 @@ class _$UserAnswerImpl extends _UserAnswer {
 
   @override
   final String? text;
+  @override
+  final String? remarks;
 
   @override
   String toString() {
-    return 'UserAnswer(selectedOptionIndex: $selectedOptionIndex, date: $date, dateRange: $dateRange, text: $text)';
+    return 'UserAnswer(selectedOptionIndex: $selectedOptionIndex, date: $date, dateRange: $dateRange, text: $text, remarks: $remarks)';
   }
 
   @override
@@ -802,7 +818,8 @@ class _$UserAnswerImpl extends _UserAnswer {
             (identical(other.date, date) || other.date == date) &&
             const DeepCollectionEquality()
                 .equals(other._dateRange, _dateRange) &&
-            (identical(other.text, text) || other.text == text));
+            (identical(other.text, text) || other.text == text) &&
+            (identical(other.remarks, remarks) || other.remarks == remarks));
   }
 
   @JsonKey(ignore: true)
@@ -812,7 +829,8 @@ class _$UserAnswerImpl extends _UserAnswer {
       const DeepCollectionEquality().hash(_selectedOptionIndex),
       date,
       const DeepCollectionEquality().hash(_dateRange),
-      text);
+      text,
+      remarks);
 
   @JsonKey(ignore: true)
   @override
@@ -833,7 +851,8 @@ abstract class _UserAnswer extends UserAnswer {
       {final List<int> selectedOptionIndex,
       final DateTime? date,
       final List<DateTime>? dateRange,
-      final String? text}) = _$UserAnswerImpl;
+      final String? text,
+      final String? remarks}) = _$UserAnswerImpl;
   const _UserAnswer._() : super._();
 
   factory _UserAnswer.fromJson(Map<String, dynamic> json) =
@@ -847,6 +866,8 @@ abstract class _UserAnswer extends UserAnswer {
   List<DateTime>? get dateRange;
   @override
   String? get text;
+  @override
+  String? get remarks;
   @override
   @JsonKey(ignore: true)
   _$$UserAnswerImplCopyWith<_$UserAnswerImpl> get copyWith =>

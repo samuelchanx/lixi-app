@@ -8,12 +8,14 @@ class RoundedButtonOption extends HookWidget {
     super.key,
     required this.text,
     this.selected = true,
+    this.showShadow = true,
     this.onPressed,
   });
 
   final bool selected;
   final String text;
   final Function()? onPressed;
+  final bool showShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class RoundedButtonOption extends HookWidget {
             borderRadius: BorderRadius.circular(100),
           ),
           shadows: [
-            if (selected)
+            if (selected && showShadow)
               const BoxShadow(
                 color: Color(0xFFBDB0AB),
                 offset: Offset(0, 6),

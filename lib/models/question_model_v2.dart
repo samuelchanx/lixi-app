@@ -134,6 +134,7 @@ class UserAnswer with _$UserAnswer {
     DateTime? date,
     List<DateTime>? dateRange,
     String? text,
+    String? remarks,
   }) = _UserAnswer;
 
   factory UserAnswer.fromJson(Map<String, dynamic> json) =>

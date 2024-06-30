@@ -38,8 +38,11 @@ class AppProgressIndicator extends StatelessWidget {
               child: const SizedBox(),
             ),
             Expanded(
-              flex: 100 - intValue,
-              child: Text('$intValue%'),
+              flex: 100 - intValue + 5,
+              child: Text(
+                '$intValue%',
+                maxLines: 1,
+              ),
             ),
           ],
         ),

@@ -11,18 +11,18 @@ _$QuestionModelV2Impl _$$QuestionModelV2ImplFromJson(
     _$QuestionModelV2Impl(
       question: json['question'] as String,
       textReplaceData: json['textReplaceData'] as String,
-      index: json['index'] as int,
-      displayIndex: json['displayIndex'] as int?,
+      index: (json['index'] as num).toInt(),
+      displayIndex: (json['displayIndex'] as num?)?.toInt(),
       transformedQuestionText: json['transformedQuestionText'] as String?,
       title: json['title'] as String?,
       image: json['image'] as String?,
-      imagesToShow: json['imagesToShow'] as int?,
+      imagesToShow: (json['imagesToShow'] as num?)?.toInt(),
       horizontalOption: json['horizontalOption'] as bool?,
       showByDiagnosis: json['showByDiagnosis'] as bool?,
       rawOptions: (json['rawOptions'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-      group: json['group'] as int,
+      group: (json['group'] as num).toInt(),
       transformedOptions: (json['transformedOptions'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -101,7 +101,7 @@ const _$AnswerFormatEnumMap = {
 _$UserAnswerImpl _$$UserAnswerImplFromJson(Map<String, dynamic> json) =>
     _$UserAnswerImpl(
       selectedOptionIndex: (json['selectedOptionIndex'] as List<dynamic>?)
-              ?.map((e) => e as int)
+              ?.map((e) => (e as num).toInt())
               .toList() ??
           const [],
       date:
@@ -110,6 +110,7 @@ _$UserAnswerImpl _$$UserAnswerImplFromJson(Map<String, dynamic> json) =>
           ?.map((e) => DateTime.parse(e as String))
           .toList(),
       text: json['text'] as String?,
+      remarks: json['remarks'] as String?,
     );
 
 Map<String, dynamic> _$$UserAnswerImplToJson(_$UserAnswerImpl instance) {
@@ -127,6 +128,7 @@ Map<String, dynamic> _$$UserAnswerImplToJson(_$UserAnswerImpl instance) {
   writeNotNull('dateRange',
       instance.dateRange?.map((e) => e.toIso8601String()).toList());
   writeNotNull('text', instance.text);
+  writeNotNull('remarks', instance.remarks);
   return val;
 }
 
@@ -143,7 +145,7 @@ _$DiagnosedIssueImpl _$$DiagnosedIssueImplFromJson(Map<String, dynamic> json) =>
       periodTexture: (json['periodTexture'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$PeriodTextureEnumMap, e))
           .toList(),
-      diagnosedStep: json['diagnosedStep'] as int?,
+      diagnosedStep: (json['diagnosedStep'] as num?)?.toInt(),
       bodyTypes: (json['bodyTypes'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$DiagnosedBodyTypeEnumMap, e))
           .toList(),
@@ -198,8 +200,8 @@ const _$PeriodColorEnumMap = {
   PeriodColor.normal: 'normal',
   PeriodColor.brightRed: 'brightRed',
   PeriodColor.deepRed: 'deepRed',
-  PeriodColor.purpleRed: 'purpleRed',
   PeriodColor.deepPurple: 'deepPurple',
+  PeriodColor.purpleRed: 'purpleRed',
 };
 
 const _$PeriodTextureEnumMap = {
@@ -230,7 +232,7 @@ const _$DiagnosedBodyTypeEnumMap = {
 _$QuestionShowIfNotConditionImpl _$$QuestionShowIfNotConditionImplFromJson(
         Map<String, dynamic> json) =>
     _$QuestionShowIfNotConditionImpl(
-      json['option'] as int?,
+      (json['option'] as num?)?.toInt(),
       json['text'] == null
           ? null
           : ComparisonCondition.fromJson(json['text'] as Map<String, dynamic>),

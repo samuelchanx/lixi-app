@@ -33,7 +33,6 @@ class Q1PeriodContent extends HookConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Gap(16),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
