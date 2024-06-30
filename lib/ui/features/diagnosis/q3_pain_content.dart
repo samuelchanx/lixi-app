@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:lixi/ui/theme/colors.dart';
+import 'package:lixi/ui/widgets/continue_row.dart';
 import 'package:lixi/ui/widgets/rounded_button_option.dart';
 import 'package:lixi/utils/iterable_utils.dart';
 
@@ -30,9 +31,13 @@ class Q3PainContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final painLevel = useState(5);
-    final whenPainIndex = useState<List<int>>([]);
-    final painSelections = useState<List<int>>([]);
+    final userAnswers = ref.watch(questionControllerProvider).userAnswers;
+
+    final painLevel = useState(userAnswers[6]?.text?.toIntOrNull() ?? 5);
+    final whenPainIndex =
+        useState<List<int>>(userAnswers[7]?.selectedOptionIndex ?? []);
+    final painSelections =
+        useState<List<int>>(userAnswers[8]?.selectedOptionIndex ?? []);
     bool isValidated() {
       return whenPainIndex.value.isNotEmpty && painSelections.value.isNotEmpty;
     }
@@ -41,7 +46,7 @@ class Q3PainContent extends HookConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Gap(16),
-        Column(
+        const Column(
           children: [
             Text(
               '請選擇妳的經痛程度',
@@ -55,33 +60,48 @@ class Q3PainContent extends HookConsumerWidget {
         Row(
           children: [
             const Text('無\n痛'),
+            const Gap(8),
             Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: SliderTheme(
-                    data: const SliderThemeData(
-                      trackHeight: 16,
-                      inactiveTrackColor: Colors.transparent,
-                      thumbColor: Colors.transparent,
-                      thumbShape: RoundSliderThumbShape(
-                        enabledThumbRadius: 0.0,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: borderColor,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: SliderTheme(
+                        data: SliderThemeData(
+                          trackHeight: 16,
+                          inactiveTrackColor: Colors.transparent,
+                          overlayShape: SliderComponentShape.noThumb,
+                          thumbColor: Colors.transparent,
+                          thumbShape: const RoundSliderThumbShape(
+                            enabledThumbRadius: 0.0,
+                          ),
+                        ),
+                        child: Slider(
+                          value: painLevel.value.toDouble(),
+                          min: 0,
+                          max: 10,
+                          activeColor: mainPinkColor,
+                          onChanged: (value) {
+                            painLevel.value = value.toInt();
+                          },
+                        ),
                       ),
-                    ),
-                    child: Slider(
-                      value: painLevel.value.toDouble(),
-                      min: 0,
-                      max: 10,
-                      activeColor: mainPinkColor,
-                      onChanged: (value) {
-                        painLevel.value = value.toInt();
-                      },
                     ),
                   ),
                 ),
               ),
             ),
+            const Gap(8),
             const Text('劇\n痛'),
           ],
         ),
@@ -149,7 +169,7 @@ class Q3PainContent extends HookConsumerWidget {
           ),
         ),
         const Gap(24),
-        ElevatedButton(
+        ContinueRow(
           onPressed: () {
             if (!isValidated()) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -170,10 +190,6 @@ class Q3PainContent extends HookConsumerWidget {
             });
             context.go('/diagnosis?step=$nextStep');
           },
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),
-            child: Text('繼續'),
-          ),
         ),
       ],
     );

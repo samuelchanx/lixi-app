@@ -7,21 +7,19 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/models/question_model_v2.dart';
 import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:lixi/ui/theme/colors.dart';
+import 'package:lixi/ui/widgets/continue_row.dart';
 import 'package:lixi/ui/widgets/rounded_button_option.dart';
 import 'package:lixi/ui/widgets/rounded_check.dart';
 import 'package:lixi/utils/iterable_utils.dart';
 
-const _painOptions = [
-  '月經不暢順',
-  '絞痛',
-  '長期隱隱痛',
-  '感覺冰凍',
-  '灼熱疼痛',
-  '有固定痛點',
-  '脹痛',
-  '有下墜感',
-  '腹部有包塊，但可推散',
-  '腰部疼痛',
+const _otherOptions = [
+  '發熱',
+  '頭痛',
+  '吐血或流鼻血',
+  '大便洩瀉',
+  '乳房作脹',
+  '煩躁易怒，或感到抑鬱',
+  '沒有',
 ];
 
 class Q4SymptomsContent extends HookConsumerWidget {
@@ -31,11 +29,11 @@ class Q4SymptomsContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final painLevel = useState(5);
-    final whenPainIndex = useState<List<int>>([]);
-    final painSelections = useState<List<int>>([]);
+    final notApplicable = useState(false);
+    final improveIndexes = useState([]);
+    final otherDiscomforts = useState<List<int>>([]);
     bool isValidated() {
-      return whenPainIndex.value.isNotEmpty && painSelections.value.isNotEmpty;
+      return otherDiscomforts.value.isNotEmpty;
     }
 
     return Column(
@@ -97,8 +95,12 @@ class Q4SymptomsContent extends HookConsumerWidget {
                               flex: 2,
                               child: Center(
                                 child: RoundedCheck(
-                                  selected: true,
-                                  onChanged: (value) {},
+                                  selected: improveIndexes.value.contains(1),
+                                  onChanged: (value) {
+                                    improveIndexes.value =
+                                        improveIndexes.value.toggle(1).toList();
+                                    notApplicable.value = false;
+                                  },
                                 ),
                               ),
                             ),
@@ -106,8 +108,12 @@ class Q4SymptomsContent extends HookConsumerWidget {
                               flex: 2,
                               child: Center(
                                 child: RoundedCheck(
-                                  selected: true,
-                                  onChanged: (value) {},
+                                  selected: improveIndexes.value.contains(2),
+                                  onChanged: (value) {
+                                    improveIndexes.value =
+                                        improveIndexes.value.toggle(2).toList();
+                                    notApplicable.value = false;
+                                  },
                                 ),
                               ),
                             ),
@@ -133,14 +139,18 @@ class Q4SymptomsContent extends HookConsumerWidget {
                               flex: 2,
                               child: Center(
                                 child: RoundedCheck(
-                                  selected: true,
-                                  onChanged: (value) {},
+                                  selected: improveIndexes.value.contains(0),
+                                  onChanged: (value) {
+                                    improveIndexes.value =
+                                        improveIndexes.value.toggle(0).toList();
+                                    notApplicable.value = false;
+                                  },
                                 ),
                               ),
                             ),
                             const Expanded(
                               flex: 2,
-                              child: Center(child: Text('加劇')),
+                              child: Center(child: Text('-')),
                             ),
                           ],
                         ),
@@ -152,39 +162,56 @@ class Q4SymptomsContent extends HookConsumerWidget {
                         color: lightWhite,
                         borderRadius: BorderRadius.all(Radius.circular(50)),
                       ),
-                      child: Row(
-                        children: [
-                          const Expanded(
-                            flex: 4,
-                            child: Center(child: Text('血塊排出')),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Center(
-                              child: Checkbox(
-                                value: true,
-                                onChanged: (bool? value) {},
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              flex: 4,
+                              child: Center(child: Text('血塊排出')),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Center(
+                                child: RoundedCheck(
+                                  selected: improveIndexes.value.contains(3),
+                                  onChanged: (value) {
+                                    improveIndexes.value =
+                                        improveIndexes.value.toggle(3).toList();
+                                    notApplicable.value = false;
+                                  },
+                                ),
                               ),
                             ),
-                          ),
-                          const Expanded(
-                            flex: 2,
-                            child: Center(child: Text('加劇')),
-                          ),
-                        ],
+                            const Expanded(
+                              flex: 2,
+                              child: Center(child: Text('-')),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const Gap(16),
-                    const DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: lightWhite,
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Center(child: Text('不適用')),
+                    InkWell(
+                      onTap: () {
+                        notApplicable.value = !notApplicable.value;
+                        if (notApplicable.value) {
+                          improveIndexes.value = [];
+                        }
+                      },
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color:
+                              notApplicable.value ? mainPinkColor : lightWhite,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(50)),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Center(child: Text('不適用')),
+                          ),
                         ),
                       ),
                     ),
@@ -197,12 +224,11 @@ class Q4SymptomsContent extends HookConsumerWidget {
         const Gap(24),
         const Row(
           children: [
-            Text('試形容妳的經痛', style: TextStyle(fontSize: 24)),
+            Text('其他不適', style: TextStyle(fontSize: 24)),
             Gap(16),
             Text('(可選多項)', style: TextStyle(fontSize: 18)),
           ],
         ),
-        const Gap(16),
         SizedBox(
           width: double.infinity,
           child: DecoratedBox(
@@ -218,14 +244,21 @@ class Q4SymptomsContent extends HookConsumerWidget {
               child: Wrap(
                 spacing: 8,
                 runSpacing: 16,
-                children: _painOptions.mapIndexed((index, e) {
+                children: _otherOptions.mapIndexed((index, e) {
                   return RoundedButtonOption(
                     text: e,
                     showShadow: false,
                     onPressed: () {
-                      painSelections.value = painSelections.value.toggle(index);
+                      if (index == _otherOptions.lastIndex) {
+                        otherDiscomforts.value = [_otherOptions.lastIndex];
+                        return;
+                      }
+                      otherDiscomforts.value = otherDiscomforts.value
+                          .toggle(index)
+                          .where((e) => e != _otherOptions.lastIndex)
+                          .toList();
                     },
-                    selected: painSelections.value.contains(index),
+                    selected: otherDiscomforts.value.contains(index),
                   );
                 }).toList(),
               ),
@@ -233,7 +266,7 @@ class Q4SymptomsContent extends HookConsumerWidget {
           ),
         ),
         const Gap(24),
-        ElevatedButton(
+        ContinueRow(
           onPressed: () {
             if (!isValidated()) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -245,19 +278,11 @@ class Q4SymptomsContent extends HookConsumerWidget {
             }
 
             final controller = ref.read(questionControllerProvider);
-            final nextStep = controller.saveAndGetNextQuestion(2, {
-              6: UserAnswer(
-                text: painLevel.value.toString(),
-              ),
-              7: UserAnswer(selectedOptionIndex: whenPainIndex.value),
-              8: UserAnswer(selectedOptionIndex: painSelections.value),
+            final nextStep = controller.saveAndGetNextQuestion(3, {
+              8: UserAnswer(selectedOptionIndex: otherDiscomforts.value),
             });
             context.go('/diagnosis?step=$nextStep');
           },
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),
-            child: Text('繼續'),
-          ),
         ),
       ],
     );

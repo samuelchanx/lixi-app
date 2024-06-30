@@ -10,6 +10,7 @@ import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:lixi/ui/theme/theme_data.dart';
 import 'package:lixi/ui/widgets/app_outlined_elevated_button.dart';
+import 'package:lixi/ui/widgets/continue_row.dart';
 import 'package:lixi/ui/widgets/form/number_input_field.dart';
 import 'package:lixi/utils/iterable_utils.dart';
 import 'package:lixi/utils/logger.dart';
@@ -21,13 +22,20 @@ class Q2BloodContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final numberOfMGuns = useState<int?>(null);
-    final useMCup = useState(false);
+    final userAnswers = ref.watch(questionControllerProvider).userAnswers;
+    final useMCup = useState(userAnswers[3]?.remarks == 'mcup');
+    final numberOfMGuns = useState<int?>(userAnswers[3]?.text?.toIntOrNull());
     final width = MediaQuery.of(context).size.width;
-    final inputController = useTextEditingController();
-    final selectedColorIndex = useState<List<int>>([]);
-    final textureSelection = useState<int?>(null);
-    final hasBloodClots = useState<bool>(false);
+    final inputController =
+        useTextEditingController(text: numberOfMGuns.value?.toString());
+    final selectedColorIndex =
+        useState<List<int>>(userAnswers[4]?.selectedOptionIndex ?? []);
+    final textureSelection =
+        useState<int?>(userAnswers[5]?.selectedOptionIndex.firstOrNull);
+    final hasBloodClots = useState<bool>(
+      userAnswers[5]?.selectedOptionIndex.contains(3) ?? false,
+    );
+
     bool isValidated() {
       return numberOfMGuns.value != null &&
           selectedColorIndex.value.isNotEmpty &&
@@ -38,7 +46,7 @@ class Q2BloodContent extends HookConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Gap(16),
-        Text(
+        const Text(
           '關於妳的經血',
           style: TextStyle(
             fontSize: 28,
@@ -120,7 +128,7 @@ class Q2BloodContent extends HookConsumerWidget {
                           elevation: 0,
                           label: Text(
                             useMCup.value ? '使用衞生巾' : '使用月經杯',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: normalColor,
                             ),
                           ),
@@ -275,7 +283,7 @@ class Q2BloodContent extends HookConsumerWidget {
           ),
         ),
         const Gap(24),
-        ElevatedButton(
+        ContinueRow(
           onPressed: () {
             if (!isValidated()) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -303,10 +311,6 @@ class Q2BloodContent extends HookConsumerWidget {
             logger.i(nextStep);
             context.go('/diagnosis?step=$nextStep');
           },
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),
-            child: Text('繼續'),
-          ),
         ),
       ],
     );

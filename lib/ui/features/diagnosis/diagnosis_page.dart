@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lixi/assets/assets.gen.dart';
 import 'package:lixi/ui/features/diagnosis/app_progress_indicator.dart';
@@ -22,9 +23,22 @@ class DiagnosisPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     logger.i('Step from route: $step');
     final currentStep = step ?? 0;
+
+    final scrollController = useScrollController();
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+        );
+      });
+      return null;
+    });
     return PageWrapper(
       stars: getStars(context),
       child: ListView(
+        controller: scrollController,
         padding: const EdgeInsets.symmetric(
           horizontal: 24.0,
           vertical: 24,

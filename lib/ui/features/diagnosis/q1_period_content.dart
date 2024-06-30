@@ -18,11 +18,14 @@ class Q1PeriodContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final inPeriod = useState(false);
-    final dateRange = useState(<DateTime>[]);
-    final regularPeriod = useState(true);
-    final periodIntervalDurationInDays = useState<int?>(null);
-    final usualPeriodDays = useState<int?>(null);
+    final userAnswers = ref.watch(questionControllerProvider).userAnswers;
+    final inPeriod = useState((userAnswers[0]?.dateRange?.length ?? 0) == 1);
+    final dateRange = useState(userAnswers[0]?.dateRange ?? []);
+    final periodIntervalDurationInDays =
+        useState<int?>(userAnswers[2]?.text?.toIntOrNull());
+    final regularPeriod = useState(periodIntervalDurationInDays.value != null);
+    final usualPeriodDays = useState<int?>(userAnswers[0]?.text?.toIntOrNull());
+
     bool isValidated() {
       if (inPeriod.value && usualPeriodDays.value == null) return false;
       return (dateRange.value.length == 2 ||
@@ -40,7 +43,7 @@ class Q1PeriodContent extends HookConsumerWidget {
               padding: const EdgeInsets.only(top: 16.0),
               child: Text(
                 '月經週期'.characters.toIterable().join('\n'),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   color: normalColor,
                 ),
@@ -181,7 +184,6 @@ class Q1PeriodContent extends HookConsumerWidget {
               ),
             });
             context.go('/diagnosis?step=$nextStep');
-
           },
           child: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),

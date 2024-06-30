@@ -24,9 +24,15 @@ class RoundedCheck extends StatelessWidget {
             color: buttonStrokeColor,
             width: 1,
           ),
-          color: selected ? const Color(0xFFDFCAC1) : Colors.transparent,
           borderRadius: BorderRadius.circular(100),
         ),
+        child: selected
+            ? const Icon(
+                Icons.check,
+                size: 16,
+                color: buttonStrokeColor,
+              )
+            : null,
       ),
     );
   }
