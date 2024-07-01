@@ -145,11 +145,7 @@ class QuestionControllerV2 {
   }
 
   List<String> getOtherQuestions(List<String> allSymptoms) {
-    final userBodyTypes = diagnosedIssue.bodyTypes ??
-        [
-          DiagnosedBodyType.kidneyQiDeficiency,
-          DiagnosedBodyType.kidneyYinDeficiency,
-        ];
+    final userBodyTypes = diagnosedIssue.bodyTypes ?? [];
     final otherQuestionUserSymptoms = otherSymptomsData.where((element) {
       final bodyType = DiagnosedBodyType.fromString(element['BodyType']!);
       return userBodyTypes.contains(bodyType);

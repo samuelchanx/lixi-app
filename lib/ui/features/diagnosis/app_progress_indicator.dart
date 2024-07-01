@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:lixi/ui/theme/colors.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -38,7 +40,7 @@ class AppProgressIndicator extends StatelessWidget {
               child: const SizedBox(),
             ),
             Expanded(
-              flex: 100 - intValue + 5,
+              flex: max(100 - intValue + 8, 8),
               child: Text(
                 '$intValue%',
                 maxLines: 1,

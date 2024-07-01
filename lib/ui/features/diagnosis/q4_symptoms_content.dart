@@ -11,6 +11,7 @@ import 'package:lixi/ui/widgets/continue_row.dart';
 import 'package:lixi/ui/widgets/rounded_button_option.dart';
 import 'package:lixi/ui/widgets/rounded_check.dart';
 import 'package:lixi/utils/iterable_utils.dart';
+import 'package:lixi/utils/logger.dart';
 
 const _otherOptions = [
   '發熱',
@@ -29,11 +30,18 @@ class Q4SymptomsContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notApplicable = useState(false);
-    final improveIndexes = useState([]);
-    final otherDiscomforts = useState<List<int>>([]);
+    final userAnswers = ref.watch(questionControllerProvider).userAnswers;
+    final notApplicable = useState(
+      (userAnswers[9]?.selectedOptionIndex.isEmpty ?? false) ? true : false,
+    );
+    final improveIndexes =
+        useState<List<int>>(userAnswers[9]?.selectedOptionIndex ?? []);
+    final otherDiscomforts = useState<List<int>>(
+      userAnswers[10]?.selectedOptionIndex ?? [],
+    );
     bool isValidated() {
-      return otherDiscomforts.value.isNotEmpty;
+      return (improveIndexes.value.isNotEmpty || notApplicable.value) &&
+          otherDiscomforts.value.isNotEmpty;
     }
 
     return Column(
@@ -279,8 +287,23 @@ class Q4SymptomsContent extends HookConsumerWidget {
 
             final controller = ref.read(questionControllerProvider);
             final nextStep = controller.saveAndGetNextQuestion(3, {
-              8: UserAnswer(selectedOptionIndex: otherDiscomforts.value),
+              9: UserAnswer(
+                selectedOptionIndex: improveIndexes.value,
+              ),
+              10: UserAnswer(
+                // Remove none option
+                selectedOptionIndex: otherDiscomforts.value
+                    .whereNot((e) => e == _otherOptions.lastIndex)
+                    .toList(),
+              ),
             });
+            logger.i('Next step: $nextStep');
+            context.go('/diagnosis?step=4');
+            return;
+            if (nextStep == -1) {
+              context.go('/registration');
+              return;
+            }
             context.go('/diagnosis?step=$nextStep');
           },
         ),

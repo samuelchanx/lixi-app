@@ -8,6 +8,7 @@ import 'package:lixi/ui/features/diagnosis/q1_period_content.dart';
 import 'package:lixi/ui/features/diagnosis/q2_blood_content.dart';
 import 'package:lixi/ui/features/diagnosis/q3_pain_content.dart';
 import 'package:lixi/ui/features/diagnosis/q4_symptoms_content.dart';
+import 'package:lixi/ui/features/diagnosis/q5_other_symptoms.dart';
 import 'package:lixi/ui/widgets/page_wrapper.dart';
 import 'package:lixi/utils/logger.dart';
 
@@ -64,6 +65,10 @@ class DiagnosisPage extends HookConsumerWidget {
             SlideInRight(
               child: const Q4SymptomsContent(),
             ),
+          if (currentStep == 4)
+            SlideInRight(
+              child: const Q5OtherSymptoms(),
+            ),
           const Center(child: PageFooter()),
         ],
       ),
@@ -80,6 +85,8 @@ class DiagnosisPage extends HookConsumerWidget {
         return 0.75;
       case 3:
         return 0.95;
+      case 4:
+        return 0.97;
       default:
         return 1;
     }
