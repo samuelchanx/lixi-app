@@ -240,7 +240,7 @@ class ProfileRegistrationPage extends HookConsumerWidget {
                                         userAnswers: userAnswers,
                                         diagnosedIssues: diagnosedIssues,
                                       );
-                                  if (context.mounted) context.pop(true);
+                                  if (context.mounted) context.go('/result');
                                 } catch (e, stack) {
                                   log.severe('$e $stack');
                                 }
