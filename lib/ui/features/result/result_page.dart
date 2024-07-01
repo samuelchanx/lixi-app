@@ -7,6 +7,7 @@ import 'package:lixi/assets/assets.gen.dart';
 import 'package:lixi/models/question_model_controller.dart';
 import 'package:lixi/provider/user_data_provider.dart';
 import 'package:lixi/ui/features/questionnaire/questionnaire_page.dart';
+import 'package:lixi/ui/widgets/page_wrapper.dart';
 import 'package:lixi/utils/date_formatter.dart';
 
 class ResultPage extends HookConsumerWidget {
@@ -133,7 +134,7 @@ class ResultPage extends HookConsumerWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(36.0),
+                      padding: const EdgeInsets.all(24.0),
                       child: ElevatedButton.icon(
                         onPressed: () {
                           context.go('/');
@@ -159,6 +160,7 @@ class ResultPage extends HookConsumerWidget {
                 ],
                 loading: () => [const CircularProgressIndicator()],
               ),
+              const PageFooter(),
             ],
           ),
         ),

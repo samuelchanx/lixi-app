@@ -48,13 +48,12 @@ class LandingPage extends HookConsumerWidget {
     }
     return PageWrapper(
       stars: getSecondPageStars(context),
-      showFooter: true,
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedVertical(140),
+            const SizedVertical(80),
             const Center(
               child: Text(
                 '免責聲明',
@@ -88,6 +87,7 @@ class LandingPage extends HookConsumerWidget {
                 textAlign: TextAlign.left,
               ),
             ),
+            const PageFooter(),
             if (kDebugMode && showDebug)
               ElevatedButton(
                 onPressed: () {

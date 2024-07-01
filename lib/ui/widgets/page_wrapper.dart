@@ -105,7 +105,7 @@ List<Widget> getSecondPageStars(BuildContext context) {
     Positioned(
       top: height * 591 / fullHeight,
       left: width * 23 / fullWidth,
-      child: Assets.svgs.staticSplash.svg(
+      child: Assets.images.staticSplash.image(
         height: 26.6,
       ),
     ),

@@ -66,6 +66,10 @@ class $AssetsImagesGen {
   AssetGenImage get pregnancy =>
       const AssetGenImage('assets/images/pregnancy.png');
 
+  /// File path: assets/images/static-splash.png
+  AssetGenImage get staticSplash =>
+      const AssetGenImage('assets/images/static-splash.png');
+
   /// File path: assets/images/texture_1.png
   AssetGenImage get texture1 =>
       const AssetGenImage('assets/images/texture_1.png');
@@ -98,6 +102,7 @@ class $AssetsImagesGen {
         mGunSvg,
         pregnancyNew,
         pregnancy,
+        staticSplash,
         texture1,
         texture2,
         texture3,

@@ -99,37 +99,37 @@ class DiagnosisPage extends HookConsumerWidget {
       Positioned(
         top: height * 84 / calculatingPageHeight,
         left: width * 308 / calculatingPageWidth,
-        child: Assets.svgs.staticSplash.svg(width: 26),
+        child: Assets.images.staticSplash.image(width: 26),
       ),
       Positioned(
         top: height * 166 / calculatingPageHeight,
         left: width * 20 / calculatingPageWidth,
-        child: Assets.svgs.staticSplash.svg(width: 26),
+        child: Assets.images.staticSplash.image(width: 26),
       ),
       Positioned(
         top: height * 332 / calculatingPageHeight,
         left: width * 357 / calculatingPageWidth,
-        child: Assets.svgs.staticSplash.svg(width: 26),
+        child: Assets.images.staticSplash.image(width: 26),
       ),
       Positioned(
         top: height * 349 / calculatingPageHeight,
         left: width * 62 / calculatingPageWidth,
-        child: Assets.svgs.staticSplash.svg(width: 26),
+        child: Assets.images.staticSplash.image(width: 26),
       ),
       Positioned(
         top: height * 583 / calculatingPageHeight,
         left: width * 208 / calculatingPageWidth,
-        child: Assets.svgs.staticSplash.svg(width: 26),
+        child: Assets.images.staticSplash.image(width: 26),
       ),
       Positioned(
         top: height * 806 / calculatingPageHeight,
         left: width * 41 / calculatingPageWidth,
-        child: Assets.svgs.staticSplash.svg(height: 26),
+        child: Assets.images.staticSplash.image(height: 26),
       ),
       Positioned(
         top: height * 803 / calculatingPageHeight,
         left: width * 325 / calculatingPageWidth,
-        child: Assets.svgs.staticSplash.svg(height: 26),
+        child: Assets.images.staticSplash.image(height: 26),
       ),
     ];
   }
